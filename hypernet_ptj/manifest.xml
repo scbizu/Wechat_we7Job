@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6">
+	<application setting="true">
+		<name><![CDATA[Job]]></name>
+		<identifie><![CDATA[Hypernet_PTJ]]></identifie>
+		<version><![CDATA[1.0]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[临安兼职二手平台]]></ability>
+		<description><![CDATA[临安兼职二手平台]]></description>
+		<author><![CDATA[Hypernet]]></author>
+		<url><![CDATA[http://bbs.we7.cc/]]></url>
+	</application>
+	<platform>
+		<subscribes>
+			<message type="text" />
+			<message type="image" />
+			<message type="voice" />
+			<message type="video" />
+			<message type="location" />
+			<message type="link" />
+			<message type="subscribe" />
+			<message type="unsubscribe" />
+			<message type="qr" />
+			<message type="trace" />
+			<message type="click" />
+			<message type="view" />
+			<message type="enter" />
+		</subscribes>
+		<handles>
+			<message type="image" />
+			<message type="voice" />
+			<message type="video" />
+			<message type="location" />
+			<message type="link" />
+			<message type="subscribe" />
+			<message type="qr" />
+			<message type="trace" />
+			<message type="click" />
+			<message type="enter" />
+			<message type="text" />
+		</handles>
+		<rule embed="true" />
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="兼职广场" do="ptjindex" state="" direct="false" />
+		</cover>
+		<rule>
+			<entry title="后台规则" do="ptjrules" state="" direct="false" />
+		</rule>
+		<menu>
+			<entry title="后台管理中心" do="ptjadmin" state="" direct="false" />
+		</menu>
+		<home>
+			<entry title="首页导航" do="ptjlink" state="" direct="false" />
+		</home>
+		<profile>
+			<entry title="个人中心" do="ptjmyinfo" state="" direct="false" />
+		</profile>
+		<shortcut>
+			<entry title="快捷功能" do="ptjorders" state="" direct="false" />
+		</shortcut>
+	</bindings>
+	<install><![CDATA[]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[]]></upgrade>
+</manifest>
