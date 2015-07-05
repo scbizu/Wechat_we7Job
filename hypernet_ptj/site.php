@@ -12,6 +12,10 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 	public function doMobilePtjindex() {
 		//这个操作被定义用来呈现 功能封面
 		global  $_W,$_GPC;
+
+		//查看广场
+		$ground=$this->DboperateSearchGroundinfo();
+	
 		
 		include $this->template('index');
 	}
@@ -62,18 +66,52 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 			echo "最终没有获取到头像,follow: {$_W['fans']['follow']}";
 		} else {
 			$src=$avatar;
-	//	echo <<<IMG
-    //  <img src="$avatar" style="width:20%;height:10%;margin-top:16%">
-//IMG;
-
 		}
+		//if user
+		$profile=$_GPC['Ptjmyinfo'];
+		$name=$profile['Name'];
+		$phone=$profile['Phone'];
+		$location=$profile['Location'];
+		$sex=$profile['Sex'];
+		$iden=$profile['identity'];
+		if($name AND $phone AND $location AND $sex AND $iden){
+			$this->DboperateInsertIntoProfile($openid, $name, $phone, $sex, $location, $iden);
+			$url=$this->createMobileUrl('ptjmyinfo');
+			echo "<script language='javascript'>
+					location.href=\"$url\";
+					</script>";
+		}
+		$user=$this->DboperateSearchUser($openid);
+		$isworker=$user['identity']=='worker'?1:0;
+		//YES 兼职
 		
+		
+		
+		//NO 商家
+		 $title=$profile['Worktitle'];  
+		$content=$profile['Workdetail'];
+		$salary=$profile['Worksalary'];
+		$mount=$profile['Workmount'];
+		$date=$profile['Workdate'];
+		if($title AND $content AND $salary AND $mount AND $date){
+		  $this->DboperateInsertGroundInfo($openid, $title, $content, $salary, $mount, $date);
+		  $url=$this->createMobileUrl('ptjmyinfo');
+		  echo "<script language='javascript'>
+		  location.href=\"$url\";
+		  </script>";
+		}
 		include $this->template('myinfo');
 	}
 	
 	public function doMobilePtjdetails(){
 		
 		global $_W,$_GPC;
+		
+		$openid=$_W['openid'];
+		
+		$ground=$_GPC['ground'];
+		
+		$Ownerinfo=$this->DboperateSearchUser($openid);
 		
 		include $this->template('details');
 	}
@@ -82,5 +120,66 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 	public function doMobilePtjorders() {
 		//这个操作被定义用来呈现 微站快捷功能导航
 	}
+	/**
+	 * 简历提交
+	 * @param unknown $openid
+	 * @param unknown $name
+	 * @param unknown $phone
+	 * @param unknown $sex
+	 * @param unknown $location
+	 * @param unknown $iden
+	 * @return Ambigous <boolean, unknown>
+	 */
+private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,$iden){
+	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0));
+  	return $T;
+	
+}	
+	
+/**
+ * 查找用户
+ * @param unknown $openid
+ * @return boolean
+ */
+ private function DboperateSearchUser($openid){
+ 	
+ 	$t=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array('oid'=>$openid));
+ 	return $t;
+ }	
+	/**
+	 * 提交需求
+	 * @param unknown $openid
+	 * @param unknown $title
+	 * @param unknown $content
+	 * @param unknown $salary
+	 * @param unknown $mount
+	 * @param unknown $date
+	 * @return Ambigous <boolean, unknown>
+	 */
+	private function DboperateInsertGroundInfo($openid,$title,$content,$salary,$mount,$date){
+		
+		$t=pdo_insert('ptj_ground',array('title'=>$title,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date));
+		return $t;
+	}
+	/**
+	 * 查看广场
+	 * @return Ambigous <boolean, multitype:unknown >
+	 */
+private  function  DboperateSearchGroundinfo(){
+	
+	$ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground'),array(),'');
+	return $ground;
+}	
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
