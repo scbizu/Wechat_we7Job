@@ -1,0 +1,70 @@
+{template 'common/header'}
+<html>
+    <link href="http://libs.baidu.com//bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    
+<nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
+  <div class="container-fluid" style="width:60%">
+    <!-- Brand and toggle get grouped for better mobile display -->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <ul class="nav navbar-nav"  >
+        <li class="active"><a href="#"> <span class="sr-only"></span>兼职广场</a></li>  
+      </ul>
+  </div><!-- /.container-fluid -->
+  
+</nav>
+
+<nav class="navbar navbar-default navbar-fixed-bottom" style="margin-left:50%">
+  <div class="container-fluid" style="width:60%">
+    <!-- Brand and toggle get grouped for better mobile display -->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <ul class="nav navbar-nav">
+        <li><a href="{php echo $this->createMobileUrl('ptjmyinfo');}">个人中心</a></li>  
+      </ul>
+  </div><!-- /.container-fluid --> 
+</nav>
+
+<nav class="navbar navbar-default" >
+<div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+    <span class="input-group-addon" style="background:orange"><mark>老司机兼职平台</mark></span>
+      <input type="text" class="form-control" placeholder="找点事做呗...">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Go!</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+</nav>
+
+<nav class="navbar navbar-default" style="margin-top:-7%">
+   <div class="container-fluid">
+
+      <ul class="nav nav-pills">
+  <li role="presentation" class="active"><a href="#">薪资排序</a></li>
+  <li role="presentation"><a href="#">时长排序</a></li>
+  <li role="presentation"><a href="#">商家排序</a></li>
+      </ul>
+            
+  </div>
+</nav>
+
+{loop $ground $k $v}
+<div class="list-group">
+  <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active">
+    <h4 class="list-group-item-heading">{$v['title']}</h4>
+        <span class="badge">浏览量:2</span>
+         <span class="badge" style="margin-top:-8%;margin-right:-22%">报名人数/总人数:2/{$v['mount']}</span>
+    <p class="list-group-item-text">{$v['content']}</p>
+<p class="list-group-item-text"><span class="glyphicon glyphicon-usd"></span>&nbsp;  &nbsp;工资/天:{$v['salary']}&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span>&nbsp;  &nbsp;截至:{php echo ($v['date']);}</p>
+  </a>
+</div> 
+{/loop}
+
+<br/>
+<br/>
+<br/>
+</html>

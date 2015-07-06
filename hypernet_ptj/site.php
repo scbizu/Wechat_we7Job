@@ -107,11 +107,29 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		
 		global $_W,$_GPC;
 		
+        $flag=0;
+		
 		$openid=$_W['openid'];
 		
 		$ground=$_GPC['ground'];
-		
-		$Ownerinfo=$this->DboperateSearchUser($openid);
+		//获取商家的信息
+		$oid=$ground['openid'];
+		$Ownerinfo=$this->DboperateSearchUser($oid);
+           
+		$bmbutton=$_GPC['button'];
+		if($bmbutton=='on' AND $this->DboperateCheckUser($openid)){
+			$arr=$this->DboperateGetjob($openid, $oid);
+			if($arr AND in_array($ground['jobid'], $arr)){
+			   $flag=1;	
+			}
+			else if($arr){
+				$flag=2;
+			    $this->DboperateSurepostinfo($oid, $openid, $ground['jobid'], $ground['mount']);
+			}
+		}
+		else if(!$this->DboperateCheckUser($openid)){
+			$flag=3;
+		}
 		
 		include $this->template('details');
 	}
@@ -158,7 +176,7 @@ private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,
 	 */
 	private function DboperateInsertGroundInfo($openid,$title,$content,$salary,$mount,$date){
 		
-		$t=pdo_insert('ptj_ground',array('title'=>$title,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date));
+		$t=pdo_insert('ptj_ground',array('title'=>$title,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date,'openid'=>$openid));
 		return $t;
 	}
 	/**
@@ -170,11 +188,44 @@ private  function  DboperateSearchGroundinfo(){
 	$ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground'),array(),'');
 	return $ground;
 }	
-
+/**
+ * 报名
+ * @param unknown $owneroid
+ * @param unknown $workoid
+ * @param unknown $jobid
+ * @param unknown $hadmount
+ * @return Ambigous <boolean, unknown>
+ */
+private function DboperateSurepostinfo($owneroid,$workoid,$jobid,$hadmount){
 	
+	$t=pdo_insert('ptj_working',array('owneroid'=>$owneroid,'workeroid'=>$workoid,'jobid'=>$jobid,'hadmount'=>$hadmount,'visible'=>1,'sure'=>1));
+	return $t;	
+}
+/**
+ * 规定权限
+ * @param unknown $openid
+ * @return boolean
+ */	
+private function DboperateCheckUser($openid){
 	
-	
-	
+	$T=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array('oid'=>$openid));
+	return $T;
+}	
+/**
+ * 查找jobid
+ * @param unknown $wopenid
+ * @param unknown $oopenid
+ * @return multitype:
+ */	
+private function DboperateGetjob($wopenid,$oopenid){
+	//取 全部该用户和一商家的全部的正在活跃的联系
+	$arr=array();
+	$t=pdo_fetchall("SELECT jobid FROM".tablename('ptj_working')."WHERE workeroid=:oid and owneroid=:ooid and sure=:su",array(':oid'=>$wopenid,':ooid'=>$oopenid,':su'=>1),'');
+	foreach ($t as $k=>$v){
+		array_push($arr, $v['jobid']);
+	}
+	return $arr;
+}
 	
 	
 	
