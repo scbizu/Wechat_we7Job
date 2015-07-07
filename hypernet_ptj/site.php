@@ -12,10 +12,17 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 	public function doMobilePtjindex() {
 		//这个操作被定义用来呈现 功能封面
 		global  $_W,$_GPC;
-
 		//查看广场
 		$ground=$this->DboperateSearchGroundinfo();
 	
+		$searchinfo=$_GPC['Ptjindex']['Search'];
+        if($searchinfo){
+        	$searchinfo=$this->DboperateSearchGround($searchinfo);
+        }
+        
+
+
+
 		
 		include $this->template('index');
 	}
@@ -35,10 +42,12 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 
 		
 		load()->model('mc');
+
 		$avatar = '';
 		$openid=$_W['openid'];
 		$count=0;
 		
+
 		
 		if (!empty($_W['member']['uid'])) {
 			$member = mc_fetch(intval($_W['member']['uid']), array('avatar'));
@@ -84,7 +93,7 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		$user=$this->DboperateSearchUser($openid);
 		$isworker=$user['identity']=='worker'?1:0;
 		//YES 兼职
-		
+		   $workerEx=$this->DboperationSearchMyworkEx($openid);
 		
 		
 		//NO 商家
@@ -107,6 +116,7 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		
 		global $_W,$_GPC;
 		
+		//echo urlencode('http://trade.koudaitong.com');
         $flag=0;
 		
 		$openid=$_W['openid'];
@@ -117,22 +127,35 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		$Ownerinfo=$this->DboperateSearchUser($oid);
            
 		$bmbutton=$_GPC['button'];
-		if($bmbutton=='on' AND $this->DboperateCheckUser($openid)){
-			$arr=$this->DboperateGetjob($openid, $oid);
-			if($arr AND in_array($ground['jobid'], $arr)){
-			   $flag=1;	
+		//按钮按下 并且不是游客
+			if($bmbutton=='on' AND $this->DboperateCheckUser($openid)){
+                 $arr=$this->DboperateGetjob($openid, $oid);
+                 if($oid!=$openid){
+                  	if($arr AND in_array($ground['jobid'], $arr)){
+                  		echo "<script language='javascript'>
+					alert('o(*^＠^*)o你报过名了哦~');
+					</script>";
+                  	}
+                  	else{
+                  		$this->DboperateSurepostinfo($oid, $openid, $ground['jobid'], $ground['mount']);
+                  		echo "<script language='javascript'>
+					alert('O(∩_∩)O~~报名成功了!');
+					</script>";
+                  	}
+                 }
+                 else{
+                 	echo "<script language='javascript'>
+					alert('ლ(╹◡╹ლ)商家号不能参与报名哦~');
+					</script>";
+                 }
 			}
-			else if($arr){
-				$flag=2;
-			    $this->DboperateSurepostinfo($oid, $openid, $ground['jobid'], $ground['mount']);
+			else if ($bmbutton=='on' AND !$this->DboperateCheckUser($openid)){
+				echo "<script language='javascript'>
+					alert('(～￣▽￣)～先去个人中心完善信息哦!');
+					</script>";
 			}
-		}
-		else if(!$this->DboperateCheckUser($openid)){
-			$flag=3;
-		}
-		
 		include $this->template('details');
-	}
+		}
 	
 	
 	public function doMobilePtjorders() {
@@ -184,8 +207,21 @@ private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,
 	 * @return Ambigous <boolean, multitype:unknown >
 	 */
 private  function  DboperateSearchGroundinfo(){
-	
-	$ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground'),array(),'');
+	$ground=array();
+	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground'),array(),'');
+	foreach ($Ground as $k=>$v){
+		$exists=$this->DboperateGetIntworkers($v['jobid']);
+		$arr=array(
+			   'exists'=>$exists,
+				'title'=>$v['title'],
+				'content'=>$v['content'],
+				'mount'=>$v['mount'],
+				'salary'=>$v['salary'],
+				'date'=>$v['date'],
+				'openid'=>$v['openid'],
+		);
+		array_push($ground, $arr);
+	}
 	return $ground;
 }	
 /**
@@ -226,11 +262,60 @@ private function DboperateGetjob($wopenid,$oopenid){
 	}
 	return $arr;
 }
-	
-	
-	
-	
-	
-	
+/**
+ * 搜索广场
+ * @param string $info
+ * @return Ambigous <boolean, multitype:unknown >
+ */	
+private function  DboperateSearchGround($info){
+	$ground=array();
+	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti",array(':ti'=>$info),'');
+	foreach ($t as $k=>$v){
+		$exists=$this->DboperateGetIntworkers($v['jobid']);
+		$arr=array(
+				'exists'=>$exists,
+				'title'=>$v['title'],
+				'content'=>$v['content'],
+				'mount'=>$v['mount'],
+				'salary'=>$v['salary'],
+				'date'=>$v['date'],
+				'openid'=>$v['openid'],
+		);
+		array_push($ground, $arr);
+	}
+	return $ground;
+}
+/**
+ * 查找工作经历
+ * @param unknown $workeroid
+ * @return multitype:
+ */
+private function  DboperationSearchMyworkEx($workeroid){
+	$arr=array();
+	$T=pdo_fetchall("SELECT jobid,sure FROM".tablename('ptj_working')."WHERE workeroid=:woid",array(':woid'=>$workeroid));
+	//两表联查  重组数组
+    foreach($T as $k=>$v){
+    	$jobid=$v['jobid'];
+    	$T1=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$jobid));
+    	//结构化array
+        $Arr=array(
+        	'jobid'=>$jobid,
+        		'title'=>$T1['title'],
+        		'content'=>$T1['content'],
+        		'status'=>$v['sure'],
+        );
+        array_push($arr, $Arr);
+    }
+    return $arr;
+}	
+/**
+ * 现有工人数
+ * @param unknown $jobid
+ * @return boolean
+ */	
+private  function  DboperateGetIntworkers($jobid){
+	$C=pdo_fetch("SELECT COUNT(*) AS count FROM".tablename('ptj_working')."WHERE jobid=:jid",array(':jid'=>$jobid));
+	return $C['count'];
+}	
 	
 }

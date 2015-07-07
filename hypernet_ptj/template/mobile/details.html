@@ -48,83 +48,21 @@
 
 <div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px">
 
-{if $flag== 2}
   <div class="btn-group " role="group">
-    <a type="button"  class="btn btn-default btn btn-success" data-toggle="modal" data-target="#bmmodal" id="flag">我要报名</a>
+    <a type="button"  href="{php echo $this->createMobileUrl('Ptjdetails',array('button'=>'on','ground'=>$ground,'openid'=>$openid));}" class="btn btn-default btn btn-success" >我要报名</a>
   </div>
 
-{/if}
-{if $flag== 1}
-  <div class="btn-group " role="group">
-    <a type="button"  class="btn btn-default btn btn-success" data-toggle="modal" data-target="#bmmodalA" id="flag">我要报名</a>
-  </div>
-{/if}
-{if $flag== 0}
-  <div class="btn-group " role="group">
-    <a type="button"  class="btn btn-default btn btn-success" data-toggle="modal" data-target="#bmmodalC" id="flag">我要报名</a>
-  </div>
-{/if}
-{if $flag== 3}
-    <div class="btn-group " role="group">
-    <a type="button"  class="btn btn-default btn btn-success" data-toggle="modal" data-target="#bmmodalB" id="flag">我要报名</a>
-  </div>
-{/if}  
 
-  <div class="modal fade" id="bmmodalA" tabindex="-1" role="dialog" aria-labelledby="bmmodalLabel" style="margin-top:200px">
-  <div class="modal-dialog bmmodal">
-    <div class="modal-title">
-     <h3 class="text-danger" style="text-align:center ;">报&nbsp;名&nbsp;结&nbsp;果</h3>
-     <br/>
-     </div>
-    <div class="modal-content">
-     <p>图片预留地</p>
-     <h3 class="text-danger" style="text-align:center">￣へ￣你报过名了哦!</h3>
 
-    </div>
-  </div>
-</div>
+  
 
-  <div class="modal fade" id="bmmodalB" tabindex="-1" role="dialog" aria-labelledby="bmmodalLabel" style="margin-top:200px">
-  <div class="modal-dialog bmmodal">
-    <div class="modal-title">
-     <h3 class="text-danger" style="text-align:center ;">报&nbsp;名&nbsp;结&nbsp;果</h3>
-     <br/>
-     </div>
-    <div class="modal-content">
-     <p>图片预留地</p>
-     <h3 class="text-danger" style="text-align:center">(～￣▽￣)～ 客官,不要急,先去个人中心完善信息吧。。。</h3>
 
-    </div>
-  </div>
-</div>
 
-  <div class="modal fade" id="bmmodalC" tabindex="-1" role="dialog" aria-labelledby="bmmodalLabel" style="margin-top:200px">
-  <div class="modal-dialog bmmodal">
-    <div class="modal-title">
-     <h3 class="text-danger" style="text-align:center ;">报&nbsp;名&nbsp;结&nbsp;果</h3>
-     <br/>
-     </div>
-    <div class="modal-content">
-     <p>图片预留地</p>
-     <h3 class="text-danger" style="text-align:center">(～￣▽￣)～ 不不不 这是一种特殊情况。。。{$flag}</h3>
 
-    </div>
-  </div>
-</div>
 
-  <div class="modal fade" id="bmmodal" tabindex="-1" role="dialog" aria-labelledby="bmmodalLabel" style="margin-top:200px">
-  <div class="modal-dialog bmmodal">
-    <div class="modal-title">
-     <h3 class="text-danger" style="text-align:center ;">报&nbsp;名&nbsp;结&nbsp;果</h3>
-     <br/>
-     </div>
-    <div class="modal-content">
-     <p>图片预留地</p>
-     <h3 class="text-success" style="text-align:center" id="bmResult">O(∩_∩)O 报名成功啦!</h3>
 
-    </div>
-  </div>
-</div>
+
+
 
 
   <div class="btn-group danger" role="group">
@@ -183,8 +121,12 @@
 require(['jquery', 'util'], function($, util){
 	$(function(){
 		$('#flag').click(function(){
-			$.post("{php echo $this->createMobileUrl('Ptjdetails');}",{button:'on'});
-		});		
+			$.post("{php echo $this->createMobileUrl('Ptjdetails');}",{button:'on'},function(){
+				alert("回调成功");
+			});
+		}
+		);	
+
 	});
 });
 </script>

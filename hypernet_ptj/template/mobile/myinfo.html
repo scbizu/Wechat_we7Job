@@ -97,41 +97,21 @@
     <div style="background:#808A87 ;margin-top:-35px" >
 <h4 style="margin-top:-20px;"><span class="glyphicon glyphicon-star"></span>工作清单(完成后点击评价)</h4>
     </div>
+    {if $workerEx}
+    {loop $workerEx $k $v}
 <div class="list-group" style="margin-top:-8px">
   <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">工作标题</h4>
+    <h4 class="list-group-item-heading">{$v['title']}</h4>
+    {if $v['status']==1}
         <span class="badge" style="background:red">未完成</span>
-    <p class="list-group-item-text">工作内容</p>
+        {else}
+        <span class="badge" style="background:green">完成</span> 
+     {/if}   
+    <p class="list-group-item-text">{$v['content']}</p>
   </a>
 </div> 
-<div class="list-group" style="margin-top:-12px">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">工作标题</h4>
-        <span class="badge" style="background:green">完成</span>
-    <p class="list-group-item-text">工作内容</p>
-  </a>
-</div> 
-<div class="list-group" style="margin-top:-12px">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">工作标题</h4>
-        <span class="badge" style="background:red">未完成</span>
-    <p class="list-group-item-text">工作内容</p>
-  </a>
-</div> 
-<div class="list-group" style="margin-top:-12px">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">工作标题</h4>
-        <span class="badge" style="background:green">完成</span>
-    <p class="list-group-item-text">工作内容</p>
-  </a>
-</div> 
-<div class="list-group" style="margin-top:-12px">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">工作标题</h4>
-        <span class="badge" style="background:green">完成</span>
-    <p class="list-group-item-text">工作内容</p>
-  </a>
-</div> 
+{/loop}
+{/if}
 <br/>
 <br/>
 <br/>  
