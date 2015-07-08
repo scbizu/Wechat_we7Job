@@ -99,6 +99,7 @@
     </div>
     {if $workerEx}
     {loop $workerEx $k $v}
+        {if $v['status']==1}
 <div class="list-group" style="margin-top:-8px">
   <a href="#" class="list-group-item active">
     <h4 class="list-group-item-heading">{$v['title']}</h4>
@@ -110,6 +111,40 @@
     <p class="list-group-item-text">{$v['content']}</p>
   </a>
 </div> 
+{else}
+<div class="list-group" style="margin-top:-8px">
+  <a  class="list-group-item active" data-toggle="modal" data-target="#formmodal">
+    <h4 class="list-group-item-heading">{$v['title']}</h4>
+    {if $v['status']==1}
+        <span class="badge" style="background:red">未完成</span>
+        {else}
+        <span class="badge" style="background:green">完成</span> 
+     {/if}   
+    <p class="list-group-item-text">{$v['content']}</p>
+  </a>
+</div> 
+<div class="modal fade" id="formmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel"> <(￣ˇ￣)/我要翻身做主人!</h4>
+      </div>
+ <form action=" " method="post" class="form-horizontal">
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">评论写这里哦&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-hand-down"></span></label>
+            <input type="text" class="form-control" id="recipient-name" name="Ptjmyinfo[comm]" style="width:60%">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">怒戳评论!</button>
+      </div>
+ </form>
+    </div>
+  </div>
+</div>
+{/if}
 {/loop}
 {/if}
 <br/>
@@ -179,7 +214,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
       <ul class="nav navbar-nav"  >
-        <li><a href="{php echo $this->createMobileUrl('ptjindex');}">兼职广场</a></li>  
+        <li><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>兼职广场</a></li>  
       </ul>
   </div><!-- /.container-fluid -->
   
@@ -189,7 +224,7 @@
   <div class="container-fluid" style="width:60%">
     <!-- Collect the nav links, forms, and other content for toggling -->
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#"><span class="sr-only"></span>个人中心</a></li>  
+        <li class="active"><a href="#"><span class="sr-only"></span><span class="glyphicon glyphicon-user"></span>个人中心</a></li>  
       </ul>
   </div><!-- /.container-fluid -->
 </nav>

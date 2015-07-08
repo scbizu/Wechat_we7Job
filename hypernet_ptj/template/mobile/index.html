@@ -14,7 +14,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
 
       <ul class="nav navbar-nav"  >
-        <li class="active"><a href="#"> <span class="sr-only"></span>兼职广场</a></li>  
+        <li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> <span class="sr-only"></span>兼职广场</a></li>  
       </ul>
   </div><!-- /.container-fluid -->
   
@@ -27,7 +27,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
 
       <ul class="nav navbar-nav"  >
-        <li><a href="{php echo $this->createMobileUrl('ptjindex');}">兼职广场</a></li>  
+        <li><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>兼职广场</a></li>  
       </ul>
   </div><!-- /.container-fluid -->
   
@@ -39,7 +39,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
       <ul class="nav navbar-nav">
-        <li><a href="{php echo $this->createMobileUrl('ptjmyinfo');}">个人中心</a></li>  
+        <li><a href="{php echo $this->createMobileUrl('ptjmyinfo');}"><span class="glyphicon glyphicon-user"></span>个人中心</a></li>  
       </ul>
   </div><!-- /.container-fluid --> 
 </nav>
@@ -64,9 +64,9 @@
    <div class="container-fluid">
 
       <ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#">薪资排序</a></li>
-  <li role="presentation"><a href="#">时长排序</a></li>
-  <li role="presentation"><a href="#">商家排序</a></li>
+  <li role="presentation"><a href="{php echo $this->createMobileUrl('ptjindex',array('salarybtn'=>'on'));}"><span class="glyphicon glyphicon-hand-down"></span>&nbsp;&nbsp;&nbsp;薪资排序</a></li>
+  <li role="presentation"><a href="{php echo $this->createMobileUrl('ptjindex',array('timebtn'=>'on'));}"><span class="glyphicon glyphicon-filter"></span>&nbsp;&nbsp;&nbsp;时长排序</a></li>
+  <li role="presentation"><a href="{php echo $this->createMobileUrl('ptjindex',array('ownerbtn'=>'on'));}"><span class="glyphicon glyphicon-globe"></span>&nbsp;&nbsp;&nbsp;商家排序</a></li>
       </ul>
             
   </div>

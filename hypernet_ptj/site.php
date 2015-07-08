@@ -13,14 +13,35 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		//这个操作被定义用来呈现 功能封面
 		global  $_W,$_GPC;
 		//查看广场
-		$ground=$this->DboperateSearchGroundinfo();
-	
+		if($_GPC['salarybtn']){
+			$ground=$this->DboperateSorybysalary();
+		}
+		else if($_GPC['timebtn']){
+			$ground=$this->DboperateSortbytime();
+		}
+		else if($_GPC['ownerbtn']){
+			$ground=$this->DboperateSortbyownerid();
+		}
+		else {
+			$ground=$this->DboperateSearchGroundinfo();
+		
+		}
+
 		$searchinfo=$_GPC['Ptjindex']['Search'];
         if($searchinfo){
-        	$searchinfo=$this->DboperateSearchGround($searchinfo);
+        	if($_GPC['salarybtn']){
+		         $searchinfo=$this->DboperateSearchGround($searchinfo,1,0,0);
+	}
+	        else if($_GPC['timebtn']){
+	           	$searchinfo=$this->DboperateSearchGround($searchinfo,FALSE,TRUE,FALSE);
+	}
+	        else if($_GPC['ownerbtn']){
+	          	$searchinfo=$this->DboperateSearchGround($searchinfo,FALSE,FALSE,TRUE);
+	}
+	   else {
+	     	$searchinfo=$this->DboperateSearchGround($searchinfo);
         }
-        
-
+        }
 
 
 		
@@ -38,9 +59,8 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 	public function doMobilePtjmyinfo() {
 		//这个操作被定义用来呈现 微站个人中心导航
 			global $_W, $_GPC;
-		
 
-		
+			
 		load()->model('mc');
 
 		$avatar = '';
@@ -76,6 +96,10 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		} else {
 			$src=$avatar;
 		}
+		
+		
+///////////////////////////////调用 mc  结束///////////////////////////////////		
+		
 		//if user
 		$profile=$_GPC['Ptjmyinfo'];
 		$name=$profile['Name'];
@@ -93,9 +117,24 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		$user=$this->DboperateSearchUser($openid);
 		$isworker=$user['identity']=='worker'?1:0;
 		//YES 兼职
+		    //更新信息
+		//获取当前时间
+		$now=date("y-m-d");
+		    $work=$this->DboperationSearchMyworkEx($openid);
+		    foreach ($work as $k=>$v){	    	
+		    	$this->Dboperatechecktime($v['jobid'], $now, $openid);
+		    	//准备接收评论
+		    	$comment=$profile['comm'];
+		    	if($comment AND $v['status']){
+		    		$this->Dboperatepushcomment($comment, $v['jobid'], $openid);
+		    	
+		    	}
+		    }
+
 		   $workerEx=$this->DboperationSearchMyworkEx($openid);
 		
-		
+
+		   
 		//NO 商家
 		 $title=$profile['Worktitle'];  
 		$content=$profile['Workdetail'];
@@ -111,14 +150,10 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		}
 		include $this->template('myinfo');
 	}
-	
+
 	public function doMobilePtjdetails(){
 		
 		global $_W,$_GPC;
-		
-		//echo urlencode('http://trade.koudaitong.com');
-        $flag=0;
-		
 		$openid=$_W['openid'];
 		
 		$ground=$_GPC['ground'];
@@ -154,6 +189,8 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 					alert('(～￣▽￣)～先去个人中心完善信息哦!');
 					</script>";
 			}
+			$info=$this->Dboperateshowcomment($ground['jobid']);
+			
 		include $this->template('details');
 		}
 	
@@ -174,7 +211,6 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,$iden){
 	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0));
   	return $T;
-	
 }	
 	
 /**
@@ -213,6 +249,7 @@ private  function  DboperateSearchGroundinfo(){
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
 		$arr=array(
 			   'exists'=>$exists,
+				'jobid'=>$v['jobid'],
 				'title'=>$v['title'],
 				'content'=>$v['content'],
 				'mount'=>$v['mount'],
@@ -267,13 +304,25 @@ private function DboperateGetjob($wopenid,$oopenid){
  * @param string $info
  * @return Ambigous <boolean, multitype:unknown >
  */	
-private function  DboperateSearchGround($info){
+private function  DboperateSearchGround($info,$salary,$time,$owner){
 	$ground=array();
-	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti",array(':ti'=>$info),'');
+	if($salary){
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti ORDER BY salary DESC",array(':ti'=>$info),'');
+	}
+	else if($time){
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti ORDER BY date ",array(':ti'=>$info),'');
+	}
+	else if($owner){
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti ORDER BY openid DESC",array(':ti'=>$info),'');
+	}
+	else {
+	    $t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti",array(':ti'=>$info),'');
+	}
 	foreach ($t as $k=>$v){
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
 		$arr=array(
 				'exists'=>$exists,
+				'jobid'=>$v['jobid'],
 				'title'=>$v['title'],
 				'content'=>$v['content'],
 				'mount'=>$v['mount'],
@@ -317,5 +366,108 @@ private  function  DboperateGetIntworkers($jobid){
 	$C=pdo_fetch("SELECT COUNT(*) AS count FROM".tablename('ptj_working')."WHERE jobid=:jid",array(':jid'=>$jobid));
 	return $C['count'];
 }	
-	
+/**
+ * 广场的薪资排序
+ * @return Ambigous <boolean, multitype:unknown >
+ */
+private function DboperateSorybysalary(){
+	$ground=array();
+	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."ORDER BY salary DESC",array(),'');
+	foreach ($t as $k=>$v){
+		$exists=$this->DboperateGetIntworkers($v['jobid']);
+		$arr=array(
+			   'exists'=>$exists,
+				'jobid'=>$v['jobid'],
+				'title'=>$v['title'],
+				'content'=>$v['content'],
+				'mount'=>$v['mount'],
+				'salary'=>$v['salary'],
+				'date'=>$v['date'],
+				'openid'=>$v['openid'],
+		);
+		array_push($ground, $arr);
+	}
+	return $ground;
+}
+/**
+ * 广场的时间排序
+ * @return Ambigous <boolean, multitype:unknown >
+ */
+private  function  DboperateSortbytime(){
+	$ground=array();
+	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."ORDER BY date ",array(),'');
+	foreach ($t as $k=>$v){
+		$exists=$this->DboperateGetIntworkers($v['jobid']);
+		$arr=array(
+				'exists'=>$exists,
+				'jobid'=>$v['jobid'],
+				'title'=>$v['title'],
+				'content'=>$v['content'],
+				'mount'=>$v['mount'],
+				'salary'=>$v['salary'],
+				'date'=>$v['date'],
+				'openid'=>$v['openid'],
+		);
+		array_push($ground, $arr);
+	}
+	return $ground;
+}
+/**
+ * 广场的商家排序
+ * @return Ambigous <boolean, multitype:unknown >
+ */
+private function DboperateSortbyownerid(){
+	$ground=array();
+	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."ORDER BY openid DESC",array(),'');
+	foreach ($t as $k=>$v){
+		$exists=$this->DboperateGetIntworkers($v['jobid']);
+		$arr=array(
+				'exists'=>$exists,
+				'jobid'=>$v['jobid'],
+				'title'=>$v['title'],
+				'content'=>$v['content'],
+				'mount'=>$v['mount'],
+				'salary'=>$v['salary'],
+				'date'=>$v['date'],
+				'openid'=>$v['openid'],
+		);
+		array_push($ground, $arr);
+	}
+	return $ground;
+}
+/**
+ * 检查合同是否到期
+ * @param unknown $jobid
+ * @param unknown $now
+ * @param unknown $openid
+ * @return Ambigous <boolean, unknown>
+ */
+private function Dboperatechecktime($jobid,$now,$openid){
+	$jobtime=pdo_fetch("select date FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$jobid));
+	if(strtotime($jobtime['date'])<=strtotime($now)){
+		$i=pdo_update('ptj_working',array('sure'=>0,'visible'=>0),array('workeroid'=>$openid,'jobid'=>$jobid));	
+	}
+	return $i;
+}
+/**
+ * 提交评论
+ * @param unknown $comment
+ * @param unknown $jobid
+ * @param unknown $workeroid
+ * @return Ambigous <boolean, unknown>
+ */
+private function Dboperatepushcomment($comment,$jobid,$workeroid){
+	$T=pdo_insert('ptj_comment',array('jobid'=>$jobid,'comment'=>$comment,'workerid'=>$workeroid));
+	return $T;
+}
+/**
+ * 拉去评论
+ * @param unknown $jobid
+ * @return Ambigous <boolean, multitype:unknown >
+ */
+private function Dboperateshowcomment($jobid){
+     $info=pdo_fetchall("SELECT * FROM".tablename('ptj_comment')."WHERE jobid=:jid",array(':jid'=>$jobid),'');
+     return $info; 	
+}
+
 }

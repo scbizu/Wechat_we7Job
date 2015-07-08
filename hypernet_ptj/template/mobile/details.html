@@ -10,7 +10,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
       <ul class="nav navbar-nav"  >
-        <li><a href="{php echo $this->createMobileUrl('ptjindex');}">兼职广场</a></li>  
+        <li><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>兼职广场</a></li>  
       </ul>
   </div><!-- /.container-fluid -->
   
@@ -22,7 +22,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
       <ul class="nav navbar-nav">
-        <li><a href="{php echo $this->createMobileUrl('ptjmyinfo');}">个人中心</a></li>  
+        <li><a href="{php echo $this->createMobileUrl('ptjmyinfo');}"><span class="glyphicon glyphicon-user"></span>个人中心</a></li>  
       </ul>
   </div><!-- /.container-fluid --> 
 </nav>
@@ -92,26 +92,13 @@
 <h5 style="margin-left:5%"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;&nbsp;<mark>评论区</mark></h5>
 </div>
 </nav>
+{loop $info $k $v}
 <div class="list-group" style="margin-top:-5%">
   <a href="#" class="list-group-item active" >
-    <p class="list-group-item-text">Main infomation</p>
+    <p class="list-group-item-text"><span class="glyphicon glyphicon-bullhorn"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$v['comment']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;&nbsp;&nbsp;{$v['workerid']}</p>
     </a>
 </div>
-<div class="list-group" style="margin-top:-5%">
-  <a href="#" class="list-group-item active" >
-    <p class="list-group-item-text">Main infomation</p>
-    </a>
-</div>
-<div class="list-group" style="margin-top:-5%">
-  <a href="#" class="list-group-item active" >
-    <p class="list-group-item-text">Main infomation</p>
-    </a>
-</div>
-<div class="list-group" style="margin-top:-5%">
-  <a href="#" class="list-group-item active" >
-    <p class="list-group-item-text">Main infomation</p>
-    </a>
-</div>
+{/loop}
 <br/>
 <br/>
 <br/>
