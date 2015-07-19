@@ -58,11 +58,12 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 	}
 	public function doMobilePtjmyinfo() {
 		//这个操作被定义用来呈现 微站个人中心导航
-			global $_W, $_GPC;
+		
+			global $_W,$_GPC;
 
 			
 		load()->model('mc');
-
+        load()->func('tpl');
 		$avatar = '';
 		$openid=$_W['openid'];
 		$count=0;
@@ -108,6 +109,7 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		$sex=$profile['Sex'];
 		$iden=$profile['identity'];
 		if($name AND $phone AND $location AND $sex AND $iden){
+			
 			$this->DboperateInsertIntoProfile($openid, $name, $phone, $sex, $location, $iden);
 			$url=$this->createMobileUrl('ptjmyinfo');
 			echo "<script language='javascript'>
@@ -136,18 +138,44 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 
 		   
 		//NO 商家
-		 $title=$profile['Worktitle'];  
+		$myworkerbtn=$_GPC['myworkerbtn'];
+		if($myworkerbtn){
+			$myworker=$this->DboperateGetworkerinfo($openid);
+			if($_GPC['undowker']&&$_GPC['jobid']){
+			
+                 $undo=$this->DboperateUndoWanna($_GPC['jobid']);
+                 $url=$this->createMobileUrl('ptjmyinfo',array('myworkerbtn'=>'on'));
+                 echo "<script language='javascript'>
+                 alert('哇!!你的一条招募令消失了~~');
+                 </script>";
+                 echo "<script language='javascript'>
+                 location.href=\"$url\";
+                 </script>";
+
+			}
+		}
+		$workmanbtn=$_GPC['workmanbtn'];
+		if($workmanbtn){
+		   $workmaninfo=$this->DboperateFindWk($openid);	
+		}
+		
+		$mypost=$_GPC['mypost'];
+		   //post info
+		$title=$profile['Worktitle'];  
+		
 		$content=$profile['Workdetail'];
 		$salary=$profile['Worksalary'];
 		$mount=$profile['Workmount'];
 		$date=$profile['Workdate'];
 		if($title AND $content AND $salary AND $mount AND $date){
-		  $this->DboperateInsertGroundInfo($openid, $title, $content, $salary, $mount, $date);
+			$jobid=substr(md5(substr(time(), 4,8)),4,9);
+		  $this->DboperateInsertGroundInfo($openid,$jobid, $title, $content, $salary, $mount, $date);
 		  $url=$this->createMobileUrl('ptjmyinfo');
 		  echo "<script language='javascript'>
 		  location.href=\"$url\";
 		  </script>";
 		}
+		
 		include $this->template('myinfo');
 	}
 
@@ -209,7 +237,7 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 	 * @return Ambigous <boolean, unknown>
 	 */
 private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,$iden){
-	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0));
+	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0,'sex'=>$sex));
   	return $T;
 }	
 	
@@ -233,9 +261,9 @@ private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,
 	 * @param unknown $date
 	 * @return Ambigous <boolean, unknown>
 	 */
-	private function DboperateInsertGroundInfo($openid,$title,$content,$salary,$mount,$date){
+	private function DboperateInsertGroundInfo($openid,$jobid,$title,$content,$salary,$mount,$date){
 		
-		$t=pdo_insert('ptj_ground',array('title'=>$title,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date,'openid'=>$openid));
+		$t=pdo_insert('ptj_ground',array('title'=>$title,'jobid'=>$jobid,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date,'openid'=>$openid));
 		return $t;
 	}
 	/**
@@ -461,13 +489,71 @@ private function Dboperatepushcomment($comment,$jobid,$workeroid){
 	return $T;
 }
 /**
- * 拉去评论
+ * 拉取评论
  * @param unknown $jobid
  * @return Ambigous <boolean, multitype:unknown >
  */
 private function Dboperateshowcomment($jobid){
      $info=pdo_fetchall("SELECT * FROM".tablename('ptj_comment')."WHERE jobid=:jid",array(':jid'=>$jobid),'');
      return $info; 	
+}
+/**
+ * 获取招募信息
+ * @param unknown $openid
+ * @return Ambigous <boolean, multitype:unknown >
+ */
+private function DboperateGetworkerinfo($openid){
+	$ground=array();
+	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE openid=:oid",array(':oid'=>$openid),'');
+	foreach ($Ground as $k=>$v){
+		$exists=$this->DboperateGetIntworkers($v['jobid']);
+		$arr=array(
+			   'exists'=>$exists,
+				'jobid'=>$v['jobid'],
+				'title'=>$v['title'],
+				'content'=>$v['content'],
+				'mount'=>$v['mount'],
+				'salary'=>$v['salary'],
+				'date'=>$v['date'],
+				'openid'=>$v['openid'],
+		);
+		array_push($ground, $arr);
+	}
+	return $ground;
+}
+/**
+ * 撤销招募令
+ * @param unknown $jobid
+ * @return Ambigous <boolean, unknown>
+ */
+private function DboperateUndoWanna($jobid){
+	$t=pdo_delete('ptj_working',array('jobid'=>$jobid));
+
+	$t1=pdo_delete('ptj_ground',array('jobid'=>$jobid));
+
+   return $t+$t1;
+}
+/**
+ * 查看工人简历
+ * @param unknown $ownerid
+ * @return multitype:
+ */
+private function DboperateFindWk($ownerid){
+	$Allarray=array();
+	$info=pdo_fetchall("SELECT * FROM".tablename('ptj_working')."WHERE owneroid=:oid and sure=:su",array(':oid'=>$ownerid,':su'=>1),'');
+	foreach ($info as $k=>$v){
+		 $winfo=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array(':oid'=>$v['workeroid']));
+		 $speinfo=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$v['jobid']));
+		 $wkinfo=array(
+		 	'wkinfo'=>$speinfo['title'],
+		 		'wkphone'=>$winfo['phone'],
+		 		'wksex'=>$winfo['sex'],
+		 		'wkname'=>$winfo['name'],
+		 		'wklocation'=>$winfo['location']
+		 );
+		 array_push($Allarray, $wkinfo);
+	}
+	return $Allarray;
 }
 
 }

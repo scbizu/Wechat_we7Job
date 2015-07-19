@@ -3,6 +3,9 @@
     <link href="{$_W['siteroot']}app/resource/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
     <link href="http://libs.baidu.com//bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
+
+
+
 <nav class="navbar navbar-default navbar-fixed-top" style="background:orange">
    <div class="container-fluid">
       <ul class="nav navbar-nav" style="text-align:center">
@@ -55,8 +58,8 @@
     <label for="Sex" class="col-sm-2 control-label">性别</label>
        <div class="col-sm-10">
  <select class="form-control" name="Ptjmyinfo[Sex]" >
- <option value="man">男</option>
- <option value="woman">女</option>
+ <option value="男">男</option>
+ <option value="女">女</option>
  </select>
     </div>
 </div>
@@ -152,8 +155,21 @@
 <br/>  
 {else}
   <!-- 是商家 -->
-
-  <form action=" " method="post" class="form-horizontal" style="width:60%">
+{if !$myworkerbtn AND !$workmanbtn}
+  <form action=" " method="post" class="form-horizontal" style="margin-top:-20px">
+  <div class="btn-group-vertical" role="group" style="background-color:grey;width:30%">
+  <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;招募兼职</a>
+  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('myworkerbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">我的招募</a>
+<a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('workmanbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">现有工人</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
+</div>
+<div style="width:60%;margin-left:38%;margin-top:-88%">
     <div class="form-group">
     <label for="Phone" class="col-sm-2 control-label">工作标题</label>
        <div class="col-sm-10">
@@ -178,21 +194,89 @@
     <input type="text" class="form-control" name="Ptjmyinfo[Workmount]" placeholder="请输入提供此工作所招聘人数"/>
     </div>
     </div>  
-            <div class="form-group">
-                <label for="dtp_input1" class="col-md-2 control-label">工作截止日期</label>
-                <div class="input-group date form_datetime col-md-5" data-date="2015-09-01" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1">
-                    <input class="form-control" size="16" type="text" value=""  name="Ptjmyinfo[Workdate]"  readonly>
-					<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                </div>
-				<input type="hidden" id="dtp_input1" value="" /><br/>
-            </div>   
+            <div class="form-group" style="margin-left:2px">
+                <label for="dtp_input1" class="col-md-2 control-label" style="margin-left:-14px">工作截止日期</label>
+                {php echo tpl_form_field_date('Ptjmyinfo[Workdate]');}
+            </div>
      	<div class="form-group">
 		<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
 			<input name="submit" type="submit" value="发布招募令" class="btn btn-primary" />
 		</div>
-	</div>       
-            
+		</div>
+	</div>                   
   </form>
+{/if}
+{if $myworkerbtn}
+<div style="margin-top:-20px;">
+    <div class="btn-group-vertical" role="group" style="background-color:grey;width:30%">
+  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('mypost'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">招募兼职</a>
+  <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;我的招募</a>
+<a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('workmanbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">现有工人</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
+</div>
+<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-88%">
+<table class="table table-striped">
+<tr class="success">
+ <th>招募令编号</th>
+ <th>招募内容</th>
+ <th>招募情况</th>
+ <th>招募控制</th>
+</tr>
+{loop $myworker $k $v}
+<tr>
+ <td>{$v['jobid']}</td>
+ <td>{$v['title']}</td>
+ <td>{$v['exists']}/{$v['mount']}</td>
+ <td>
+ <!--a type="button" class="btn btn-danger" href="{php echo $this->createMobileUrl('ptjmyinfo',array('jobid'=>$v['jobid'],'undowker'=>'on','myworkerbtn'=>'on'));}" onclick="confirm_disp()">撤销招募</a-->
+ <a type="button" class="btn btn-danger" href="{php echo $this->createMobileUrl('ptjmyinfo',array('jobid'=>$v['jobid'],'undowker'=>'on','myworkerbtn'=>'on'));}">撤销招募</a>
+ </td>
+</tr>
+{/loop}
+</table> 
+</div>
+</div>
+{/if}
+{if $workmanbtn}
+<div style="margin-top:-20px;">
+    <div class="btn-group-vertical" role="group" style="background-color:grey;width:30%">
+  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('mypost'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">招募兼职</a>
+  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('myworkerbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">我的招募</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;现有工人</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
+<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
+</div>
+<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-88%">
+<table class="table table-striped">
+<tr class="success">
+ <th>姓名</th>
+ <th>性别</th>
+ <th>联系方式</th>
+ <th>工作内容</th>
+</tr>
+{loop $workmaninfo $k $v}
+<tr>
+   <td>{$v['wkname']}</td>
+   <td>{$v['wksex']}</td>
+   <td>{$v['wkphone']}</td>
+   <td>{$v['wkinfo']}</td>   
+</tr>
+{/loop}
+</table>
+</div>
+</div>
+{/if}
 <br/>
 <br/>
 <br/>
@@ -229,56 +313,21 @@
   </div><!-- /.container-fluid -->
 </nav>
 {/if}
-<script type="text/javascript" src="{$_W['siteroot']}app/resource/js/lib/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-<script type="text/javascript" src="{$_W['siteroot']}app/resource/js/lib/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.js"></script>
 <script type="text/javascript">
-
-function refresh(){
-	　　url = location.href;    //把当前页面的地址赋给变量 url
-	　　var times = url.split("&");      //分切变量 url 分隔符号为 "&"
-	　　if(times[times.length-1] != 'fresh')
-	    {        //如果?后的值不等于1表示没有刷新
-	　　url += "&fresh";           //把变量 url 的值加入&fresh
-	　　self.location.replace(url);         //刷新页面
-	　　}
-	　　}
-
-    $('.form_datetime').datetimepicker({
-        //language:  'fr',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		forceParse: 0,
-        showMeridian: 1
-    });
-   
-	$('.form_date').datetimepicker({
-        language:  'fr',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		minView: 2,
-		forceParse: 0
-    });
-	$('.form_time').datetimepicker({
-        language:  'fr',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 1,
-		minView: 0,
-		maxView: 1,
-		forceParse: 0
-    });
-	
+function confirm_disp(){
+	     var r=confirm("真的要撤销咩/(ㄒoㄒ)/~~")
+	     
+	    if(r==true){
+	      location.href="{php echo $this->createMobileUrl('ptjmyinfo',array('undowker'=>'on','myworkerbtn'=>'on'));}"
+	      //尝试post
+	    }   
+	    else{
+	    	return false;
+	    }
+}
 </script>
-
 </html>
 
 
