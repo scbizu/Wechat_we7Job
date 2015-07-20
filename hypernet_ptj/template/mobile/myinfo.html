@@ -1,11 +1,7 @@
 {template 'common/header'}
-<html>
-    <link href="{$_W['siteroot']}app/resource/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<html> 
     <link href="http://libs.baidu.com//bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-
-
-
-
+    
 <nav class="navbar navbar-default navbar-fixed-top" style="background:orange">
    <div class="container-fluid">
       <ul class="nav navbar-nav" style="text-align:center">
@@ -14,20 +10,39 @@
   </div>
 </nav>
 
+<nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
+  <div class="container-fluid" style="width:70%">
+    <!-- Brand and toggle get grouped for better mobile display -->
 
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <ul class="nav navbar-nav"  >
+        <li><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>兼职广场</a></li>  
+      </ul>
+  </div><!-- /.container-fluid -->
+  
+</nav>
 
-<div class="jumbotron" >
+<nav class="navbar navbar-default navbar-fixed-bottom" style="margin-left:50%">
+  <div class="container-fluid" style="width:70%">
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#"><span class="sr-only"></span><span class="glyphicon glyphicon-user"></span>个人中心</a></li>  
+      </ul>
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="jumbotron" style="width:100%" >
 <div class="row" style="margin-top:30%">
   <div class="col-xs-6 col-md-3">
       <img src="{php echo $src}" style="width:90px; height:90px; border-radius:50px; ">
   </div>
 </div>
-<div style="margin-left:60%;margin-top:-130px">
+<div style="margin-left:50%;margin-top:-130px">
 <p class="text-danger">微信号</p>
-<p><mark>{$openid}</mark></p>
+<p><mark>{$nickname}</mark></p>
 </div>
 
-<div style="margin-left:60%;margin-top:5%" >
+<div style="margin-left:50%;margin-top:5%" >
 <p class="text-danger">积分</p>
 <p><mark>{$count}</mark></p>
 </div>
@@ -39,25 +54,25 @@
 
 <!-- form  -->
 <!-- Name -->
-<form action=" " method="post" class="form-horizontal" style="width:60%;margin-top:0%">
+<form action=" " method="post" class="table-horizontal" style="width:85%;margin-left:7%">
 <div class="form-group">
-    <label for="Name" class="col-sm-2 control-label">姓名</label>
-       <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Name]" placeholder="求职者写姓名,商家写店铺地址"/>
+     <label for="Name" class="col-sm-2 control-label">姓名</label>
+     <div class="col-sm-10">
+    <input type="text" class="form-control" name="Ptjmyinfo[Name]"  id="Name" placeholder="求职者写姓名,商家写店铺地址"/>
     </div>
 </div>
 <!-- phone -->
 <div class="form-group">
     <label for="Phone" class="col-sm-2 control-label">联系方式</label>
        <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Phone]" placeholder="请输入您的联系方式"/>
+    <input type="text" class="form-control" name="Ptjmyinfo[Phone]" id="Phone" placeholder="请输入您的联系方式"/>
     </div>
 </div>
 <!-- sex -->
 <div class="form-group">
     <label for="Sex" class="col-sm-2 control-label">性别</label>
        <div class="col-sm-10">
- <select class="form-control" name="Ptjmyinfo[Sex]" >
+ <select class="form-control" name="Ptjmyinfo[Sex]" id="Sex">
  <option value="男">男</option>
  <option value="女">女</option>
  </select>
@@ -65,16 +80,16 @@
 </div>
 <!-- location -->
 <div class="form-group">
-    <label for="Sex" class="col-sm-2 control-label">坐标</label>
+    <label for="Location" class="col-sm-2 control-label">坐标</label>
        <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Location]" placeholder="求职者写住址,商家填入店铺所在地"/>
+    <input type="text" class="form-control" name="Ptjmyinfo[Location]" id="Location" placeholder="求职者写住址,商家填入店铺所在地"/>
     </div>
 </div>
 <!-- 身份信息  初始化信息 -->
 <div class="form-group">
-    <label for="Sex" class="col-sm-2 control-label">身份</label>
+    <label for="Id" class="col-sm-2 control-label">身份</label>
        <div class="col-sm-10">
- <select class="form-control" name="Ptjmyinfo[identity]" >
+ <select class="form-control" name="Ptjmyinfo[identity]" id="Id">
  <option value="owner">商家</option>
  <option value="worker">求职者</option>
  </select>
@@ -157,7 +172,7 @@
   <!-- 是商家 -->
 {if !$myworkerbtn AND !$workmanbtn}
   <form action=" " method="post" class="form-horizontal" style="margin-top:-20px">
-  <div class="btn-group-vertical" role="group" style="background-color:grey;width:30%">
+  <div class="btn-group-vertical" role="group" style="background-color:grey;width:36%">
   <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;招募兼职</a>
   <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('myworkerbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">我的招募</a>
 <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('workmanbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">现有工人</a>
@@ -169,7 +184,7 @@
 <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
 <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
 </div>
-<div style="width:60%;margin-left:38%;margin-top:-88%">
+<div style="width:60%;margin-left:38%;margin-top:-118%">
     <div class="form-group">
     <label for="Phone" class="col-sm-2 control-label">工作标题</label>
        <div class="col-sm-10">
@@ -208,7 +223,7 @@
 {/if}
 {if $myworkerbtn}
 <div style="margin-top:-20px;">
-    <div class="btn-group-vertical" role="group" style="background-color:grey;width:30%">
+    <div class="btn-group-vertical" role="group" style="background-color:grey;width:36%">
   <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('mypost'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">招募兼职</a>
   <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;我的招募</a>
 <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('workmanbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">现有工人</a>
@@ -220,7 +235,7 @@
 <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
 <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
 </div>
-<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-88%">
+<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-118%">
 <table class="table table-striped">
 <tr class="success">
  <th>招募令编号</th>
@@ -242,10 +257,26 @@
 </table> 
 </div>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 {/if}
 {if $workmanbtn}
 <div style="margin-top:-20px;">
-    <div class="btn-group-vertical" role="group" style="background-color:grey;width:30%">
+    <div class="btn-group-vertical" role="group" style="background-color:grey;width:36%">
   <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('mypost'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">招募兼职</a>
   <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('myworkerbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">我的招募</a>
 <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;现有工人</a>
@@ -257,7 +288,7 @@
 <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
 <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
 </div>
-<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-88%">
+<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-118%">
 <table class="table table-striped">
 <tr class="success">
  <th>姓名</th>
@@ -276,6 +307,16 @@
 </table>
 </div>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 {/if}
 <br/>
 <br/>
@@ -292,26 +333,7 @@
 
 
 
-<nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
-  <div class="container-fluid" style="width:60%">
-    <!-- Brand and toggle get grouped for better mobile display -->
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-      <ul class="nav navbar-nav"  >
-        <li><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>兼职广场</a></li>  
-      </ul>
-  </div><!-- /.container-fluid -->
-  
-</nav>
-
-<nav class="navbar navbar-default navbar-fixed-bottom" style="margin-left:50%">
-  <div class="container-fluid" style="width:60%">
-    <!-- Collect the nav links, forms, and other content for toggling -->
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#"><span class="sr-only"></span><span class="glyphicon glyphicon-user"></span>个人中心</a></li>  
-      </ul>
-  </div><!-- /.container-fluid -->
-</nav>
 {/if}
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src="http://libs.baidu.com/jquery/1.11.1/jquery.js"></script>

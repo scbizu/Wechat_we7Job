@@ -7,7 +7,7 @@
  */
 defined('IN_IA') or exit('Access Denied');
 
-class Hypernet_PTJModule extends WeModule {
+class hypernet_iptjModule extends WeModule {
 	public function fieldsFormDisplay($rid = 0) {
 		//要嵌入规则编辑页的自定义内容，这里 $rid 为对应的规则编号，新增时为 0
 	}

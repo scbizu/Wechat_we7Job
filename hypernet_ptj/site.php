@@ -7,7 +7,7 @@
  */
 defined('IN_IA') or exit('Access Denied');
 
-class Hypernet_PTJModuleSite extends WeModuleSite {
+class hypernet_iptjModuleSite extends WeModuleSite {
 
 	public function doMobilePtjindex() {
 		//这个操作被定义用来呈现 功能封面
@@ -49,9 +49,14 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 	}
 	public function doWebPtjrules() {
 		//这个操作被定义用来呈现 规则列表
+		global  $_W,$_GPC;
 	}
 	public function doWebPtjadmin() {
 		//这个操作被定义用来呈现 管理中心导航菜单
+		global $_W,$_GPC;
+		$openid='';
+       $arr=$this->SendTpl($openid);
+		include $this->template('Admin');
 	}
 	public function doMobilePtjlink() {
 		//这个操作被定义用来呈现 微站首页导航图标
@@ -68,12 +73,14 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		$openid=$_W['openid'];
 		$count=0;
 		
-
-		
+                $uid=$_W['member']['uid'];
+//		$nickname=$_W['member']['nickname'];
 		if (!empty($_W['member']['uid'])) {
-			$member = mc_fetch(intval($_W['member']['uid']), array('avatar'));
+			$member = mc_fetch(intval($_W['member']['uid']), array('avatar','nickname'));
+//var_dump($member);
 			if (!empty($member)) {
 				$avatar = $member['avatar'];
+                                $nickname=$member['nickname'];
 			}
 		}
 		if (empty($avatar)) {
@@ -84,8 +91,10 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
 		}
 		if (empty($avatar)) {
 			$userinfo = mc_oauth_userinfo();
+                           var_dump($userinfo);
 			if (!is_error($userinfo) && !empty($userinfo) && is_array($userinfo) && !empty($userinfo['avatar'])) {
 				$avatar = $userinfo['avatar'];
+                                 $nickname=$userinfo['nickname'];
 			}
 		}
 		if (empty($avatar) && !empty($_W['member']['uid'])) {
@@ -201,6 +210,7 @@ class Hypernet_PTJModuleSite extends WeModuleSite {
                   	}
                   	else{
                   		$this->DboperateSurepostinfo($oid, $openid, $ground['jobid'], $ground['mount']);
+                  		$this->SendTpl($openid,$Ownerinfo);
                   		echo "<script language='javascript'>
 					alert('O(∩_∩)O~~报名成功了!');
 					</script>";
@@ -263,7 +273,7 @@ private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,
 	 */
 	private function DboperateInsertGroundInfo($openid,$jobid,$title,$content,$salary,$mount,$date){
 		
-		$t=pdo_insert('ptj_ground',array('title'=>$title,'jobid'=>$jobid,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date,'openid'=>$openid));
+		$t=pdo_insert('ptj_ground',array('title'=>$title,'jobid'=>$jobid,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date,'openid'=>$openid,'visible'=>1));
 		return $t;
 	}
 	/**
@@ -272,9 +282,10 @@ private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,
 	 */
 private  function  DboperateSearchGroundinfo(){
 	$ground=array();
-	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground'),array(),'');
+	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi",array(':vi'=>1),'');
 	foreach ($Ground as $k=>$v){
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
+		if($exists<$v['mount']){
 		$arr=array(
 			   'exists'=>$exists,
 				'jobid'=>$v['jobid'],
@@ -286,6 +297,10 @@ private  function  DboperateSearchGroundinfo(){
 				'openid'=>$v['openid'],
 		);
 		array_push($ground, $arr);
+	}
+	else{
+		pdo_update('ptj_ground',array('visible'=>0),array('jobid'=>$v['jobid']));
+	}
 	}
 	return $ground;
 }	
@@ -335,16 +350,16 @@ private function DboperateGetjob($wopenid,$oopenid){
 private function  DboperateSearchGround($info,$salary,$time,$owner){
 	$ground=array();
 	if($salary){
-		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti ORDER BY salary DESC",array(':ti'=>$info),'');
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY salary DESC",array(':ti'=>$info,':vi'=>1),'');
 	}
 	else if($time){
-		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti ORDER BY date ",array(':ti'=>$info),'');
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY date ",array(':ti'=>$info,':vi'=>1),'');
 	}
 	else if($owner){
-		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti ORDER BY openid DESC",array(':ti'=>$info),'');
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY openid DESC",array(':ti'=>$info,':vi'=>1),'');
 	}
 	else {
-	    $t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti",array(':ti'=>$info),'');
+	    $t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi",array(':ti'=>$info,':vi'=>1),'');
 	}
 	foreach ($t as $k=>$v){
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
@@ -400,7 +415,7 @@ private  function  DboperateGetIntworkers($jobid){
  */
 private function DboperateSorybysalary(){
 	$ground=array();
-	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."ORDER BY salary DESC",array(),'');
+	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi ORDER BY salary DESC",array(':vi'=>1),'');
 	foreach ($t as $k=>$v){
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
 		$arr=array(
@@ -423,7 +438,7 @@ private function DboperateSorybysalary(){
  */
 private  function  DboperateSortbytime(){
 	$ground=array();
-	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."ORDER BY date ",array(),'');
+	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi ORDER BY date ",array(':vi'=>1),'');
 	foreach ($t as $k=>$v){
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
 		$arr=array(
@@ -446,7 +461,7 @@ private  function  DboperateSortbytime(){
  */
 private function DboperateSortbyownerid(){
 	$ground=array();
-	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."ORDER BY openid DESC",array(),'');
+	$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi ORDER BY openid DESC",array(':vi'=>1),'');
 	foreach ($t as $k=>$v){
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
 		$arr=array(
@@ -555,5 +570,49 @@ private function DboperateFindWk($ownerid){
 	}
 	return $Allarray;
 }
-
+/*
+private function DboperateGetOinfo($oid){
+	$info=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array(':oid'=>$oid));
+	return $info;
+}
+*/
+//////////////////////////业务操作 分割线//////////////////////////
+/**
+ * 模板消息 demo   
+ * @todo 接口未开放   TID DATA等请自行设定  
+ * @param unknown $openid
+ */
+private function SendTpl($openid,$oinfo){
+	load()->func('communication');
+    
+	$access_token = WeAccount::token();
+	//post URL
+	$url='https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$access_token;
+	//POST data
+	$data=array(
+		'touser'=>$openid,
+		'template_id'=>'hxPWB-1f5nc4OMCYGaPo97U1viizkuC5BBjgvAdBlvQ',
+		'url'=>'http://www.zafuic.xyz/',
+		'topcolor'=>'#FF0000' ,
+		'data'=>array(
+		'first'=>array(
+				'value'=>'报名成功!这是商家发来的贺电哦~~',
+				'color'=>'#F8091D',
+			),
+	   'name'=>array(
+			'value'=>$oinfo['name'].'欢迎你的加入~', 
+	   		'color'=>'#F8091D',
+		),
+	  'phone'=>array(
+	   	'value'=>'这是我的电话:'.$oinfo['phone'],
+	  	'color'=>'#F8091D',
+	   ),
+	  'location'=>array(
+	  	'value'=>'记住我的坐标哦:'.$oinfo['location'],
+	  	'color'=>'#F8091D',
+	  )			
+	)			
+	);
+   ihttp_post($url,json_encode($data));
+}
 }
