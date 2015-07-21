@@ -1,2 +1,48 @@
 {template 'common/header'}
+<h2 class="lead text-center">老司机兼职平台后台用户管理</h2>
+<table class="table table-responsive table-bordered">
+ <tr>
+   <th>用户编号</th>
+   <th>用户姓名</th>
+   <th>用户微信号</th>
+   <th>用户电话</th>
+   <th>用户身份</th>
+   <th>用户地址</th>
+   <th>审核状态</th>
+ </tr>
+{loop $pinfo $k $v}
+{if $v['sure']}
+ <tr class="success">
+   <td>{$v['id']}</td>
+   <td>{$v['name']}</td>
+   <td>{$v['nickname']}</td>
+   <td>{$v['phone']}</td>
+   {if $v['identity']=='worker'}
+   <td>兼职者</td>
+   {else}
+    <td>商家</td>  
+      {/if}
+   <td>{$v['location']}</td>
+   <td><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;&nbsp;已审核</td>
+ </tr>
+ {/if}
+ {if !$v['sure']}
+  <tr class="danger">
+   <td>{$v['id']}</td>
+   <td>{$v['name']}</td>
+   <td>{$v['nickname']}</td>
+   <td>{$v['phone']}</td>
+   {if $v['identity']=='worker'}
+   <td>兼职者</td>
+   {else}
+    <td>商家</td>  
+      {/if}
+   <td>{$v['location']}</td>
+ <td>
+ <a type="button" class="btn btn-success" href="{php echo $this->createWebUrl('ptjadmin',array('surebtn'=>'on','id'=>$v['id']));}">允许加入</a>
+ </td>
+ </tr>
+ {/if}
+{/loop}
+</table>
 

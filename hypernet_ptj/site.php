@@ -54,8 +54,17 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	public function doWebPtjadmin() {
 		//这个操作被定义用来呈现 管理中心导航菜单
 		global $_W,$_GPC;
-		$openid='';
-       $arr=$this->SendTpl($openid);
+        $pinfo=$this->DboperateGetAllProfile();
+        $root=$_W['siteroot'].'app/index.php?i=5&c=entry&do=ptjindex&m=hypernet_iptj';
+	   if($_GPC['surebtn']){
+	   	 $t=$this->DboperateAdminSurePro($_GPC['id']);
+	   	 $info=pdo_fetch("SELECT * from".tablename('ptj_profile')."WHERE id=:i",array(':i'=>$_GPC['id']));
+	   	 $this->SendTpl($info['openid'],$info,'auth');
+	   	 $url=$this->createWebUrl('ptjadmin');
+	   	 echo "<script language='javascript'>
+	   	 location.href=\"$url\";
+	   	 </script>";	   	 
+	   }
 		include $this->template('Admin');
 	}
 	public function doMobilePtjlink() {
@@ -119,7 +128,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$iden=$profile['identity'];
 		if($name AND $phone AND $location AND $sex AND $iden){
 			
-			$this->DboperateInsertIntoProfile($openid, $name, $phone, $sex, $location, $iden);
+			$this->DboperateInsertIntoProfile($openid, $name, $nickname,$phone, $sex, $location, $iden);
 			$url=$this->createMobileUrl('ptjmyinfo');
 			echo "<script language='javascript'>
 					location.href=\"$url\";
@@ -210,7 +219,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
                   	}
                   	else{
                   		$this->DboperateSurepostinfo($oid, $openid, $ground['jobid'], $ground['mount']);
-                  		$this->SendTpl($openid,$Ownerinfo);
+                  		$this->SendTpl($openid,$Ownerinfo,'apply');
                   		echo "<script language='javascript'>
 					alert('O(∩_∩)O~~报名成功了!');
 					</script>";
@@ -224,7 +233,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 			}
 			else if ($bmbutton=='on' AND !$this->DboperateCheckUser($openid)){
 				echo "<script language='javascript'>
-					alert('(～￣▽￣)～先去个人中心完善信息哦!');
+					alert('(～￣▽￣)～先去个人中心完善信息并等待管理员确认哦~');
 					</script>";
 			}
 			$info=$this->Dboperateshowcomment($ground['jobid']);
@@ -244,10 +253,11 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	 * @param unknown $sex
 	 * @param unknown $location
 	 * @param unknown $iden
+	 * @param unknown $nickname
 	 * @return Ambigous <boolean, unknown>
 	 */
-private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,$iden){
-	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0,'sex'=>$sex));
+private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,$location,$iden){
+	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'nickname'=>$nickname,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0,'sex'=>$sex,'sure'=>'0'));
   	return $T;
 }	
 	
@@ -258,7 +268,7 @@ private function DboperateInsertIntoProfile($openid,$name,$phone,$sex,$location,
  */
  private function DboperateSearchUser($openid){
  	
- 	$t=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array('oid'=>$openid));
+ 	$t=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid AND sure=:su",array('oid'=>$openid,':su'=>1));
  	return $t;
  }	
 	/**
@@ -284,6 +294,7 @@ private  function  DboperateSearchGroundinfo(){
 	$ground=array();
 	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi",array(':vi'=>1),'');
 	foreach ($Ground as $k=>$v){
+		$this->DboperateCheckGroundTime($v['jobid'], $v['date'], date('y-m-d'));
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
 		if($exists<$v['mount']){
 		$arr=array(
@@ -324,7 +335,7 @@ private function DboperateSurepostinfo($owneroid,$workoid,$jobid,$hadmount){
  */	
 private function DboperateCheckUser($openid){
 	
-	$T=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array('oid'=>$openid));
+	$T=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid AND sure=:su",array('oid'=>$openid,':su'=>1));
 	return $T;
 }	
 /**
@@ -493,6 +504,19 @@ private function Dboperatechecktime($jobid,$now,$openid){
 	return $i;
 }
 /**
+ * 检查广场消息是否过期
+ * @param unknown $jobid
+ * @param unknown $date
+ * @param unknown $now
+ * @return unknown
+ */
+private function DboperateCheckGroundTime($jobid,$date,$now){
+	if(strtotime($date)<=strtotime($now)){
+		$t=pdo_update('ptj_ground',array('visible'=>0),array('jobid'=>$jobid));
+	}
+	return $t;
+}
+/**
  * 提交评论
  * @param unknown $comment
  * @param unknown $jobid
@@ -570,6 +594,23 @@ private function DboperateFindWk($ownerid){
 	}
 	return $Allarray;
 }
+/**
+ * 后台操作函数  获得所有人名单
+ * @return unknown
+ */
+private function DboperateGetAllProfile(){
+	$info=pdo_fetchall("SELECT * FROM".tablename('ptj_profile')."ORDER BY id DESC",array(),'');
+	return  $info;
+}
+/**
+ * 后台操作函数 管理员的确认profile函数
+ * @param unknown $id
+ * @return unknown
+ */
+private  function DboperateAdminSurePro($id){
+	$t=pdo_update('ptj_profile',array('sure'=>1),array('id'=>$id));
+	return $t;
+}
 /*
 private function DboperateGetOinfo($oid){
 	$info=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array(':oid'=>$oid));
@@ -582,37 +623,70 @@ private function DboperateGetOinfo($oid){
  * @todo 接口未开放   TID DATA等请自行设定  
  * @param unknown $openid
  */
-private function SendTpl($openid,$oinfo){
+private function SendTpl($openid,$info,$type){
 	load()->func('communication');
-    
+    global $_W;
 	$access_token = WeAccount::token();
+	$date=date('Y-m-d H:i');
 	//post URL
 	$url='https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$access_token;
 	//POST data
+	if($type=='apply'){
 	$data=array(
 		'touser'=>$openid,
-		'template_id'=>'hxPWB-1f5nc4OMCYGaPo97U1viizkuC5BBjgvAdBlvQ',
-		'url'=>'http://www.zafuic.xyz/',
-		'topcolor'=>'#FF0000' ,
+		'template_id'=>'xYkOym8y5fCrgYlJUfRCGjK-CGscFsD9sihZy3kf27E',
+		'url'=>$_W['siteroot'].'app/index.php?i=5&c=entry&do=ptjindex&m=hypernet_iptj',
+		'topcolor'=>'#FF0000',
 		'data'=>array(
 		'first'=>array(
 				'value'=>'报名成功!这是商家发来的贺电哦~~',
 				'color'=>'#F8091D',
 			),
-	   'name'=>array(
-			'value'=>$oinfo['name'].'欢迎你的加入~', 
+	   'keynote1'=>array(
+			'value'=>$info['name'].'欢迎你的加入~', 
 	   		'color'=>'#F8091D',
 		),
-	  'phone'=>array(
-	   	'value'=>'这是我的电话:'.$oinfo['phone'],
+		'keynote2'=>array(
+						'value'=>'即日起~~',
+						'color'=>'#F8091D',
+				),
+	  'remark'=>array(
+	   	'value'=>'这是我的电话:'.$info['phone'],'   欢迎咨询~',
 	  	'color'=>'#F8091D',
-	   ),
-	  'location'=>array(
-	  	'value'=>'记住我的坐标哦:'.$oinfo['location'],
-	  	'color'=>'#F8091D',
-	  )			
+	   ),			
 	)			
 	);
+	}
+	elseif ($type=='auth'){
+		$data=array(
+				'touser'=>$openid,
+				'template_id'=>'GR8B0nCPus9hjnQajwuLMHr-AntvCSqZy_E5ErJh3P4',
+				'url'=>$_W['siteroot'].'app/index.php?i=5&c=entry&do=ptjindex&m=hypernet_iptj',
+				'topcolor'=>'#FF0000',
+				'data'=>array(
+						'first'=>array(
+								'value'=>'一封来自老司机兼职平台的邀请函。。。。',
+								'color'=>'#F8091D',
+						),
+						'keynote1'=>array(
+								'value'=>$info['name'],
+								'color'=>'#0542FA',
+						),
+						'keynote2'=>array(
+								'value'=>$info['phone'],
+								'color'=>'#0542FA',
+						),
+						'keynote3'=>array(
+								'value'=>$date,
+								'color'=>'#0542FA',
+						),
+						'remark'=>array(
+								'value'=>'老司机兼职平台的大门永远为充满生活热情的你打开~~',
+								'color'=>'#0542FA',
+						),
+				)
+		);
+	}
    ihttp_post($url,json_encode($data));
 }
 }
