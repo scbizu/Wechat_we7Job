@@ -3,7 +3,7 @@
 <script src="http://libs.baidu.com/jquery/1.11.1/jquery.js"></script>
 
 <html>
-
+<body style="background-color:#ededed">
 <nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
   <div class="container-fluid" style="width:70%">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -26,46 +26,112 @@
       </ul>
   </div><!-- /.container-fluid --> 
 </nav>
-
-<nav class="navbar navbar-default navbar-fixed-top" style="background:orange">
+{if $flag==2}
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
    <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjmodel',array('id'=>'owner'));}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
       <ul class="nav navbar-nav" style="text-align:center">
-        <h4 class="text-primary">老司机兼职平台</h4>  
-      </ul>        
+        <p style="font-size:20px;color:white">详情</p> 
+      </ul>
+      </div>    
   </div>
 </nav>
 <br/>
 <br/>
+{else}
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjindex');}" type="button"  style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="font-size:20px;color:white">详情</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+<br/>
+<br/>
+{/if}
+<div style="background:white;;margin-top: 30px;margin-bottom:5px">
+<br/>
+<div style="margin-top:-20px;border-style:solid; border-width:1px; border-color:#D3D3D2">
+{if $Ownerinfo['cname']}
+<a href="{php echo $this->createMobileUrl('ptjownerindex',array('ground'=>$ground));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block" style="margin-top:-10px">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{$name} <span class="glyphicon glyphicon-chevron-right" style="margin-left:60%"></span></a>
+{else}
+<a href="{php echo $this->createMobileUrl('ptjworkerindex',array('ground'=>$ground,'wopenid'=>$oid,'entry'=>'details'));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block" style="margin-top:-10px">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{$name} <span class="glyphicon glyphicon-chevron-right" style="margin-left:60%"></span></a>
+
+{/if}
+</div>
+</div>
+<div style="font-size:20px">
+{$ground['title']}
+</div>
 <!--information  -->
-<div class="jumbotron">
- <p style="font-size:10px"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;职位提供方:{$Ownerinfo['name']}</p>
- <p style="font-size:10px"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;职位名称:{$ground['title']}</p>
- <p style="font-size:10px"><span class="glyphicon glyphicon-align-center"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;职位详细描述:{$ground['content']}</p>
-  <p style="font-size:10px"><span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单位联系电话:{$Ownerinfo['phone']}</p>
-  <p style="font-size:10px"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单位地址:{$Ownerinfo['location']}</p>
-  <p style="font-size:10px"><span class="glyphicon glyphicon-usd"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;薪水/天:{$ground['salary']}</p>
+<div class="jumbotron" style="background-color:#fff">
+<p style="font-size:15px"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发布时间:{$ground['now']}</p>
+<p style="font-size:15px"><span class="glyphicon glyphicon-globe"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作地点:{$ground['workplace']}</p>
+<p style="font-size:15px"><span class="glyphicon glyphicon-flag"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作时间:{$ground['date']}至{$ground['stopdate']}</p>
+  <p style="font-size:15px"><span class="glyphicon glyphicon-usd"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;薪资待遇:{$ground['salary']}元/天</p>
+   <p style="font-size:15px"><span class="glyphicon glyphicon-usd"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已报名:{$ground['exists']}/{$ground['mount']} 人</p> 
+{if $ground['limit']=='no'}  
+   <p style="font-size:15px"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作要求:男女不限</p>
+   {else if $ground['limit']=='man'}
+    <p style="font-size:15px"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作要求:只限男生</p>
+    {else if $ground['limit']=='woman'}
+     <p style="font-size:15px"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作要求:只限女生</p>   
+{/if}   
+ <p style="font-size:15px"><span class="glyphicon glyphicon-align-center"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;具体内容:{$ground['content']}</p>
 </div>
 
-<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px">
+{if $isworker==1}
+<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px;height: 60px;">
 
-  <div class="btn-group " role="group">
-    <a type="button"  href="{php echo $this->createMobileUrl('Ptjdetails',array('button'=>'on','ground'=>$ground,'openid'=>$openid));}" class="btn btn-default btn btn-success" >我要报名</a>
+  <div class="btn-group " role="group" style="background-color:#fff">
+    <div style="border-style:solid; border-width:1px;border-color:#D3D3D2">
+    <a type="button"  href="{php echo $this->createMobileUrl('Ptjdetails',array('button'=>'on','ground'=>$ground,'openid'=>$openid));}" class="btn btn-default text-center" >
+       我要报名
+    </a>
+    </div>
+  </div>
+</div>
+{else if $isworker==3}
+<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px;height: 60px;">
+
+  <div class="btn-group " role="group" style="background-color:#fff">
+    <div style="border-style:solid; border-width:1px;border-color:#D3D3D2 ">
+    <p>
+    &nbsp;&nbsp;&nbsp;已报名: {$ground['exists']}/{$ground['mount']} 人   <span style="margin-left:35%">终止招聘</span>
+    </p>
+    <a type="button" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground));}" class="btn btn-default">查看求职者信息<span class="glyphicon glyphicon-chevron-right" style="margin-left:65%"></span></a>
+    </div>
   </div>
 
+</div>
+  {if !$ifprivacy}
+<div style="margin-top:20px">
+<a href="{php echo $this->createMobileUrl('ptjdetails',array('top'=>'on','ground'=>$ground));}" type="button" class="btn btn-success text-center" style="width:100%">我要置顶</a>
+</div>
+{/if}
+{else if $isworker==2}
+<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px;height: 60px;">
 
+  <div class="btn-group " role="group" style="background-color:#fff">
+    <div style="border-style:solid; border-width:1px; border-color:#D3D3D2">
+    <a type="button"  href="#" class="btn btn-default " >
+    &nbsp;&nbsp;&nbsp;已报名:{$ground['exists']}/{$ground['mount']} 人  
+    </a>
+    </div>
+  </div>
+</div>
 
-  
+{/if}
 
-
-
-
-
-
-
-
-
-
-  <div class="btn-group danger" role="group">
+  <!--div class="btn-group danger" role="group">
     <a type="button" class="btn btn-default btn btn-danger" data-toggle="modal" data-target="#jbmodal">我要举报</a>
   </div>
   <div class="modal fade" id="jbmodal" tabindex="-1" role="dialog" aria-labelledby="jbmodalLabel" style="margin-top:200px">
@@ -81,30 +147,30 @@
      <br/>
     </div>
   </div>
-</div>
-</div>
+</div-->
 
 
 
-<!-- 分割   评论 -->
-<nav class="navbar navbar-default" >
-<div  class="container-fluid" style="margin-top:40px;">
-<h5 style="margin-left:5%"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;&nbsp;<mark>评论区</mark></h5>
-</div>
-</nav>
-{loop $info $k $v}
-<div class="list-group" style="margin-top:-5%">
-  <a href="#" class="list-group-item active" >
-    <p class="list-group-item-text"><span class="glyphicon glyphicon-bullhorn"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$v['comment']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;&nbsp;&nbsp;{$v['workerid']}</p>
-    </a>
-</div>
-{/loop}
 <br/>
 <br/>
 <br/>
 <br/>
 <br/>
+
+</body>
+
 <script>
+
+sharedata = {
+		title: '[招聘平台]拉出来遛遛  毕竟搞了这么久了。。。',
+		desc: '这条兼职好像也挺诱人的撒~~(不要封窝,窝是良民!)',
+		imgUrl: 'http://nace.oss-cn-hangzhou.aliyuncs.com/girl.jpg',
+		link:'',
+		success: function(){
+			alert('分享成功!');
+		}
+	};
+
 require(['jquery', 'util'], function($, util){
 	$(function(){
 		$('#flag').click(function(){
@@ -117,7 +183,5 @@ require(['jquery', 'util'], function($, util){
 	});
 });
 </script>
-
-
 
 </html>

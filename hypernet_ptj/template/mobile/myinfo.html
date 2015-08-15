@@ -1,340 +1,145 @@
 {template 'common/header'}
 <html> 
     <link href="http://libs.baidu.com//bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    
-<nav class="navbar navbar-default navbar-fixed-top" style="background:orange">
-   <div class="container-fluid">
-      <ul class="nav navbar-nav" style="text-align:center">
-        <h4 class="text-primary">老司机兼职平台</h4> 
-      </ul>        
-  </div>
-</nav>
+  	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_normalize.css" />
+	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_styles.css" />
+	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_default.css" />  
+<body style="background-color:#ededed">
 
 <nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
-  <div class="container-fluid" style="width:70%">
+  <div class="container-fluid" style="background-color:white">
     <!-- Brand and toggle get grouped for better mobile display -->
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-      <ul class="nav navbar-nav"  >
-        <li><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>兼职广场</a></li>  
+      <ul class="nav navbar-nav">
+        <li class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;首页</a></li>  
       </ul>
   </div><!-- /.container-fluid -->
   
 </nav>
 
 <nav class="navbar navbar-default navbar-fixed-bottom" style="margin-left:50%">
-  <div class="container-fluid" style="width:70%">
+  <div class="container-fluid" style="background-color:white">
     <!-- Collect the nav links, forms, and other content for toggling -->
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#"><span class="sr-only"></span><span class="glyphicon glyphicon-user"></span>个人中心</a></li>  
+        <li class="text-center" ><a href="#" style="color:#3FBD3A"><span class="sr-only"></span><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;个人中心</a></li>  
       </ul>
   </div><!-- /.container-fluid -->
 </nav>
 
-<div class="jumbotron" style="width:100%" >
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+    <div>   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="font-size:20px;color:#fff">个人中心</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+
+<div class="jumbotron" style="width:100% ;margin-bottom: 30px;margin-top: -50;margin-top: -50px;padding-bottom: 20px;" >
 <div class="row" style="margin-top:30%">
-  <div class="col-xs-6 col-md-3">
+  <div class="col-xs-6 col-md-3" style="width:40%">
       <img src="{php echo $src}" style="width:90px; height:90px; border-radius:50px; ">
   </div>
 </div>
-<div style="margin-left:50%;margin-top:-130px">
-<p class="text-danger">微信号</p>
-<p><mark>{$nickname}</mark></p>
-</div>
-
-<div style="margin-left:50%;margin-top:5%" >
-<p class="text-danger">积分</p>
-<p><mark>{$count}</mark></p>
-</div>
-
-</div>
-
 
 {if !$user}
+     {if $waiting}
+<div >
+<div style="margin-top:-90px;margin-left:45%">
+<p>欢迎你,{$nickname}</p>
+</div>
+<a type="button" href="{php echo $this->createMobileUrl('ptjperfect');}" class="btn btn-danger" style="font-size:15px;margin-left:45%;">审核中...</a>
+</div>  
 
-<!-- form  -->
-<!-- Name -->
-<form action=" " method="post" class="table-horizontal" style="width:85%;margin-left:7%">
-<div class="form-group">
-     <label for="Name" class="col-sm-2 control-label">姓名</label>
-     <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Name]"  id="Name" placeholder="求职者写姓名,商家写店铺地址"/>
-    </div>
+	{else}
+<div >
+<div style="margin-top:-90px;margin-left:45%">
+<p>欢迎你,{$nickname}</p>
 </div>
-<!-- phone -->
-<div class="form-group">
-    <label for="Phone" class="col-sm-2 control-label">联系方式</label>
-       <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Phone]" id="Phone" placeholder="请输入您的联系方式"/>
-    </div>
+<a type="button" href="{php echo $this->createMobileUrl('ptjperfect');}" class="btn btn-primary" style="font-size:15px;margin-left:45%;">完善信息</a>
 </div>
-<!-- sex -->
-<div class="form-group">
-    <label for="Sex" class="col-sm-2 control-label">性别</label>
-       <div class="col-sm-10">
- <select class="form-control" name="Ptjmyinfo[Sex]" id="Sex">
- <option value="男">男</option>
- <option value="女">女</option>
- </select>
-    </div>
-</div>
-<!-- location -->
-<div class="form-group">
-    <label for="Location" class="col-sm-2 control-label">坐标</label>
-       <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Location]" id="Location" placeholder="求职者写住址,商家填入店铺所在地"/>
-    </div>
-</div>
-<!-- 身份信息  初始化信息 -->
-<div class="form-group">
-    <label for="Id" class="col-sm-2 control-label">身份</label>
-       <div class="col-sm-10">
- <select class="form-control" name="Ptjmyinfo[identity]" id="Id">
- <option value="owner">商家</option>
- <option value="worker">求职者</option>
- </select>
-    </div>
-</div>
-<br/>
-	<div class="form-group">
-		<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
-			<input name="submit" type="submit" value="提交简历" class="btn btn-primary" onclick="refresh()"/>
-		</div>
-	</div>
-	<!--防止遮住button -->
-<br/>
-<br/>	
-<br/>
-<br/>	
-</form>
-
+   {/if}
 {else}
-<!-- 是求职者 -->
-{if $isworker}
-    <!-- loop -->
-    <div style="background:#808A87 ;margin-top:-35px" >
-<h4 style="margin-top:-20px;"><span class="glyphicon glyphicon-star"></span>工作清单(完成后点击评价)</h4>
-    </div>
-    {if $workerEx}
-    {loop $workerEx $k $v}
-        {if $v['status']==1}
-<div class="list-group" style="margin-top:-8px">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">{$v['title']}</h4>
-    {if $v['status']==1}
-        <span class="badge" style="background:red">未完成</span>
-        {else}
-        <span class="badge" style="background:green">完成</span> 
-     {/if}   
-    <p class="list-group-item-text">{$v['content']}</p>
-  </a>
-</div> 
+   {if $isworker==1}
+   <div style="margin-top:-70px;">
+<p  style="font-size:15px;margin-left:45%;">个人:{$user['name']}</p>
+<p  style="font-size:15px;margin-left:45%;">ID:{$user['phone']}</p>
+</div>
+   {else if $isworker==2}
+    <div style="margin-top:-70px;">
+<p  style="font-size:15px;margin-left:45%;">企业:{$user['cname']}</p>
+<p  style="font-size:15px;margin-left:45%;">ID:{$user['phone']}</p>
+   {else if $isworker==3}
+   <div style="margin-top:-70px;">
+<p  style="font-size:15px;margin-left:45%;">管理员:{$user['name']}</p>
+<p  style="font-size:15px;margin-left:45%;">ID:{$user['phone']}</p>
+</div>
+   {/if}
+{/if}
+</div>
+
+</div>
+{if $isworker==1 OR $isworker==3}
+<div style="margin-left:5%;width:90%;background:#fff">
+
+   <a href="{php echo $this->createMobileUrl('ptjmodel',array('id'=>'owner'));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我发布的<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $this->createMobileUrl('ptjmodel',array('id'=>'worker'));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-heart"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的消息<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $this->createMobileUrl('ptjpay',array('credit'=>$credit));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-gift"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关于积分<span style="margin-left:45%">{$credit}</span></a> 
+<hr style=" margin-top: 0px;margin-bottom: 0px;">
+   <a href="{php echo $url}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-align-center"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;功能介绍<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+ 
+</div>
+{elseif $isworker==2}
+<div style="margin-left:5%;width:90%;background:#0AB4B7">
+    <a href="{php echo $this->createMobileUrl('ptjmodel',array('id'=>'owner'));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我发布的<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="#" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-heart"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的消息<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+      <a href="{php echo $this->createMobileUrl('ptjpay',array('credit'=>$credit));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-gift"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关于积分<span style="margin-left:45%">{$credit}</span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $url}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-align-center"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;功能介绍<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">  
+</div>
 {else}
-<div class="list-group" style="margin-top:-8px">
-  <a  class="list-group-item active" data-toggle="modal" data-target="#formmodal">
-    <h4 class="list-group-item-heading">{$v['title']}</h4>
-    {if $v['status']==1}
-        <span class="badge" style="background:red">未完成</span>
-        {else}
-        <span class="badge" style="background:green">完成</span> 
-     {/if}   
-    <p class="list-group-item-text">{$v['content']}</p>
-  </a>
-</div> 
-<div class="modal fade" id="formmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel"> <(￣ˇ￣)/我要翻身做主人!</h4>
-      </div>
- <form action=" " method="post" class="form-horizontal">
-      <div class="modal-body">
-          <div class="form-group">
-            <label for="recipient-name" class="control-label">评论写这里哦&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-hand-down"></span></label>
-            <input type="text" class="form-control" id="recipient-name" name="Ptjmyinfo[comm]" style="width:60%">
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">怒戳评论!</button>
-      </div>
- </form>
-    </div>
-  </div>
+<div >
+<img src="{php echo $image;}"  style="width:100%;height:63%;display:block;margin-top:-25px"/>
 </div>
 {/if}
-{/loop}
-{/if}
 <br/>
 <br/>
-<br/>  
-{else}
-  <!-- 是商家 -->
-{if !$myworkerbtn AND !$workmanbtn}
-  <form action=" " method="post" class="form-horizontal" style="margin-top:-20px">
-  <div class="btn-group-vertical" role="group" style="background-color:grey;width:36%">
-  <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;招募兼职</a>
-  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('myworkerbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">我的招募</a>
-<a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('workmanbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">现有工人</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
-</div>
-<div style="width:60%;margin-left:38%;margin-top:-118%">
-    <div class="form-group">
-    <label for="Phone" class="col-sm-2 control-label">工作标题</label>
-       <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Worktitle]" placeholder="请输入提供工作的标题"/>
-    </div>
-       </div>
-     <div class="form-group">
-    <label for="Phone" class="col-sm-2 control-label">工作细节</label>
-       <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Workdetail]" placeholder="请输入提供工作的特殊要求"/>
-    </div>
-    </div>
-     <div class="form-group">
-    <label for="Phone" class="col-sm-2 control-label">工作薪资</label>
-       <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Worksalary]" placeholder="请输入提供工作的时薪"/>
-    </div>
-    </div>
-     <div class="form-group">
-    <label for="Phone" class="col-sm-2 control-label">工作人数</label>
-       <div class="col-sm-10">
-    <input type="text" class="form-control" name="Ptjmyinfo[Workmount]" placeholder="请输入提供此工作所招聘人数"/>
-    </div>
-    </div>  
-            <div class="form-group" style="margin-left:2px">
-                <label for="dtp_input1" class="col-md-2 control-label" style="margin-left:-14px">工作截止日期</label>
-                {php echo tpl_form_field_date('Ptjmyinfo[Workdate]');}
-            </div>
-     	<div class="form-group">
-		<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
-			<input name="submit" type="submit" value="发布招募令" class="btn btn-primary" />
-		</div>
-		</div>
-	</div>                   
-  </form>
-{/if}
-{if $myworkerbtn}
-<div style="margin-top:-20px;">
-    <div class="btn-group-vertical" role="group" style="background-color:grey;width:36%">
-  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('mypost'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">招募兼职</a>
-  <a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;我的招募</a>
-<a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('workmanbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">现有工人</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
-</div>
-<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-118%">
-<table class="table table-striped">
-<tr class="success">
- <th>招募令编号</th>
- <th>招募内容</th>
- <th>招募情况</th>
- <th>招募控制</th>
-</tr>
-{loop $myworker $k $v}
-<tr>
- <td>{$v['jobid']}</td>
- <td>{$v['title']}</td>
- <td>{$v['exists']}/{$v['mount']}</td>
- <td>
- <!--a type="button" class="btn btn-danger" href="{php echo $this->createMobileUrl('ptjmyinfo',array('jobid'=>$v['jobid'],'undowker'=>'on','myworkerbtn'=>'on'));}" onclick="confirm_disp()">撤销招募</a-->
- <a type="button" class="btn btn-danger" href="{php echo $this->createMobileUrl('ptjmyinfo',array('jobid'=>$v['jobid'],'undowker'=>'on','myworkerbtn'=>'on'));}">撤销招募</a>
- </td>
-</tr>
-{/loop}
-</table> 
-</div>
-</div>
+<p class="text-center">技术相关:<b>@Hypernet</b>&nbsp;&nbsp;&nbsp;&nbsp;UI相关:<a href="http://glyphicons.com/">@Glyphicons</a></p> 
 <br/>
 <br/>
 <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-{/if}
-{if $workmanbtn}
-<div style="margin-top:-20px;">
-    <div class="btn-group-vertical" role="group" style="background-color:grey;width:36%">
-  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('mypost'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">招募兼职</a>
-  <a type="button" class="btn btn-default" href="{php echo $this->createMobileUrl('ptjmyinfo',array('myworkerbtn'=>'on'));}" style="font-size:18px;background-color:#1CA5B2;color:white">我的招募</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;现有工人</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>
-<a type="button" class="btn btn-default" href="#" style="font-size:18px;background-color:#1CA5B2;color:white">尽请期待</a>  
-</div>
-<div class="table-responsive" style="width:60%;margin-left:38%;margin-top:-118%">
-<table class="table table-striped">
-<tr class="success">
- <th>姓名</th>
- <th>性别</th>
- <th>联系方式</th>
- <th>工作内容</th>
-</tr>
-{loop $workmaninfo $k $v}
-<tr>
-   <td>{$v['wkname']}</td>
-   <td>{$v['wksex']}</td>
-   <td>{$v['wkphone']}</td>
-   <td>{$v['wkinfo']}</td>   
-</tr>
-{/loop}
-</table>
-</div>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-{/if}
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-{/else}
-{/if}
 
+</body>
 
-
-
-{/if}
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src="http://libs.baidu.com/jquery/1.11.1/jquery.js"></script>
 <script type="text/javascript">

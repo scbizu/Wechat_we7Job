@@ -1,0 +1,42 @@
+{template 'common/header'}
+
+
+<h2 class="lead text-center">老司机兼职平台后台帖子管理</h2>
+<table class="table table-responsive table-bordered">
+ <tr>
+   <th>帖子编号</th>
+   <th>发帖人</th>
+   <th>类型</th>
+   <th>已有人数/应有人数</th>
+   <th>是否置顶</th>
+    <th>状态</th>
+   </tr>
+{loop $ground $k $v}
+  <tr class="success">
+   <td>{$v['jobid']}</td>
+   <td>{$v['cname']}</td>
+   <td>兼职</td>
+   <td>{$v['exists']}/{$v['mount']}</td>
+  {if $v['privacy']==1}
+     <td>
+     已置顶 
+   </td>
+      <td>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'down'));}" type="button" class="btn btn-default">下</a>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'delete'=>'on'));}" type="button" class="btn btn-default">删</a>
+   </td>
+{else}
+   <td>
+     未置顶 
+   </td>
+      <td>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'up'));}" type="button" class="btn btn-default">顶</a>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'delete'=>'on'));}" type="button" class="btn btn-default">删</a>
+   </td>
+   {/if}
+
+ </tr>
+{/loop}
+
+ </table>
+ 
