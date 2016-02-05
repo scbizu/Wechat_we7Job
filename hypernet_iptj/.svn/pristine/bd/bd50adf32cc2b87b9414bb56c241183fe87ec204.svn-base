@@ -1,0 +1,33 @@
+{template 'common/header'}
+
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjmyinfo');}" type="button" style="color:#fff;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="font-size:20px;color:#fff">我的积分</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+<div class="jumbotron" style="width:100% ;margin-bottom: 30px;margin-top: -50;margin-top: -50px;padding-bottom: 20px;">
+<div class="row" style="margin-top:30%">
+  <div class="col-xs-6 col-md-3" style="width:40%">
+   当前您拥有的积分为:<h2><b>{$credit}</b></h2>积分
+  </div>
+</div>
+<div style="margin-left:80%;margin-top:-90px">
+<div style="margin-bottom:10px">
+ <a type="button" href="./index.php?i=1&c=entry&do=index&m=meepo_credit1" class="btn btn-success" style="font-size:15px"><span class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp;&nbsp;充值</a>
+ </div>
+ <div>
+  <a type="button" href="./index.php?c=mc&a=home&i=1" class="btn btn-danger" style="font-size:15px"><span class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp;&nbsp;兑换</a>
+  </div>
+</div>
+</div>
+
+
+
+

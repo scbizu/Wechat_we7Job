@@ -1,0 +1,39 @@
+{template 'common/header'}
+<form class="form-horizontal" action="{php echo $this->createWebUrl('PtjAdmin_add',array('behavior'=>1));}" method="post" >
+
+<div class="form-group">
+    <label  class="col-sm-2 control-label">姓名</label>
+    <input class="col-sm-3" type="text" name="name">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">openid</label>
+    <input class="col-sm-3" type="text" name="openid">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">用户身份</label>
+    <select class="col-sm-3" name="identity">
+      <option value ="worker">兼职者</option>
+      <option value ="owner">商家</option>
+      <option value ="admin">管理员</option>
+      <option value ="xued">小黑屋中..</option>
+    </select>
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">用户地址</label>
+    <input class="col-sm-3" type="text" name="location">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">电话号码</label>
+    <input class="col-sm-3" type="text" name="phone">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">email</label>
+    <input class="col-sm-3" type="text" name="email">
+</div>
+<div class="form-group">
+    <div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
+      <input name="submit" type="submit" value="提交" class="btn btn-primary" />
+      <input name="reset" type="reset" value="重置" class="btn btn-primary" />
+    </div>
+</div>
+</form>

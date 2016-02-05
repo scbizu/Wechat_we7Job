@@ -1,0 +1,247 @@
+{template 'common/header'}
+<html>
+
+    <link href="http://libs.baidu.com//bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+ <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://unslider.com/unslider.js"></script>      
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+
+ <body style="background-color:#ededed">  
+       {if !$searchinfo}
+<nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
+  <div class="container-fluid" style="background-color:white">
+    <!-- Brand and toggle get grouped for better mobile display -->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+
+      <ul class="nav navbar-nav"  >
+        <li class="text-center"><a href="#" style="color:#3FBD3A"><span class="glyphicon glyphicon-home"></span> <span class="sr-only"></span>&nbsp;&nbsp;首页</a></li>  
+      </ul>
+  </div><!-- /.container-fluid -->
+  
+</nav>
+{else}
+<nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
+  <div class="container-fluid" style="background-color:white">
+    <!-- Brand and toggle get grouped for better mobile display -->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+
+      <ul class="nav navbar-nav"  >
+        <li class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex');}"  style="color:#3FBD3A"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;首页</a></li>  
+      </ul>
+  </div><!-- /.container-fluid -->
+  
+</nav>
+{/if}
+<nav class="navbar navbar-default navbar-fixed-bottom" style="margin-left:50%">
+  <div class="container-fluid" style="background-color:white">
+    <!-- Brand and toggle get grouped for better mobile display -->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <ul class="nav navbar-nav">
+        <li class="text-center"><a href="{php echo $this->createMobileUrl('ptjmyinfo');}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;个人中心</a></li>  
+      </ul>
+  </div><!-- /.container-fluid --> 
+</nav>
+
+<nav class="navbar navbar-default" style="margin-bottom: 0px;background-color:#00b26d;border-color:#00b26d;">
+<div class="row" style="height: 54px;">
+  <div class="col-lg-6" style="height: 54px;">
+    <div class="input-group" style="width:20%;margin-left:4%;">
+    <span class="input-group-addon" style="font-size:18px;background-color:#00b26d;border-color:#00b26d;color:white"><img src="{php echo $src;}" style="height:40px;border-radius:20px" onclick="location='{php echo $this->createMobileUrl('ptjmyinfo');}'"/></span>
+    </div>
+    <!--div style="height: 30px;margin-left:50%;margin-top:-50px">
+       <a href="{php echo $this->createMobileUrl('ptjmypost',array('ground'=>$ground));}" class="btn btn-default" type="button" style="background-color:#00b26d;border-color:#00b26d;color:white;font-size:20px"><span class="glyphicon glyphicon-log-in"></span>&nbsp;发布信息</a>
+    </div-->
+	{if $user}
+	  {if $user['identity']=='xued'}
+	  	  <div style="height: 30px;margin-left:50%;margin-top:-50px">
+       <a onclick="alert('您已被管理员禁言,如给您带来不便，请与管理员联系')" class="btn btn-default" type="button" style="background-color:#00b26d;border-color:#00b26d;color:white;font-size:20px"><span class="glyphicon glyphicon-log-in"></span>&nbsp;发布信息</a>
+    </div>
+	  {else}
+	  <div style="height: 30px;margin-left:50%;margin-top:-50px">
+       <a href="{php echo $this->createMobileUrl('ptjpostinfo');}" class="btn btn-default" type="button" style="background-color:#00b26d;border-color:#00b26d;color:white;font-size:20px"><span class="glyphicon glyphicon-log-in"></span>&nbsp;发布信息</a>
+    </div>
+	{/if}
+	{else}
+	  <div style="height: 30px;margin-left:50%;margin-top:-50px">
+       <a  onclick="alert('请先去个人中心完善信息哦...')" class="btn btn-default" type="button" style="background-color:#00b26d;border-color:#00b26d;color:white;font-size:20px"><span class="glyphicon glyphicon-log-in"></span>&nbsp;发布信息</a>
+    </div>	
+	{/if}
+  </div>
+</div>
+</nav>
+
+
+
+<div class="banner" style="margin-bottom: 0px;overflow: hidden;position:relative;margin-left:-40px">
+<ul>
+{loop $img $k $v}
+{if $v['imgurl']!=$proot}
+<li style="background-image: url({php echo $v['imgurl']}); background-size: 100% 100%;height:180px;float:left">
+   <!-- a href="#"><img src="{php echo $v['imgurl'];}"  style="height:180px;width:100%" /></a-->
+ </li>
+ {/if}
+ {/loop}
+
+</ul>
+</div>
+<div style="height:60px;background-color:#ededed">
+<div style="margin-left:5%;margin-bottom:10px;width:90%;margin-top:0px">
+<br/>
+    <form action=" " method="post" class="form-inline" >
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="搜索...." style="width:100%" name="Ptjindex[Search]">
+      <span class="input-group-btn">
+			<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+      </span>
+      </div>
+      </form>
+      
+</div>
+</div>
+
+<!--nav class="navbar navbar-default" style="background-color:#00b26d;border-color:#00b26d;margin-bottom: 0px;">
+   <div class="container-fluid">
+  <ul class="nav nav-pills" >
+  <li role="presentation" style="margin-left:3%;"><a href="#" class="btn" type="button" style="color:black;font-size:15px;color:rgba(255, 255, 255, 0.65)">提问</a></li>
+  <li role="presentation" style="margin-left:3%;"><a href="{php echo $this->createMobileUrl('ptjindex',array('ground'=>$ground));}" class="btn" type="button" style="color:white;font-size:15px;"><i>兼职</i></a></li>
+  <li role="presentation" style="margin-left:3%;"><a href="#" class="btn" type="button" style="color:black;font-size:15px;color:rgba(255, 255, 255, 0.65)">闲置</a></li>
+  <li role="presentation" style="margin-left:3%;"><a href="#" class="btn" type="button" style="color:black;font-size:15px;color:rgba(255, 255, 255, 0.65)">租房</a></li>
+  </ul>           
+  </div>
+</nav-->
+
+<table class="table table-bordered table-responsive" style="width:100%;" >
+<tr class="active">
+<td class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex',array('type'=>'cd'));}" class="text-center" style="color:black">传单派发</a></td>
+<td class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex',array('type'=>'jj'));}" class="text-center" style="color:black">家教</a></td>
+<td class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex',array('type'=>'wm'));}" class="text-center" style="color:black">外卖小哥</a></td>
+</tr>
+<tr>
+<td class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex',array('type'=>'fwy'));}" class="text-center" style="color:black">服务员</a></td>
+<td class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex',array('type'=>'kf'));}" class="text-center" style="color:black">客服</a></td>
+<td class="text-center"><a href="{php echo $this->createMobileUrl('ptjindex',array('type'=>'others'));}" class="text-center" style="color:black">其他</a></td>
+</tr>
+<tr>
+</tr>
+</table>
+
+{if $searchinfo AND $search}
+{loop $searchinfo $k $v}
+  {if $v['privacy']==1 AND $k==0}
+ <div style="color:#00b26d">
+ <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;老司机推荐
+ </div> 
+  {else if $v['privacy']==0 AND $k==$first}
+  <div style="color:#00b26d">
+ <span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;最新
+ </div> 
+ {/if}
+<div class="list-group" style="margin-bottom:5px">
+  <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active" style="background-color:#fff;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background-color:#fff;color:#333">{$v['title']}</h4>
+       
+         <span class="badge" style="font-size:13px;background-color:#fff;color:#333">工资:{$v['salary']}元/天</span>
+        
+    <p class="list-group-item-text" style="background-color:#fff;color:#333">地点:{$v['workplace']}</p>
+    <br/>
+<p class="list-group-item-text" style="background-color:#fff;color:#333">发布方相关:@{$v['cname']} <!--span style="margin-left:25%">已报名:{$v['exists']}/{$v['mount']}</span--> </p>
+  </a>
+
+</div> 
+{/loop}
+{/if}
+{if $groundtype AND $type}
+{loop $groundtype $k $v}
+  {if $v['privacy']==1 AND $k==0}
+ <div style="color:#00b26d">
+ <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;老司机推荐
+ </div> 
+  {else if $v['privacy']==0 AND $k==$first}
+  <div style="color:#00b26d">
+ <span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;最新
+ </div> 
+ {/if}
+<div class="list-group" style="margin-bottom:5px">
+  <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active" style="background-color:#fff;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background-color:#fff;color:#333">{$v['title']}</h4>
+       
+         <span class="badge" style="font-size:13px;background-color:#fff;color:#333">工资:{$v['salary']}元/天</span>
+        
+    <p class="list-group-item-text" style="background-color:#fff;color:#333">地点:{$v['workplace']}</p>
+    <br/>
+<p class="list-group-item-text" style="background-color:#fff;color:#333">发布方相关:@{$v['cname']} <!--span style="margin-left:25%">已报名:{$v['exists']}/{$v['mount']}</span--> </p>
+  </a>
+</div> 
+{/loop}
+{/if}
+
+{if $ground AND !$type AND !$search}
+{loop $ground $k $v}
+  {if $k>=($pageindex-1)*$pagesize && $k<($pageindex)*$pagesize}
+  {if $v['privacy']==1 AND $k==0}
+ <div style="color:#00b26d">
+ <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;老司机推荐
+ </div> 
+ {else if $v['privacy']==0 AND $k==$first}
+  <div style="color:#00b26d">
+ <span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;最新
+ </div> 
+ {/if}
+<div class="list-group" style="margin-bottom:0px">
+  <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active" style="background-color:#fff;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background-color:#fff;color:#333">{$v['title']}</h4>
+       
+         <span class="badge" style="font-size:13px;background-color:#fff;color:#333;">工资:{$v['salary']}元/天</span>
+        
+    <p class="list-group-item-text" style="background-color:#fff;color:#333">地点:{$v['workplace']}</p>
+    <br/>
+<p class="list-group-item-text" style="background-color:#fff;color:#333">发布方相关:@{$v['cname']} <!--span style="margin-left:25%">已报名:{$v['exists']}/{$v['mount']}</span--> </p>
+  </a>
+</div> 
+<br/>
+  {/if}
+{/loop}
+<div>
+</div>
+{$page}
+{/if}
+
+<br/>
+<br/>
+<br/>
+</body>
+
+
+<script>
+
+sharedata = {
+		title: '您有一份兼职等待领取',
+		desc: '来自万能的老司机',
+		link: 'http://www.wx7plus.com/index.php?i=1&c=entry&do=ptjindex&m=hypernet_iptj',
+		imgUrl: 'http://www.wx7plus.com/attachment/images/laosiji.png',
+		success: function(){
+			alert('甩锅成功!');
+		}
+	};
+
+$('.banner').unslider({
+
+});
+
+require(['jquery', 'util'], function($, util){
+	$(function(){
+		$('#searchbtn').click(function(){
+			$.post("{php echo $this->createMobileUrl('Ptjindex');}",{searchinfo:$("#searchsth").val()},function(data,status){
+				alert(data);
+			});
+		}
+		);	
+	});
+});
+</script>
+</html>
+{template 'common/footer'}

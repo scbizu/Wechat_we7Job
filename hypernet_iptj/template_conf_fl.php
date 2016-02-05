@@ -1,0 +1,2 @@
+<?php
+$full='{"c":"profile","a":"module","do":"setting","m":"hypernet_iptj","full_tid":"asb","full_first":"ddddd","full_fcolor":"#000000","full_remark":"nnnnnnn","full_mkcolor":"#000000","type":"full","submit":"\u63d0\u4ea4","__session":"eyJ1aWQiOiIxIiwibGFzdHZpc2l0IjoiMTQ1NDE2MTE5MSIsImxhc3RpcCI6Ijo6MSIsImhhc2giOiIxNzYwMDRiZWEwZjM2YjUzNTA1ZjI3MDBmZWJmMWYwYSJ9","__uniacid":"6"}';

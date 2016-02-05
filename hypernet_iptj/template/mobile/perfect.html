@@ -1,0 +1,147 @@
+{template 'common/header'}
+<html>
+    <link href="http://libs.baidu.com//bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_normalize.css" />
+	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_styles.css" />
+	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_default.css" />  
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjmyinfo');}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="font-size:20px;color:#fff">完善信息</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+
+{if !$user} 
+  {if $waiting}
+  	<div class="htmleaf-container" style="margin-top:60px;max-width:100%;height:600px ">
+
+		<section class="mod model-8" >
+			<div class="spinner" style="width: 200px;height: 60%;margin-top: 50%;">
+				<h2 style="color: white;width: 50%;margin-top: 35px;margin-left: -10px">审核中</h2>
+			</div>
+		</section>		
+
+	</div>
+  {else}
+<form class="form-horizontal" style="margin-top:100px;margin-left:10%" action="{php echo $this->createMobileUrl('ptjperfect',array('postbtn'=>'on'));}" method="post">
+
+    <div class="form-group">
+        <label for="Name" class="control-label col-xs-2" style="width:70px">姓名</label>
+        <div class="col-xs-8">
+            <input type="text" class="form-control" id="Name" name="Ptjperfect[Name]" placeholder="这里写名字">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="Age" class="control-label col-xs-2" style="width:70px">年龄</label>
+        <div class="col-xs-8">
+            <input type="text" class="form-control" id="Age" name="Ptjperfect[Age]" placeholder="这里写几岁了">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Phone" class="control-label col-xs-2" style="width:70px">电话</label>
+        <div class="col-xs-9">
+            <input type="text" class="form-control" id="Phone" name="Ptjperfect[Phone]" placeholder="这里写你的联系方式..">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="Address" class="control-label col-xs-2" style="width:70px">住址</label>
+        <div class="col-xs-9" >
+            <input type="text" class="form-control" id="Address" name="Ptjperfect[Address]" placeholder="这里写住哪里..">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="Email" class="control-label col-xs-2" style="width:70px">邮箱</label>
+        <div class="col-xs-9">
+            <input type="email" class="form-control" id="Email" name="Ptjperfect[Email]" placeholder="这里写该往哪个邮箱发信息...">
+        </div>
+    </div>
+    
+<div class="form-group">
+            <label for="Name" class="control-label col-xs-2" style="width:70px">性别</label>
+   <label class="checkbox-inline">
+      <input type="radio" name="Ptjperfect[Sex]" id="Man" 
+         value="Man" checked> 男
+   </label>
+   <label class="checkbox-inline">
+      <input type="radio" name="Ptjperfect[Sex]" id="Woman" 
+         value="Woman"> 女
+   </label>
+</div>
+    
+<div class="form-group">
+     <label for="Name" class="control-label col-xs-2" style="width:70px">用户类型</label>
+   <label class="checkbox-inline" style="margin-left:3%">
+      <input type="radio" name="Ptjperfect[Usertype]"  onclick="return click_orgin('Ifcompany')"
+         value="worker" checked> 个人
+   </label>
+   <label class="checkbox-inline" style="margin-left:3%">
+      <input type="radio" name="Ptjperfect[Usertype]"  value="owner" onclick="return click_a('Ifcompany')">企业
+   </label>
+</div>
+
+<div style="display:none" id="Ifcompany">
+
+    <div class="form-group" >
+        <label for="Cname" class="control-label col-xs-2" style="width:70px">企业名称</label>
+        <div class="col-xs-9" >
+            <input type="text" class="form-control" id="Cname" name="Ptjperfect[Cname]" placeholder="这里写店叫什么名字...">
+        </div>
+    </div>
+
+    <div class="form-group"  >
+        <label for="Cname" class="control-label col-xs-2" style="width:70px">企业地址</label>
+        <div class="col-xs-9" >
+            <input type="text" class="form-control" id="Caddress" name="Ptjperfect[Caddress]" placeholder="这里写你的店在哪里...">
+        </div>
+    </div>
+    
+<div class="form-group">
+        <label for="Cphone" class="control-label col-xs-2" style="width:70px">企业电话</label>
+        <div class="col-xs-9" >
+            <input type="text" class="form-control" id="Cphone" name="Ptjperfect[Cphone]" placeholder="这里写店里的电话...">
+        </div>
+        </div>
+ </div>
+        <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-10">
+            <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+    </div> 
+</form>
+{/if}
+{else}
+<div class="jumbotron" style="width:100%;background:#11EEB7;margin-top:60px">
+        <h2 style="color:black">您的信息已录入&nbsp;&nbsp;&nbsp;感谢你对本平台的支持,我们会越做越好哒^_^</h2>  
+</div>
+{/if}
+
+<script>
+function click_a(Ifcompany)
+{
+    if(document.getElementById(Ifcompany).style.display != "block")
+    {
+        document.getElementById(Ifcompany).style.display = "block";
+    }
+}
+function click_orgin(Ifcompany)
+{
+    if(document.getElementById(Ifcompany).style.display != "none")
+    {
+        document.getElementById(Ifcompany).style.display = "none";
+    }
+}
+
+</script>
+
+
+</html>

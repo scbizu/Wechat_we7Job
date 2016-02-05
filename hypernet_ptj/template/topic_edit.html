@@ -1,0 +1,55 @@
+{template 'common/header'}
+<form class="form-horizontal" action="{php echo $this->createWebUrl('Ptjtopic_edit',array('jobid'=>$detail['jobid']));}" method="post" >
+
+<div class="form-group">
+    <label  class="col-sm-2 control-label">标题</label>
+    <input class="col-sm-3" type="text" name="title" value="{$detail['title']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">工作地点</label>
+    <input class="col-sm-3" type="text" name="workplace" value="{$detail['workplace']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">薪资待遇</label>
+    <input class="col-sm-3" type="text" name="salary" value="{$detail['salary']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">兼职开始时间</label>
+    <input class="col-sm-3" type="text" name="date" value="{$detail['date']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">兼职结束时间</label>
+    <input class="col-sm-3" type="text" name="stopdate" value="{$detail['stopdate']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">兼职类型</label>
+    <select class="col-sm-3" name="type">
+      <option value ="cd" {php echo ($detail['type']=='cd')?'selected':'';}>传单派发</option>
+      <option value ="jj" {php echo ($detail['type']=='jj')?'selected':'';}>家教</option>
+      <option value ="wm" {php echo ($detail['type']=='wm')?'selected':'';}>外卖小哥</option>
+      <option value ="fwy" {php echo ($detail['type']=='fwy')?'selected':'';}>服务员</option>
+      <option value ="kf" {php echo ($detail['type']=='kf')?'selected':'';}>客服</option>
+      <option value ="others" {php echo ($detail['type']=='others')?'selected':'';}>其他</option>
+    </select>
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">招聘人数</label>
+    <input class="col-sm-3" type="text" name="mount" value="{$detail['mount']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">具体要求</label>
+    <textarea class="col-sm-3" name="content" style="border-color:#BFBFBF;" rows = "8">{$detail['content']}</textarea>
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">工作要求</label>
+    <p class="col-sm-2" style= "margin-top:5px"><input type="radio" name="haslimit" value="No" {php echo ($detail['haslimit']=='No')?'checked':'';}>男女不限</p>
+    <p class="col-sm-2" style= "margin-top:5px"><input type="radio" name="haslimit" value="仅限男生" {php echo ($detail['haslimit']=='仅限男生')?'checked':'';}>仅限男生</p>
+    <p class="col-sm-2" style= "margin-top:5px"><input type="radio" name="haslimit" value="仅限女生" {php echo ($detail['haslimit']=='仅限女生')?'checked':'';}>仅限女生</p>
+</div>
+<div class="form-group">
+    <div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
+      <input name="submit" type="submit" value="提交" class="btn btn-primary" />
+      <input name="reset" type="reset" value="重置" class="btn btn-primary" />
+    </div>
+</div>
+</form>

@@ -1,0 +1,84 @@
+{template 'common/header'}
+<script type="text/javascript">
+require(['jquery', 'util'], function($, util){
+	$(function(){
+		// 对象绑定点击事件
+		$('#mainpage_upload').click(function(){
+			util.image('',function(data){
+				$('#mainpage_image').attr('src',data['url']);
+				$('#mainpage_imgurl').val(data['url']);
+			});
+		});
+
+		$('#topic_upload').click(function(){
+			util.image('',function(data){
+				$('#topic_image').attr('src',data['url']);
+				$('#topic_imgurl').val(data['url']);
+			});
+		});
+
+		$('#center_upload').click(function(){
+			util.image('',function(data){
+				$('#center_image').attr('src',data['url']);
+				$('#center_imgurl').val(data['url']);
+			});
+		});
+	});
+});
+</script>
+<form class="form-horizontal" action="{php echo $this->createWebUrl('Ptjshare_edit');}" method="post" >
+
+<h2>主页</h2>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">标题</label>
+    <input class="col-sm-3" type="text" name="mainpage_title" value="{$share['mainpage_title']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">描述</label>
+    <input class="col-sm-3" type="text" name="mainpage_desc" value="{$share['mainpage_desc']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">图片</label>
+    <img id="mainpage_image" src="{$share['mainpage_imgurl']}"style="max-width: 80px; max-height: 80px;"></img>
+    <span id="mainpage_upload" class="btn btn-primary"><i class="fa fa-plus"></i> 上传图片</span>
+    <input class="col-sm-3" id="mainpage_imgurl" type="text" name="mainpage_imgurl" style = "display:none" value="{$share['mainpage_imgurl']}">
+</div>
+<hr></hr>
+<h2>帖子详情</h2>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">标题</label>
+    <input class="col-sm-3" type="text" name="topic_title" value="{$share['topic_title']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">描述</label>
+    <input class="col-sm-3" type="text" name="topic_desc" value="{$share['topic_desc']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">图片</label>
+    <img id="topic_image" src="{$share['topic_imgurl']}" style="max-width: 80px; max-height: 80px;"></img>
+    <span id="topic_upload" class="btn btn-primary"><i class="fa fa-plus"></i> 上传图片</span>
+    <input class="col-sm-3" id="topic_imgurl" type="text" name="topic_imgurl" style = "display:none" value="{$share['topic_imgurl']}">
+</div>
+<hr></hr>
+<h2>个人中心</h2>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">标题</label>
+    <input class="col-sm-3" type="text" name="center_title" value="{$share['center_title']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">描述</label>
+    <input class="col-sm-3" type="text" name="center_desc" value="{$share['center_desc']}">
+</div>
+<div class="form-group">
+    <label  class="col-sm-2 control-label">图片</label>
+    <img id="center_image" src="{$share['center_imgurl']}" style="max-width: 80px; max-height: 80px;"></img>
+    <span id="center_upload" class="btn btn-primary"><i class="fa fa-plus"></i> 上传图片</span>
+    <input class="col-sm-3" id="center_imgurl" type="text" name="center_imgurl" style = "display:none" value="{$share['center_imgurl']}">
+</div>
+<div class="form-group">
+    <div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
+      <input name="submit" type="submit" value="提交" class="btn btn-primary" />
+      <input name="reset" type="reset" value="重置" class="btn btn-primary" />
+    </div>
+</div>
+</form>
