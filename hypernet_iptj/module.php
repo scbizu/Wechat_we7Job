@@ -163,6 +163,21 @@ class hypernet_iptjModule extends WeModule {
 	}
 	
 /**
+ * 判断是本地上传 还是oss外链
+ * @param unknown $img
+ * @param unknown $proot
+ * @return unknown|string
+ */
+private function img_type_change($img,$proot){
+	if(strpos($img,'http')!==FALSE){
+		return $img;
+	}
+	else{
+		return $proot.$img;
+	}
+}
+	
+/**
  * 
  * @param unknown $pid
  * @param unknown $priority
@@ -171,12 +186,12 @@ class hypernet_iptjModule extends WeModule {
  * @param unknown $button
  */	
    private function setpic($pid,$priority,$img,$proot,$button){
-   	
+   		$img=self::img_type_change($img,$proot);
    		if($this->search_pid($pid)){
-   			pdo_update('ptj_pic',array('priority'=>$priority,'imgurl'=>$proot.$img,'ison'=>$button),array('pid'=>$pid));
+   			pdo_update('ptj_pic',array('priority'=>$priority,'imgurl'=>$img,'ison'=>$button),array('pid'=>$pid));
    		}
 		else{
-			pdo_insert('ptj_pic',array('priority'=>$priority,'imgurl'=>$proot.$img,'ison'=>$button));
+			pdo_insert('ptj_pic',array('priority'=>$priority,'imgurl'=>$img,'ison'=>$button));
 		}
    }
 /**

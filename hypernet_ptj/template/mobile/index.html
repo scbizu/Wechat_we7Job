@@ -90,7 +90,8 @@
 <ul>
 {loop $img $k $v}
 
-<li style="background-image: url({php echo $v['imgurl']}); background-size: 100% 100%;height:180px;float:left">
+<li style="background-image: url({php echo $v['imgurl']}); background-size: 100% 100%;height:180px;float:left;padding:0px">
+<a href="{php echo $v['imgurl']}" style="margin: 0px; display: block; width: 100%; height: 100%;"></a>
  </li>
 
  {/loop}
