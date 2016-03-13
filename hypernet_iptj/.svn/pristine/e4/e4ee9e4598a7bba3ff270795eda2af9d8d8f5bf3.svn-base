@@ -1,0 +1,77 @@
+{template 'common/header'}
+
+<h2 class="lead text-center">老司机兼职平台后台帖子管理</h2>
+<div class="search">
+  <input class="col-sm-2" type="text" placeholder="帖子标题" id="title">
+  <input class="col-sm-2" type="text" placeholder="发帖人" style="margin-left:5px" id="cname">
+  <select class="col-sm-2" style="margin-left:5px" id="privacy">
+      <option value ="2" }>全部</option>
+      <option value ="0" }>未置顶</option>
+      <option value ="1" }>已置顶</option>
+    </select>
+  <a id="search" type="button" class="btn btn-primary" style="margin-left:5px">搜索</a>
+</div>
+<hr></hr>
+<div class="control" style="margin-bottom:5px;">
+  <a href="{php echo $this->createWebUrl('ptjtiezi',array('add'=>'on'));}" type="button" class="btn btn-primary">新建</a>
+</div>
+<table class="table table-responsive table-bordered">
+ <tr>
+   <th>帖子编号<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'jobid'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'jobid DESC'));}" type="button" class="btn btn-small">↓</a></th>
+   <th>发帖人<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'cname'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'cname DESC'));}" type="button" class="btn btn-small">↓</a></th>
+   <th>帖子标题<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'title'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'title DESC'));}" type="button" class="btn btn-small">↓</a></th>
+   <th>已有/应有<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'exists'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'exists DESC'));}" type="button" class="btn btn-small">↓</a></th>
+   <th>是否置顶<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'privacy'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'privacy DESC'));}" type="button" class="btn btn-small">↓</a></th>
+    <th>操作<a href="" type="button" class="btn btn-small">↑</a><a href="" type="button" class="btn btn-small">↓</a></th>
+   </tr>
+{loop $ground $k $v}
+  <tr class="success">
+   <td>{$v['jobid']}</td>
+   <td>{$v['cname']}</td>
+   <td>{$v['title']}</td>
+   <td>{$v['exists']}/{$v['mount']}</td>
+  {if $v['privacy']==1}
+     <td>
+     已置顶 
+   </td>
+   	  {if $v['vis']}
+      <td>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'down'));}" type="button" class="btn btn-default">下</a>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'close'));}" type="button" class="btn btn-default">关</a>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'edit'=>'on'));}" type="button" class="btn btn-default">改</a>
+   </td>
+   {else}
+   <td >
+   <p>已完成<a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'open'));}" type="button" class="btn btn-default" style="margin-right:5px">开</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'delete'=>'on'));}" type="button" class="btn btn-default" style="margin-right:5px">删</a></p>
+   </td>
+   {/if}
+{else}
+   <td>
+     未置顶 
+   </td>
+     	  {if $v['vis']}
+      <td>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'up'));}" type="button" class="btn btn-default">顶</a>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'close'));}" type="button" class="btn btn-default">关</a>
+   <a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'edit'=>'on'));}" type="button" class="btn btn-default">改</a>
+   </td>
+      {else}
+	  <td>
+   <p>已完成<a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'status'=>'open'));}" type="button" class="btn btn-default" style="margin-right:5px">开</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('jobid'=>$v['jobid'],'delete'=>'on'));}" type="button" class="btn btn-default" style="margin-right:5px">删</a></p>
+   </td>
+      {/if}
+   {/if}
+
+ </tr>
+{/loop}
+
+ </table>
+ <script>
+//动态填充action值
+require(['jquery', 'util'], function($, util){
+    $('#search').click(function(){
+          //alert('./index.php?c=site&a=entry&title='+$('#title').val()+'&cname='+$('#cname').val()+'$privacy='+$('#privacy').val()+'&do=ptjtiezi&m=hypernet_iptj');
+          location.href = './index.php?c=site&a=entry&search=on&title='+$('#title').val()+'&cname='+$('#cname').val()+'&privacy='+$('#privacy').val()+'&do=ptjtiezi&m=hypernet_iptj';
+    }); 
+});
+</script>

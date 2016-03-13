@@ -68,12 +68,6 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 				if($v['privacy']==0){																							
 					array_push($farr,$k);				
 				}
-				$admitted=$this->ifAllSure($v['jobid']);
-				//var_dump($admitted);
-				if($admitted>=$v['mount']){
-					pdo_update('ptj_ground',array('visible'=>0),array('jobid'=>$v['jobid']));
-				}
-				//$first=$farr[0];
 			}		
 		}
 ///////////搜索后的排序
@@ -89,7 +83,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
         $avatar=$_W['account']['avatar'];
         $first=$farr[0];
 
-        $img=pdo_fetchall("SELECT * FROM".tablename('ptj_pic')."ORDER BY priority",array(),'');
+        $img=pdo_fetchall("SELECT * FROM".tablename('ptj_pic')."WHERE ison=:io ORDER BY priority",array(':io'=>1),'');
 		$proot=$_W['attachurl'];
 		
 
@@ -324,7 +318,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		}
 		if (empty($avatar)) {
 			// 提示用户关注公众号。;
-			echo "最终没有获取到头像,follow: {$_W['fans']['follow']}";
+		//	echo "最终没有获取到头像,follow: {$_W['fans']['follow']}";
 		} else {
 		$src=$avatar;
 		}
@@ -596,57 +590,19 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		}
 		if (empty($avatar)) {
 			// 提示用户关注公众号。;
-			echo "最终没有获取到头像,follow: {$_W['fans']['follow']}";
+			//echo "最终没有获取到头像,follow: {$_W['fans']['follow']}";
 		} else {
 		$src=$avatar;
 		}
 	//////////////////////////////////////mc调用结束////////////////////////////
-		$user=$this->DboperateSearchUser($openid);
-		//if user
-		$profile=$_GPC['Ptjperfect'];
-		$name=$profile['Name'];
-		$phone=$profile['Phone'];
-		$location=$profile['Address'];
-		$sex=$profile['Sex'];
-		$email=$profile['Email'];
-		$iden=$profile['Usertype'];
-		$Cname=$profile['Cname'];
-		$Caddress=$profile['Caddress'];
-		$Cphone=$profile['Cphone'];
-		//是否处于等待审核状态
-		if($this->DboperateIsWaiting($openid)){
-			$waiting=true;
-		}
-		
-		
-if($_GPC['postbtn']=='on'){
-		if($name AND $phone AND $location AND $sex AND $iden=='owner' AND $email AND $Cname AND $Caddress AND $Cphone){
-				
-			$this->DboperateInsertIntoProfile($openid, $name, $nickname,$phone, $sex, $location, $email,$iden,$Cname,$Caddress,$Cphone);
-			mc_update($uid, array('realname'=>$name,'mobile'=>$phone,'email'=>$email));
-			$url=$this->createMobileUrl('ptjperfect');
-			echo "<script language='javascript'>
-			alert('耐心等待管理员审核哦,审核成功后会通知你哒~~谢谢光顾~');
-			location.href=\"$url\";
-			</script>";
-		}
-		else if($name AND $phone AND $location AND $sex AND $iden=='worker' AND $email){
-			$this->DboperateInsertIntoProfile($openid, $name, $nickname,$phone, $sex, $location,$email ,$iden);
-			mc_update($uid, array('realname'=>$name,'mobile'=>$phone,'email'=>$email));
-			$url=$this->createMobileUrl('ptjmyinfo');
-			echo "<script language='javascript'>
-			alert('耐心等待管理员审核哦,审核成功后会通知你哒~~谢谢光顾~');
-			location.href=\"$url\";
-			</script>";			
-		}
-		else{
-			$url=$this->createMobileUrl('ptjperfect');
-			echo "<script language='javascript'>
-			alert('你的信息好像哪里不符合规范~~~再试一遍 咯!');
-			location.href=\"$url\";
-			</script>";
-		}
-}
+	
+         $name=$_GPC['name'];
+		 $phone=$_GPC['phone'];
+		 $openid=$_W['openid'];
+		 if(isset($name) && isset($phone)){
+		 	pdo_insert('ptj_profile',array('name'=>$name,'phone'=>$phone,'sure'=>1,'openid'=>$openid));		 	
+		 }
+
 		include $this->template('perfect');
 	}
 	
@@ -757,45 +713,42 @@ if($_GPC['postbtn']=='on'){
 		
 		load()->func('tpl');
 		load()->model('mc');
-		
-				$uid=mc_openid2uid($_W['openid']);
+		load()->func('file');		
+		$uid=mc_openid2uid($_W['openid']);
 	    $creditarray=mc_credit_fetch($uid);
 		$credit=$creditarray['credit1'];
 		
 		$ground=$_GPC['ground'];
-		$mypost=$_GPC['Ptjpostinfo'];
+	//	$mypost=$_GPC['Ptjpostinfo'];
 		$user=$this->DboperateSearchUser($_W['openid']);		
-	if($_GPC['postbtn']=='on'){
-		$postinfo=$_GPC['Ptjpostinfo'];
-        $starttime = $_GPC['startdate'];
-        $endtime   = $_GPC['enddate'];
-     $suretime=(strtotime($starttime)<=strtotime($endtime))?1:0;
-        //post info
-        $title=$mypost['title'];       
-        $content=$mypost['content'];
-        $salary=$mypost['salary'];
-        $mount=$mypost['mount'];
-        $type=$mypost['wktype'];
-        $limit=$mypost['limit'];
-        $privacy=$mypost['privacy'];
-        //后台判断  不操作数据库
-        if($limit=='man'){
-        	$limit='仅限男生';
-        }
-        else if($limit=='no'){
-        	$limit='不限男女';
-        }
-        else if($limit=='woman'){
-        	$limit='仅限女生';
-        }
-        $nowtime=date('Y-m-d');
-        $now=date('Y-m-d H:i:s');
-        $workplace=$mypost['wkplace'];
+
+if($_GPC){
+     	   		$title=$_GPC['title'];       
+       			$content=$_GPC['description'];
+     			 $privacy=$_GPC['top']=='on'?1:0;
+     			 $c_pay=$_GPC['credit'];
+     			 $phone=$_GPC['default_tel']!=''?$_GPC['default_tel']:$_GPC['new_tel'];
+     			 if($_FILES['pic1']['name']){
+     			 	$pic1=file_upload($_FILES['pic1'],'image');
+     			 	$path1=tomedia($pic1['path']);    			 	
+     			 }
+     			 if($_FILES['pic2']['name']){
+				$pic2=file_upload($_FILES['pic2'],'image');				
+				$path2=tomedia($pic2['path']);
+     			 }
+     			 if($_FILES['pic3']['name']){     			 
+				$pic3=file_upload($_FILES['pic3'],'image');		
+				$path3=tomedia($pic3['path']);	
+     			 }					
         //检测状态
-        if($title AND $content AND $salary AND $mount  AND $type AND $limit AND $nowtime AND $workplace AND $suretime){
+        if($title!="" AND $content!=""   AND $phone!="" AND $credit>=floatval($c_pay)){
+        	
+
+        	
         	//判断置顶招聘是否已满
-        	if($this->GetPrivacyNum()>10){
-               message('置顶招聘已满...请稍后重试!','','warning');        	
+        	if($privacy AND $this->GetPrivacyNum()>10){
+               message('置顶招聘已满...请稍后重试!','','warning');  
+               exit();
         	}
         	else{
 			        	if($privacy AND $credit>=100){
@@ -804,35 +757,15 @@ if($_GPC['postbtn']=='on'){
                       	}	
 						else if($privacy){
 							message('积分不足,您无权进行此操作,请前往个人中心充值。如有问题,请与管理员联系!');
+							exit();
 						}
 			}
          $jobid=substr(md5(substr(time(), 4,8)),4,9);
-         if($this->DboperateSearchUser($_W['openid'])){       
-        $this->DboperateInsertGroundInfo($_W['openid'], $jobid, $title, $content, $salary, $mount, $starttime, $type, $limit, $endtime, $nowtime, $workplace,$privacy,$now);
-        $url=$this->createMobileUrl('ptjindex',array('ground'=>$ground));
-        echo "<script language='javascript'>
-        alert('招募信息发布成功,准备好接收一波鲜肉了吗!');
-        location.href=\"$url\";
-        </script>";
-         }
-         else {
-         	$url=$this->createMobileUrl('ptjpostinfo',array('ground'=>$ground));
-         	echo "<script language='javascript'>
-         	alert('先去完善信息哦！');
-         	location.href=\"$url\";
-         	</script>";
-         }
+      
+        $this->DboperateInsertGroundInfo($_W['openid'], $jobid, $title, $content,$phone, $privacy,$path1,$path2,$path3,intval($c_pay));                  
+        }	
+}
 
-        }
-        else{
-        	$url=$this->createMobileUrl('ptjpostinfo',array('ground'=>$ground));
-        	echo "<script language='javascript'>
-        	alert('好像哪里出错了...再来一遍呗^_^  ');
-        	location.href=\"$url\";
-        	</script>";
-        }
-	}
-	
 		include $this->template('postinfo');
 	}
 	
@@ -928,9 +861,9 @@ private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,
 	 * @param unknown $date
 	 * @return Ambigous <boolean, unknown>
 	 */
-	private function DboperateInsertGroundInfo($openid,$jobid,$title,$content,$salary,$mount,$date,$type,$limit,$stopdate,$nowtime,$workplace,$privay,$pdate){
+	private function DboperateInsertGroundInfo($openid,$jobid,$title,$content,$phone,$privay,$pic1=null,$pic2=null,$pic3=null,$credit){
 		
-		$t=pdo_insert('ptj_ground',array('title'=>$title,'jobid'=>$jobid,'content'=>$content,'salary'=>$salary,'mount'=>$mount,'date'=>$date,'openid'=>$openid,'visible'=>1,'type'=>$type,'haslimit'=>$limit,'stopdate'=>$stopdate,'nowtime'=>$nowtime,'workplace'=>$workplace,'privacy'=>$privay,'pdate'=>$pdate));
+		$t=pdo_insert('ptj_ground',array('title'=>$title,'jobid'=>$jobid,'content'=>$content,'phone'=>$phone,'openid'=>$openid,'visible'=>1,'privacy'=>$privay,'pic1'=>$pic1,'pic2'=>$pic2,'pic3'=>$pic3,'credit'=>$credit));
 		$admin=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid='admin'",array(),'');
 		if (empty($admin)) {
 			//如果没有默认管理员，则添加一个默认管理员
@@ -945,10 +878,10 @@ private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,
 private  function  DboperateSearchGroundinfo(){
 	$ground=array();
 	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi ORDER BY privacy DESC",array(':vi'=>1),'');
-
+/*
 	foreach ($Ground as $k=>$v){
 		//$this->DboperateCheckGroundTime($v['jobid'], $v['date'], date('Y-m-d'));
-		$this->RefreshPrivacy($v['pdate'], $v['jobid']);
+	//	$this->RefreshPrivacy($v['pdate'], $v['jobid']);
 		$oprofile=$this->DboperateSearchUser($v['openid']);
 		$oname=$oprofile['cname']?$oprofile['cname']:$oprofile['name'];
 		$phone=$oprofile['cphone']?$oprofile['cphone']:$oprofile['phone'];
@@ -976,8 +909,8 @@ private  function  DboperateSearchGroundinfo(){
 		array_push($ground, $arr);
 	}
 	}
-// 	/var_dump($ground);
-	return $ground;
+*/
+	return $Ground;
 }	
 /**
  * 

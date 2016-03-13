@@ -1,12 +1,13 @@
 {template 'common/header'}
-<script>//alert('{php echo $apply['apply_tid']}');</script>
+
 <h2>#1 轮播图设置</h2>
 <br/>
 <blockquote>注:<br/>
 1.优先级即表示图片的轮播顺序,相同优先级即系统自动排序(从“1”开始， “1”表示优先级最高， 默认为“1”).<br/>
 2.照片要求格式为横版,最佳像素为320px * 180px.<br/>
 3.照片建议不要存在微擎(服务器)端,原因你们懂得。<br/>
-*若要存,请每次更改信息(优先级,是否显示)时,请再插入一遍图片~
+*若要存,请每次更改信息(优先级,是否显示)时,请再插入一遍图片~<br/>
+4.加图文地址时请带上<code>http://</code>或者<code>https://</code> 
 </blockquote>
 
  <div class="panel panel-default">
@@ -19,13 +20,18 @@
 <div class="form-group">
     <label  class="col-sm-2 control-label">Slide Picture Preview</label>
     <div class="col-sm-10">
-  {php  echo tpl_form_field_image('ImageUrl1',$src1['imgurl'],$src1['imgurl']);}
+ 	 	{php  echo tpl_form_field_image('ImageUrl1',$src1['imgurl'],$src1['imgurl']);}
     </div>
 </div>
 
 <div class="form-group" style="margin-left:10px;margin-top:10px">
 	<label class="col-sm-2 control-lable">优先级:</label>
 	<input class="col-sm-1" name="priority_f" type="text" value="{$src1['priority']}"/>
+</div>
+
+<div class="form-group" style="margin-left:10px;margin-top:10px">
+	<label class="col-sm-2 control-lable">图文地址:</label>
+	<input class="col-sm-8" name="arti_f" type="text" value="{$src1['arti']}"/>
 </div>
 
 <div class="form-group" style="margin-left:10px;margin-top:10px">
@@ -51,7 +57,6 @@
 <div class="form-group" style="display:none">
 	<input name="type" type="text" value="pic1" />
 </div>
-
 	<div class="form-group" style="margin-top:20px">
 		<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
 			<input name="submit" type="submit" value="保存" class="btn btn-primary" />
@@ -68,8 +73,7 @@
     <h3 class="panel-title">轮播#2 of 5:</h3>
   </div>
   <div class="panel-body">
-<form class="form-horizontal" action="" method="post" style="margin-top:100px">
-
+<form class="form-horizontal" action="" method="post">
 <div class="form-group">
     <label  class="col-sm-2 control-label">Slide Picture Preview</label>
     <div class="col-sm-10">
@@ -80,6 +84,11 @@
 <div class="form-group" style="margin-left:10px;margin-top:10px">
 	<label class="col-sm-2 control-lable">优先级:</label>
 	<input class="col-sm-1" name="priority_s" type="text" value="{$src2['priority']}"/>
+</div>
+
+<div class="form-group" style="margin-left:10px;margin-top:10px">
+	<label class="col-sm-2 control-lable">图文地址:</label>
+	<input class="col-sm-8" name="arti_s" type="text" value="{$src2['arti']}"/>
 </div>
 
 <div class="form-group" style="margin-left:10px;margin-top:10px">
@@ -120,7 +129,7 @@
     <h3 class="panel-title">轮播#3 of 5:</h3>
   </div>
   <div class="panel-body">
-<form class="form-horizontal" action="" method="post" style="margin-top:100px">
+<form class="form-horizontal" action="" method="post" >
 
 <div class="form-group">
     <label  class="col-sm-2 control-label">Slide Picture Preview</label>
@@ -132,6 +141,11 @@
 <div class="form-group" style="margin-left:10px;margin-top:10px">
 	<label class="col-sm-2 control-lable">优先级:</label>
 	<input class="col-sm-1" name="priority_t" type="text" value="{$src3['priority']}"/>
+</div>
+
+<div class="form-group" style="margin-left:10px;margin-top:10px">
+	<label class="col-sm-2 control-lable">图文地址:</label>
+	<input class="col-sm-8" name="arti_t" type="text" value="{$src3['arti']}"/>
 </div>
 
 <div class="form-group" style="margin-left:10px;margin-top:10px">
@@ -172,7 +186,7 @@
     <h3 class="panel-title">轮播#4 of 5:</h3>
   </div>
   <div class="panel-body">
-<form class="form-horizontal" action="" method="post" style="margin-top:100px">
+<form class="form-horizontal" action="" method="post" >
 
 <div class="form-group">
     <label  class="col-sm-2 control-label">Slide Picture Preview</label>
@@ -184,6 +198,11 @@
 <div class="form-group" style="margin-left:10px;margin-top:10px">
 	<label class="col-sm-2 control-lable">优先级:</label>
 	<input class="col-sm-1" name="priority_fo" type="text" value="{$src4['priority']}"/>
+</div>
+
+<div class="form-group" style="margin-left:10px;margin-top:10px">
+	<label class="col-sm-2 control-lable">图文地址:</label>
+	<input class="col-sm-8" name="arti_fo" type="text" value="{$src4['arti']}"/>
 </div>
 
 <div class="form-group" style="margin-left:10px;margin-top:10px">
@@ -224,7 +243,7 @@
     <h3 class="panel-title">轮播#5 of 5:</h3>
   </div>
   <div class="panel-body">
-<form class="form-horizontal" action="" method="post" style="margin-top:100px">
+<form class="form-horizontal" action="" method="post">
 
 <div class="form-group">
     <label  class="col-sm-2 control-label">Slide Picture Preview</label>
@@ -236,6 +255,11 @@
 <div class="form-group" style="margin-left:10px;margin-top:10px">
 	<label class="col-sm-2 control-lable">优先级:</label>
 	<input class="col-sm-1" name="priority_fi" type="text" value="{$src5['priority']}"/>
+</div>
+
+<div class="form-group" style="margin-left:10px;margin-top:10px">
+	<label class="col-sm-2 control-lable">图文地址:</label>
+	<input class="col-sm-8" name="arti_fi" type="text" value="{$src5['arti']}"/>
 </div>
 
 <div class="form-group" style="margin-left:10px;margin-top:10px">

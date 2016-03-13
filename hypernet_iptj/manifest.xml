@@ -92,7 +92,7 @@ CREATE TABLE `ims_ptj_link` (
   PRIMARY KEY (`Linkid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
-	/*
+/*
 Navicat MySQL Data Transfer
 
 Source Server         : localhost_3306
@@ -104,7 +104,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2015-11-20 17:48:43
+Date: 2016-02-29 16:21:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -114,10 +114,23 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `ims_ptj_pic`;
 CREATE TABLE `ims_ptj_pic` (
-  `pid` int(10) NOT NULL,
+  `pid` int(30) NOT NULL AUTO_INCREMENT,
   `imgurl` text NOT NULL,
+  `priority` int(10) NOT NULL,
+  `ison` int(1) NOT NULL,
+  `arti` varchar(100) NOT NULL,
   PRIMARY KEY (`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ims_ptj_pic
+-- ----------------------------
+INSERT INTO `ims_ptj_pic` VALUES ('1', '', '1', '0', '');
+INSERT INTO `ims_ptj_pic` VALUES ('2', '', '1', '0', '');
+INSERT INTO `ims_ptj_pic` VALUES ('3', '', '1', '0', '');
+INSERT INTO `ims_ptj_pic` VALUES ('4', '', '1', '0', '');
+INSERT INTO `ims_ptj_pic` VALUES ('5', '', '1', '0', '');
+
 	
 	/*
 Navicat MySQL Data Transfer

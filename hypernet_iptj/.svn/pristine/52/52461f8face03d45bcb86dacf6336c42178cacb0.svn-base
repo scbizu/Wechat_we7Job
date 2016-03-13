@@ -1,0 +1,69 @@
+{template 'common/header'}
+<html>
+<body style="background-color:#ededed">
+{if $flag==1}
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjmodel');}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="color:white;font-size:20px">求职者名单</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+{else}
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$ground,'openid'=>$openid,'exists'=>$exists));}" type="button" style="color:#fff;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="font-size:20px;color:#fff">求职者名单</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+{/if}
+{if $Wkinfo}
+ <div style="width:40%;margin-left:70%;margin-top:60px;">
+ <a type="button" class="btn btn-success" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'wopenid'=>$v['wopenid'],'abutton'=>'on'));}">全部录用</a>
+ </div>
+ {loop $Wkinfo $k $v}
+  <div class="btn-group btn-group-justified" role="group" style="height: 60px;">
+  <div class="btn-group " role="group" >
+    <div style="border-style:solid; border-width:1px; border-color:#D3D3D2">
+    <div style="margin-top:10px">
+    <a href="{php echo $this->createmobileUrl('ptjworkerindex',array('ground'=>$ground,'exists'=>$exists,'wopenid'=>$v['wopenid']));}" style="color:black;font-size:18px;">
+    &nbsp;&nbsp;&nbsp; {$v['wkname']}&nbsp;{$v['wkphone']}
+    </a>
+    </div>
+     {if !$v['status']}
+    <div style=" height: 10px;">
+     <a type="button" class="btn btn-default" style="width:20%;margin-left:70%;margin-top:-45px" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'wopenid'=>$v['wopenid'],'ebutton'=>'on'));}">录用</a>
+    </div>
+    {else}
+     <div style="margin-top:-20px;margin-left:70%">
+     <p><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已录用</p>
+    </div>   
+    {/if}     
+    </div>
+  </div>
+</div>
+{/loop}
+{else}
+<div class="jumbotron" style="margin-top:60px;background-color:#fff">
+  <p style="color:#333">(空空荡荡~~~)你这里怎么没人来啊？要不试试撤掉 然后<b>加点薪水</b>什么的</p>
+</div>
+{/if}
+<div style="margin-top:20px">
+<a href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'sbutton'=>'on'));}" type="button" class="btn btn-danger text-center" style="width:100%">终止招聘</a>
+</div>
+
+<br>
+<br>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{template 'common/header'}
+<html>
+<body style="background-color:#ededed">
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjmyinfo');}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="color:white;font-size:20px">一些关于你的事</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+
+
+<div style="margin-top:80px">
+{if $OwnerEx}
+{loop $OwnerEx $k $v}
+{if !$v['vis']}
+<div class="list-group" style="margin-bottom:6px">
+  <a href="{php echo $this->createMobileUrl('ptjdetails',array('openid'=>$openid,'jobid'=>$v['jobid'],'flag'=>2));}" class="list-group-item active" style="background-color:#fff;color:#333;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background:#fff;color:#333">发布相关</h4>
+         <span class="badge"  style="background:#fff;color:#333">已结束</span>
+    <p class="list-group-item-text" style="background:#fff;color:#333">{$v['title']}</p>
+  </a>
+</div> 
+{else}
+<div class="list-group"  style="margin-bottom:6px">
+  <a href="{php echo $this->createMobileUrl('ptjdetails',array('openid'=>$openid,'jobid'=>$v['jobid'],'flag'=>2));}" class="list-group-item active" style="background-color:#fff;color:#333;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background:#fff;color:#333">发布相关</h4>
+         <span class="badge" style="background:#fff;color:#333">正在进行...</span>
+    <p class="list-group-item-text" style="background:#fff;color:#333">{$v['title']}</p>
+  </a>
+</div> 
+{/if}
+{/loop}
+
+{else if $wEx}
+{loop $wEx $k $v}
+{if $v['status']==1 AND $v['vis']==1}
+<div class="list-group">
+  <a href="#" class="list-group-item active" style="background-color:#fff;color:#333;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background:#fff;color:#333">兼职相关</h4>
+         <span class="badge" style="background:#fff;color:#333">正在进行...</span>
+    <p class="list-group-item-text" style="background:#fff;color:#333">{$v['title']}</p>
+	{if $v['cname']}
+	<p class="list-group-item-text" style="background:#fff;color:#333">来自:@{$v['cname']}</p>
+	{else}
+	<p class="list-group-item-text" style="background:#fff;color:#333">来自:@{$v['name']}</p>
+	{/if}
+  </a>
+</div> 
+{else if $v['status']==1 AND $v['vis']==0}
+<div class="list-group">
+  <a href="#" class="list-group-item active" style="background-color:#fff;color:#333;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background:#fff;color:#333">兼职相关</h4>
+         <span class="badge"  style="background:#fff;color:#333">已完成</span>
+    <p class="list-group-item-text" style="background:#fff;color:#333">{$v['title']}</p>
+	{if $v['cname']}
+	<p class="list-group-item-text" style="background:#fff;color:#333">来自:@{$v['cname']}</p>
+	{else}
+	<p class="list-group-item-text" style="background:#fff;color:#333">来自:@{$v['name']}</p>
+	{/if}
+  </a>
+</div> 
+{else if $v['status']==0}
+<div class="list-group">
+  <a href="#" class="list-group-item active" style="background-color:#fff;color:#333;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background:#fff;color:#333">兼职相关</h4>
+         <span class="badge" style="background:#fff;color:#333">未审核</span>
+    <p class="list-group-item-text" style="background:#fff;color:#333">{$v['title']}</p>
+	{if $v['cname']}
+	<p class="list-group-item-text" style="background:#fff;color:#333">来自:@{$v['cname']}</p>
+	{else}
+	<p class="list-group-item-text" style="background:#fff;color:#333">来自:@{$v['name']}</p>
+	{/if}
+  </a>
+</div>
+{/if}
+{/loop}
+{/if}
+</div>
+</body>
+</html>

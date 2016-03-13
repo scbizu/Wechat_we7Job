@@ -1,0 +1,45 @@
+{template 'common/header'}
+
+<form class="form-horizontal" action="" method="post" >
+
+<div class="form-group">
+    <label  class="col-sm-2 control-label">首页照片1</label>
+    <div class="col-sm-10">
+  {php  echo tpl_form_field_image('ImageUrl1','照片要求格式为横版,最佳像素为320px * 180px');}
+    </div>
+</div>
+
+<div class="form-group">
+    <label  class="col-sm-2 control-label">首页照片2</label>
+    <div class="col-sm-10">
+  {php  echo tpl_form_field_image('ImageUrl2','照片要求格式为横版,最佳像素为320px * 180px');}
+    </div>
+</div>
+
+<div class="form-group">
+    <label  class="col-sm-2 control-label">首页照片3</label>
+    <div class="col-sm-10">
+  {php  echo tpl_form_field_image('ImageUrl3','照片要求格式为横版,最佳像素为320px * 180px');}
+    </div>
+</div>
+
+<div class="form-group">
+    <label  class="col-sm-2 control-label">首页照片4</label>
+    <div class="col-sm-10">
+  {php  echo tpl_form_field_image('ImageUrl4','照片要求格式为横版,最佳像素为320px * 180px');}
+    </div>
+</div>
+
+<div class="form-group">
+    <label  class="col-sm-2 control-label">首页照片5</label>
+    <div class="col-sm-10">
+  {php  echo tpl_form_field_image('ImageUrl5','照片要求格式为横版,最佳像素为320px * 180px');}
+    </div>
+</div>
+
+	<div class="form-group">
+		<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
+			<input name="submit" type="submit" value="上照!" class="btn btn-primary" />
+		</div>
+	</div>
+</form>

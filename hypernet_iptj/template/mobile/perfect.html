@@ -1,131 +1,154 @@
 {template 'common/header'}
 <html>
-    <link href="http://libs.baidu.com//bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
   	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_normalize.css" />
 	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_styles.css" />
-	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_default.css" />  
+	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_default.css" />
+    <link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>	
+<body>	  
 <nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
    <div class="container-fluid">
    <div style="width:30%;margin-top:10px">
-    <a href="{php echo $this->createMobileUrl('ptjmyinfo');}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    <div id="back" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
     </div> 
-    <div style="margin-top:-36px">   
-      <ul class="nav navbar-nav" style="text-align:center">
-        <p style="font-size:20px;color:#fff">完善信息</p> 
-      </ul>
-      </div>    
+    <div style="margin-top:-50px">
+     <h2 style="color:#fff" align="center">注册 </h2>
+     </div>
   </div>
 </nav>
+<br/>
+<br/>
+<div class="weui_cells weui_cells_form">
 
-{if !$user} 
-  {if $waiting}
-  	<div class="htmleaf-container" style="margin-top:60px;max-width:100%;height:600px ">
-
-		<section class="mod model-8" >
-			<div class="spinner" style="width: 200px;height: 60%;margin-top: 50%;">
-				<h2 style="color: white;width: 50%;margin-top: 35px;margin-left: -10px">审核中</h2>
-			</div>
-		</section>		
-
-	</div>
-  {else}
-<form class="form-horizontal" style="margin-top:100px;margin-left:10%" action="{php echo $this->createMobileUrl('ptjperfect',array('postbtn'=>'on'));}" method="post">
-
-    <div class="form-group">
-        <label for="Name" class="control-label col-xs-2" style="width:70px">姓名</label>
-        <div class="col-xs-8">
-            <input type="text" class="form-control" id="Name" name="Ptjperfect[Name]" placeholder="这里写名字">
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">姓名</label>
         </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="Age" class="control-label col-xs-2" style="width:70px">年龄</label>
-        <div class="col-xs-8">
-            <input type="text" class="form-control" id="Age" name="Ptjperfect[Age]" placeholder="这里写几岁了">
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="text" id="name" placeholder="请输入真实姓名">
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="Phone" class="control-label col-xs-2" style="width:70px">电话</label>
-        <div class="col-xs-9">
-            <input type="text" class="form-control" id="Phone" name="Ptjperfect[Phone]" placeholder="这里写你的联系方式..">
+
+    <div class="weui_cell weui_cell_select weui_select_before">
+        <div class="weui_cell_hd">
+            <select class="weui_select" name="select" id="pretel">
+                <option value="+86">+86</option>
+                <option value="+80">+80</option>
+                <option value="+84">+84</option>
+                <option value="+87">+87</option>
+            </select>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="tel" id="tel" placeholder="请输入联系方式">
         </div>
     </div>
     
-    <div class="form-group">
-        <label for="Address" class="control-label col-xs-2" style="width:70px">住址</label>
-        <div class="col-xs-9" >
-            <input type="text" class="form-control" id="Address" name="Ptjperfect[Address]" placeholder="这里写住哪里..">
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="Email" class="control-label col-xs-2" style="width:70px">邮箱</label>
-        <div class="col-xs-9">
-            <input type="email" class="form-control" id="Email" name="Ptjperfect[Email]" placeholder="这里写该往哪个邮箱发信息...">
-        </div>
-    </div>
-    
-<div class="form-group">
-            <label for="Name" class="control-label col-xs-2" style="width:70px">性别</label>
-   <label class="checkbox-inline">
-      <input type="radio" name="Ptjperfect[Sex]" id="Man" 
-         value="Man" checked> 男
-   </label>
-   <label class="checkbox-inline">
-      <input type="radio" name="Ptjperfect[Sex]" id="Woman" 
-         value="Woman"> 女
-   </label>
-</div>
-    
-<div class="form-group">
-     <label for="Name" class="control-label col-xs-2" style="width:70px">用户类型</label>
-   <label class="checkbox-inline" style="margin-left:3%">
-      <input type="radio" name="Ptjperfect[Usertype]"  onclick="return click_orgin('Ifcompany')"
-         value="worker" checked> 个人
-   </label>
-   <label class="checkbox-inline" style="margin-left:3%">
-      <input type="radio" name="Ptjperfect[Usertype]"  value="owner" onclick="return click_a('Ifcompany')">企业
-   </label>
+    <br/>
+    <br/>
+    <div  class="weui_btn weui_btn_primary" id="s_btn">提交</div>
 </div>
 
-<div style="display:none" id="Ifcompany">
-
-    <div class="form-group" >
-        <label for="Cname" class="control-label col-xs-2" style="width:70px">企业名称</label>
-        <div class="col-xs-9" >
-            <input type="text" class="form-control" id="Cname" name="Ptjperfect[Cname]" placeholder="这里写店叫什么名字...">
+<div class="weui_dialog_alert" id="name_error_dia" style="display:none">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd">
+          <strong class="weui_dialog_title">错误提示</strong>
+      </div>
+        <div class="weui_dialog_bd">姓名是必须的哦~</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary" id="know">我知道了</a>
         </div>
     </div>
-
-    <div class="form-group"  >
-        <label for="Cname" class="control-label col-xs-2" style="width:70px">企业地址</label>
-        <div class="col-xs-9" >
-            <input type="text" class="form-control" id="Caddress" name="Ptjperfect[Caddress]" placeholder="这里写你的店在哪里...">
-        </div>
-    </div>
-    
-<div class="form-group">
-        <label for="Cphone" class="control-label col-xs-2" style="width:70px">企业电话</label>
-        <div class="col-xs-9" >
-            <input type="text" class="form-control" id="Cphone" name="Ptjperfect[Cphone]" placeholder="这里写店里的电话...">
-        </div>
-        </div>
- </div>
-        <div class="form-group">
-        <div class="col-xs-offset-2 col-xs-10">
-            <button type="submit" class="btn btn-primary">提交</button>
-        </div>
-    </div> 
-</form>
-{/if}
-{else}
-<div class="jumbotron" style="width:100%;background:#11EEB7;margin-top:60px">
-        <h2 style="color:black">您的信息已录入&nbsp;&nbsp;&nbsp;感谢你对本平台的支持,我们会越做越好哒^_^</h2>  
 </div>
-{/if}
 
+<div class="weui_dialog_alert" id="phone_error_dia" style="display:none">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd">
+          <strong class="weui_dialog_title">错误提示</strong>
+      </div>
+        <div class="weui_dialog_bd">电话是必须的哦~</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary" id="know">我知道了</a>
+        </div>
+    </div>
+</div>
+
+
+<div id="toast" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content">耶！注册成功!</p>
+    </div>
+</div>
+
+
+<div id="loadingToast" class="weui_loading_toast" style="display:none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <div class="weui_loading">
+            <!-- :) -->
+            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+        </div>
+        <p class="weui_toast_content">正在与服务器交互....</p>
+    </div>
+</div>
+
+
+</body>
 <script>
+
+require(['jquery','util'],function($,util){
+	$("#back").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjmyinfo');}";
+	});
+	
+	$("#s_btn").click(function(){
+		var name=$("#name").val();
+		var tel=$("#pretel").val()+$("#tel").val();
+		if(name===""){
+			$("#name_error_dia").attr("style","display:block");
+		}else if($("#tel").val()===""){
+			$("#tel_error_dia").attr("style","display:block");
+		}else{
+			$("#loadingToast").attr("style","display:block");
+		//alert(tel);
+			$.ajax({
+				url:"{php echo $this->createMobileUrl('ptjperfect')}",
+				method:"POST",
+				data:{
+					name:name,
+					phone:tel
+				}
+				})
+				.done(function(){
+					$("#loadingToast").attr("style","display:none");
+					$("#toast").attr("style","display:block");
+					setTimeout(function(){
+						window.location.href="{php echo $this->createMobileUrl('ptjmyinfo');}";
+					},1000);
+				});
+		}
+	});
+	
+	$("#know").click(function(){
+		$("#name_error_dia").attr("style","display:none");
+		$("#tel_error_dia").attr("style","display:none");
+	});
+});
+
 function click_a(Ifcompany)
 {
     if(document.getElementById(Ifcompany).style.display != "block")

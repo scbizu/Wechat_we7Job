@@ -64,14 +64,16 @@ class hypernet_iptjModule extends WeModule {
 				$dat1=$_GPC['ImageUrl1'];
 				if($dat1){	
 				   // echo "<script>alert('1');</script>";
-           			$this->setpic(1,$_GPC['priority_f'], $dat1,$proot,$_GPC['ison_f']);
+           			$this->setpic(1,$_GPC['priority_f'], $dat1,$proot,$_GPC['ison_f'],$_GPC['arti_f']);
            		//	var_dump($this->search_other(1));
+					$this->we7_refresh();
+				}elseif(isset($_GPC['ison_f'])){
+					pdo_update('ptj_pic',array('ison'=>$_GPC['ison_f']),array('pid'=>1));
 					$this->we7_refresh();
 				}
 				else{
 					message('别忘了 插入图片哦','refresh');
-				}
-				
+				}				
 			}
 			
 
@@ -79,8 +81,11 @@ class hypernet_iptjModule extends WeModule {
 		  	if($_GPC['type']=='pic2'){
 				$dat2=$_GPC['ImageUrl2'];
 				if($dat2){	
-           			$this->setpic(2,$_GPC['priority_s'], $dat2,$proot,$_GPC['ison_s']);
+           			$this->setpic(2,$_GPC['priority_s'], $dat2,$proot,$_GPC['ison_s'],$_GPC['arti_s']);
            			$this->we7_refresh();
+				}elseif(isset($_GPC['ison_s'])){
+					pdo_update('ptj_pic',array('ison'=>$_GPC['ison_s']),array('pid'=>2));
+					$this->we7_refresh();
 				}
 				else{
 					message('别忘了 插入图片哦','refresh');
@@ -91,8 +96,11 @@ class hypernet_iptjModule extends WeModule {
 			if($_GPC['type']=='pic3'){
 				$dat3=$_GPC['ImageUrl3'];
 				if($dat3){	
-           			$this->setpic(3,$_GPC['priority_t'], $dat3,$proot,$_GPC['ison_t']);
+           			$this->setpic(3,$_GPC['priority_t'], $dat3,$proot,$_GPC['ison_t'],$_GPC['arti_t']);
            			$this->we7_refresh();
+				}elseif(isset($_GPC['ison_t'])){
+					pdo_update('ptj_pic',array('ison'=>$_GPC['ison_t']),array('pid'=>3));
+					$this->we7_refresh();
 				}
 				else{
 					message('别忘了 插入图片哦','refresh');
@@ -102,8 +110,11 @@ class hypernet_iptjModule extends WeModule {
 		 	if($_GPC['type']=='pic4'){
 				$dat4=$_GPC['ImageUrl4'];
 				if($dat4){	
-           			$this->setpic(4,$_GPC['priority_fo'], $dat4,$proot,$_GPC['ison_fo']);
+           			$this->setpic(4,$_GPC['priority_fo'], $dat4,$proot,$_GPC['ison_fo'],$_GPC['arti_fo']);
            			$this->we7_refresh();
+				}elseif(isset($_GPC['ison_fo'])){
+					pdo_update('ptj_pic',array('ison'=>$_GPC['ison_fo']),array('pid'=>4));
+					$this->we7_refresh();
 				}
 				else{
 					message('别忘了 插入图片哦','refresh');
@@ -114,8 +125,11 @@ class hypernet_iptjModule extends WeModule {
 			if($_GPC['type']=='pic5'){
 				$dat5=$_GPC['ImageUrl5'];
 				if($dat5){	
-           			$this->setpic(5,$_GPC['priority_fi'], $dat5,$proot,$_GPC['ison_fi']);
+           			$this->setpic(5,$_GPC['priority_fi'], $dat5,$proot,$_GPC['ison_fi'],$_GPC['arti_fi']);
            			$this->we7_refresh();
+				}elseif(isset($_GPC['ison_fi'])){
+					pdo_update('ptj_pic',array('ison'=>$_GPC['ison_fi']),array('pid'=>5));
+					$this->we7_refresh();
 				}
 				else{
 					message('别忘了 插入图片哦','refresh');
@@ -185,13 +199,13 @@ private function img_type_change($img,$proot){
  * @param unknown $proot
  * @param unknown $button
  */	
-   private function setpic($pid,$priority,$img,$proot,$button){
+   private function setpic($pid,$priority,$img,$proot,$button,$arti){
    		$img=self::img_type_change($img,$proot);
    		if($this->search_pid($pid)){
-   			pdo_update('ptj_pic',array('priority'=>$priority,'imgurl'=>$img,'ison'=>$button),array('pid'=>$pid));
+   			pdo_update('ptj_pic',array('priority'=>$priority,'imgurl'=>$img,'ison'=>$button,'arti'=>$arti),array('pid'=>$pid));
    		}
 		else{
-			pdo_insert('ptj_pic',array('priority'=>$priority,'imgurl'=>$img,'ison'=>$button));
+			pdo_insert('ptj_pic',array('priority'=>$priority,'imgurl'=>$img,'ison'=>$button,'arti'=>$arti));
 		}
    }
 /**

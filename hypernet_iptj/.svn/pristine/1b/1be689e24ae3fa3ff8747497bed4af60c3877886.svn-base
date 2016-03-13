@@ -1,0 +1,79 @@
+{template 'common/header'}
+<html>
+<body style="background-color:#ededed">
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$ground,'openid'=>$openid));}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="color:white;font-size:20px">老司机用户</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+
+<div class="jumbotron" style="width:100% ;margin-bottom: 0px;margin-top: -50;margin-top: -50px;padding-bottom: 20px;" >
+<div class="row" style="margin-top:30%">
+  <div class="col-xs-6 col-md-3" style="width:40%">
+      <img src="{php echo $src}" style="width:90px; height:90px; border-radius:50px; ">
+  </div>
+</div>
+<div style="margin-top:-90px;margin-left:45%">
+<!--p>{$nickname}</p-->
+<p>{$user['cname']}</p>
+<!--h4>ID:{$user['phone']}</h4-->
+</div>
+</div>
+
+
+<div style="background:#00b26d">
+ <div style="margin-top:30px" class="text-center">
+  <a type="button" class="btn  btn-lg " style="color:#fff;margin-left:5%" href="#">往&nbsp;&nbsp;期&nbsp;&nbsp;发&nbsp;&nbsp;布</a>
+  </div>
+</div>
+{loop $OwnerEx $k $v}
+{if !$v['vis']}
+<div class="list-group" style="margin-bottom:5px">
+  <a href="#" class="list-group-item active" style="background-color:#fff;color:#333;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background:#fff;color:#333">{$v['now']}</h4>
+         <span class="badge" style="background:red;color:white" style="background:#fff;color:#333">已结束</span>
+    <p class="list-group-item-text" style="background:#fff;color:#333">{$v['title']}</p>
+  </a>
+</div> 
+{else}
+<div class="list-group"  style="margin-bottom:5px">
+  <a href="#" class="list-group-item active" style="background-color:#fff;color:#333;border-color:#ededed">
+    <h4 class="list-group-item-heading" style="background:#fff;color:#333">{$v['now']}</h4>
+         <span class="badge" style="background:#fff;color:#333">正在进行...</span>
+    <p class="list-group-item-text" style="background:#fff;color:#333">{$v['title']}</p>
+  </a>
+</div> 
+{/if}
+{/loop}
+
+
+<!--div style="background:#00b26d">
+ <div style="width:50%">
+ <a type="button" class="btn  btn-lg " style="margin-left:20px;color:rgba(248, 244, 241, 0.49)" href="#">主&nbsp;&nbsp;体&nbsp;&nbsp;简&nbsp;&nbsp;介</a>
+ </div>
+ <div style="width:50%;margin-left:50%;margin-top:-45px">
+  <a type="button" class="btn  btn-lg " style="color:#fff;margin-left:5%" href="{php echo $this->createMobileUrl('ptjownerindex',array('last'=>'on','ground'=>$ground));}">往&nbsp;&nbsp;期&nbsp;&nbsp;发&nbsp;&nbsp;布</a>
+  </div>
+</div>
+<br/>
+
+
+<br/>
+
+<p style="font-size:18px" class="text-left"><span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;公司电话:{$user['cphone']}</p>
+<p style="font-size:18px" class="text-left"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;&nbsp;公司地址:{$user['clocation']}</p-->
+
+</body>
+</html>
+
+
+
+
+

@@ -1,10 +1,12 @@
 {template 'common/header'}
+
 <html>
+<link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>
 <body style="background-color:#ededed">
 <nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
    <div class="container-fluid">
    <div style="width:30%;margin-top:10px">
-    <a href="{php echo $this->createMobileUrl('ptjindex',array('ground'=>$ground));}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    <div id="back" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
     </div> 
     <div style="margin-top:-36px">   
       <ul class="nav navbar-nav" style="text-align:center">
@@ -14,128 +16,267 @@
   </div>
 </nav>
 
-<form class="form-horizontal" style="margin-top:100px;margin-left:10%" action="{php echo $this->createMobileUrl('ptjpostinfo',array('postbtn'=>'on'));}" method="post">
 
-    <div class="form-group">
-        <label for="Name" class="control-label col-xs-5" style="">发布标题</label>
-        <div class="col-xs-8">
-            <input type="text" class="form-control" id="Name" name="Ptjpostinfo[title]" placeholder="工作标题...">
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="Age" class="control-label col-xs-5" style="">工作地点</label>
-        <div class="col-xs-8">
-            <input type="text" class="form-control" id="Age" name="Ptjpostinfo[wkplace]" placeholder="工作地点...">
-        </div>
-    </div>
-  
-    <div class="form-group">
-        <label for="Salary" class="control-label col-xs-5" style="">薪资待遇</label>
-        <div class="col-xs-8 input-group" style="margin-left:15px">
-            <input type="text" class="form-control" id="salary" name="Ptjpostinfo[salary]" placeholder="工资.....">
-                        <span class="input-group-addon">元/天</span>
-        </div>
-    </div>
-    
-	<!--div class="form-group">
-        <label for="content" class="control-label col-xs-5" style="">兼职开始时间</label>
-        <div class="col-xs-9" >
-            <input type="text" class="form-control" id="startdate" name="startdate" placeholder="兼职会在什么时候开始...">
-        </div>
-   </div-->
-   
-   <!--div class="form-group">
-        <label for="content" class="control-label col-xs-5" style="">兼职结束时间</label>
-        <div class="col-xs-9" >
-            <input type="text" class="form-control" id="enddate" name="enddate" placeholder="兼职又会在什么时候结束...">
-        </div>
-   </div-->
-	
-	
-    <div class="form-group">
-        <label for="wktype" class="control-label col-xs-5" style="">兼职类型</label>
-        <div class="col-xs-9" >
-         <select  class="form-control" name="Ptjpostinfo[wktype]" placeholder="什么样的兼职...." id="wktype">
-            <option value="cd">传单派发</option>
-            <option value="jj">家教</option>
-            <option  value="wm">外卖小哥</option>
-             <option value="fwy">服务员</option>
-             <option value="kf">客服</option>
-              <option value="others">其他</option>           
-           </select>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="Email" class="control-label col-xs-5" style="">招聘人数</label>
-        <div class="col-xs-8 input-group" style="margin-left:15px">
-            <input type="text" class="form-control" id="mount" name="Ptjpostinfo[mount]" placeholder="人数...">
-            <span class="input-group-addon">人</span>
-        </div>
-        
-    </div>
-   
 
-   
 
-	
-<div class="form-group">
-            <label for="Name" class="control-label col-xs-7" style="">工作要求</label>
+<div style="margin-top:80px">
+<form enctype="multipart/form-data"   method="post" id="post_form">
+<input style="display:none" id="have_credit" value="{$credit}">
+   <!-- TITLE -->
+<div class="weui_cells_title">标题</div>
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="text" placeholder="请输入标题" id="title" name="title">
+        </div>
+    </div>
+</div>
+  <!-- TEL -->
+<div class="weui_cells_title">联系方式</div>
+<div class="weui_cells weui_cells_checkbox">
+    <label class="weui_cell weui_check_label" for="s11">
+        <div class="weui_cell_hd">
+            <input type="checkbox" class="weui_check" name="default_tel" id="s11" checked="checked" value="{$user['phone']}">
+            <i class="weui_icon_checked"></i>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <p id="default_tel">{$user['phone']}</p>
+        </div>
+    </label>
+    <label class="weui_cell weui_check_label" for="new">
+        <div class="weui_cell_hd">
+            <label class="weui_label">其他</label>          
+        </div>
+        <div class="weui_cell_bd weui_cell_primary" id="new">
+            <input class="weui_input" type="tel" placeholder="请输入其他联系方式" id="new_tel" name="new_tel">
+        </div>
+    </label>
+</div>
+<!-- Top -->
+<div class="weui_cells_title">置顶开关</div>
+<div class="weui_cells weui_cells_form">
+  <div class="weui_cell weui_cell_switch">
+    <div class="weui_cell_hd weui_cell_primary">是否需要置顶(消耗100积分)</div>
+    <div class="weui_cell_ft">
+      <input class="weui_switch" type="checkbox" id="sw_top" name="top">
+    </div>
+  </div>
+</div>
+<!-- 悬赏积分 -->
+<div class="weui_cells_title">悬赏积分</div>
+<div class="weui_cells">
+    <div class="weui_cell weui_cell_select">
+        <div class="weui_cell_bd weui_cell_primary">
+            <select class="weui_select" name="credit" id="credit"> 
+                <option selected="" value="0.00">0分</option>
+                <option value="10.00">10分</option>
+                <option value="20.00">20分</option>
+                <option value="30.00">30分</option>                
+            </select>
+        </div>
+    </div>
+ </div>
+<!-- 具体描述 -->
+<div class="weui_cells_title">具体描述</div>
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <textarea class="weui_textarea" placeholder="请输入具体信息" rows="5" id="description" name="description"></textarea>
+        </div>
+    </div>
+</div>
+<!-- 图片 -->
+<div class="weui_cells_title">图片上传</div>
 
-   <label class="checkbox-inline col-xs-8" style="margin-left:8px">
-      <input type="radio" name="Ptjpostinfo[limit]" id="No" 
-         value="No" checked> 男女不限
-   </label>
-   <label class="checkbox-inline col-xs-8">
-      <input type="radio" name="Ptjpostinfo[limit]" id="man" 
-         value="man"> 只限男生
-   </label>
-      <label class="checkbox-inline col-xs-8">
-      <input type="radio" name="Ptjpostinfo[limit]" id="Woman" 
-         value="woman"> 只限女生
-   </label>
- 
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <div class="weui_uploader">
+
+                <div class="weui_uploader_bd">
+                    <ul class="weui_uploader_files">
+                        <li class="weui_uploader_file" style="display:none" id="f_p"></li>
+                        <li class="weui_uploader_file" style=";display:none" id="s_p" ></li>
+                        <li class="weui_uploader_file" style=";display:none" id="t_p"></li>
+                    </ul>                
+                    <div class="weui_uploader_input_wrp" id="d_pic1">
+                        <input class="weui_uploader_input" type="file" accept="image/*" id="pic1" name="pic1">
+                    </div>
+                    <div class="weui_uploader_input_wrp" id="d_pic2">
+                        <input class="weui_uploader_input" type="file" accept="image/*" id="pic2" name="pic2">
+                    </div>   
+                    <div class="weui_uploader_input_wrp" id="d_pic3">
+                        <input class="weui_uploader_input" type="file" accept="image/*" id="pic3" name="pic3">
+                    </div>                                      
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-
-    <div class="form-group">
-             <label class="control-label col-xs-7" style="">置顶选项</label>
-         <label class="checkbox-inline col-xs-8" style="margin-left:8px">
-            	<input type="radio" name="Ptjpostinfo[privacy]" id="privacy" 
-         value="1" > 置顶公告(消耗100积分)
-   </label>  
-       <label class="checkbox-inline col-xs-8" style="">
-            	<input type="radio" name="Ptjpostinfo[privacy]" id="privacy" 
-         value="0" checked> 不置顶公告(不消耗积分)
-   </label>          
-  </div>
-
-	    <!--div class="form-group">
-        <label for="content" class="control-label col-xs-5" >兼职开始时间</label>
-            {php echo tpl_form_field_date('startdate',NULL,true);}
-    </div>
-    <div class="form-group">
-        <label for="content" class="control-label col-xs-5" >兼职结束时间</label>
-            {php echo tpl_form_field_date('enddate',NULL,true);}
-            <br/>
-    </div-->
-
-<div class="form-group">
-        <label for="content" class="control-label col-xs-5" style="">具体要求</label>
-        <textarea class="form-control" rows="8" id="content" name="Ptjpostinfo[content]" placeholder="具体说一说吧..." style="width:80%"></textarea>
-        <!--div class="col-xs-9" >
-            <input type="text" class="form-control" id="content" name="Ptjpostinfo[content]" placeholder="具体说一说吧...">
-        </div-->
-   </div>
-
-
-        <div class="form-group">
-        <div class="col-xs-offset-0 col-xs-10">
-            <button type="submit" class="btn btn-primary">提交</button>
-        </div>
-    </div> 
+<br/>
+<!-- submit button -->
+<button  class="weui_btn weui_btn_primary" id="post">发布</button>
 </form>
+<br/>
+<br/>
+<br/>
+
+</div>
+<nav class="navbar navbar-default navbar-fixed-bottom" style="background:#00b26d">
+	<div class="weui_tabbar">
+        <div class="weui_tabbar_item " id="index">
+            <div class="weui_tabbar_icon">
+                <img src="./weui/dist/example/images/icon_nav_button.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">首页</p>
+        </div>
+
+         <div  class="weui_tabbar_item weui_bar_item_on">
+            <div class="weui_tabbar_icon">
+                <img src="./weui/dist/example/images/icon_nav_cell.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">发布</p>
+        </div> 	
+
+         <div  class="weui_tabbar_item " id="mine">
+            <div class="weui_tabbar_icon">
+                <img src="./weui/dist/example/images/icon_nav_msg.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">我的</p>
+        </div> 
+	</div>
+</nav>
+<div id="loadingToast" class="weui_loading_toast" style="display:none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <div class="weui_loading">
+            <!-- :) -->
+            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+        </div>
+        <p class="weui_toast_content">正在说服总管...</p>
+    </div>
+</div>
+
+<div id="toast" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content">你的请求已经收录成功!</p>
+    </div>
+</div>
+
+<div class="weui_dialog_alert" id="no_credit" style="display:none">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd">
+          <strong class="weui_dialog_title">积分充值提醒</strong>
+      </div>
+        <div class="weui_dialog_bd">Sorry~积分不足啦~~</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary" id="no_credit_confirm">确定</a>
+        </div>
+    </div>
+</div>
 </body>
+<script>
+require(['jquery'],function($){
+
+	$('#mine').click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjmyinfo');}";
+	});
+	$('#index').click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjindex');}";
+	});	
+	
+	$("#back").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjindex',array('ground'=>$ground));}";
+	});
+	//移除s11的checked属性
+	$("#new_tel").focus(function(){		
+		$("#s11").removeAttr("checked");
+	});
+	//图片变化的事件监听
+	$("#pic1").change(function(){
+		var file=this.files[0];	
+		var f_p=$("#f_p")[0].style.display;
+		if(file){
+			var reader=new FileReader();
+			reader.onload=function(e){
+				if(f_p==='none'){
+					$("#f_p").attr('style',"background-image:url("+e.target.result+");display:block");
+              		  $("#d_pic1").attr('style',"display:none");
+ 			   }
+				
+			};
+			reader.readAsDataURL(file);
+		}
+	});
+	
+	$("#pic2").change(function(){
+		var file=this.files[0];	
+		var s_p=$("#s_p")[0].style.display;
+		if(file){
+			var reader=new FileReader();
+			reader.onload=function(e){
+				 if(s_p==='none'){
+					$("#s_p").attr('style',"background-image:url("+e.target.result+");display:block");	
+            		  $("#d_pic2").attr('style',"display:none");													
+				}				
+			};
+			reader.readAsDataURL(file);
+		}
+	});	
+	
+	$("#pic3").change(function(){
+		var file=this.files[0];	
+		var t_p=$("#t_p")[0].style.display;
+		if(file){
+			var reader=new FileReader();
+			reader.onload=function(e){
+				 if(t_p==='none'){
+					$("#t_p").attr('style',"background-image:url("+e.target.result+");display:block");	
+          		  $("#d_pic3").attr('style',"display:none");														
+				}				
+			};
+			reader.readAsDataURL(file);
+		}
+	});		
+	//button
+
+	$("#post").click(function(){
+		var title=$("#title").val();
+		var phone=($("#s11").val()!=='')?$("#s11").val():$("#new_tel").val();
+		var top=($("#sw_top")[0].checked)?"toped":"notop";
+        var info=$("#description").val();
+        var credit=$("#credit").val();
+     //   console.log(credit);
+        if(title=='' || phone=='' || top=='' || info==''){
+        	alert('哪里出错了耶~');
+        }else if(parseFloat(credit) > $("#have_credit").val()){
+        	$("#no_credit").attr('style',"display:block");      	
+        }else{
+			$("#loadingToast").attr("style","display:block");     
+			$("#post_form").submit();
+			$("#loadingToast").attr("style","display:none");
+			$("#toast").attr("style","display:block");				
+        }		       
+	});
+
+	$("#no_credit_confirm").click(function(){
+    	$("#no_credit").attr('style',"display:none"); 		
+	});
+});
+</script>
 </html>

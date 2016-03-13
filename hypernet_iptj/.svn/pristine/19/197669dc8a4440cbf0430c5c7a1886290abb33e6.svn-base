@@ -1,0 +1,61 @@
+{template 'common/header'}
+<body style="background-color:#ededed">
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+   <div class="container-fluid">
+   <div style="width:30%;margin-top:10px">
+    <a href="{php echo $this->createMobileUrl('ptjindex',array('ground'=>$ground));}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    </div> 
+    <div style="margin-top:-36px">   
+      <ul class="nav navbar-nav" style="text-align:center">
+        <p style="color:white;font-size:20px">类别选择</p> 
+      </ul>
+      </div>    
+  </div>
+</nav>
+{if $isworker==2}
+<div style="margin-top:55px; background:#fff">
+   <a href="{php echo $this->createMobileUrl('ptjpostinfo',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-bullhorn"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;兼职招聘<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+
+   <a href="{php echo $this->createMobileUrl('ptjing',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;闲置出售<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $this->createMobileUrl('ptjing',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-tower"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;租房住宿<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $this->createMobileUrl('ptjing',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我要提问<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+</div>
+{else if $isworker==1}
+<div style="margin-top:55px; background:background:#fff">
+   <br/>
+      <a href="{php echo $this->createMobileUrl('ptjpostinfo',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-bullhorn"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;兼职招聘<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $this->createMobileUrl('ptjing',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block" ><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;闲置出售<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $this->createMobileUrl('ptjing',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-tower"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;租房住宿<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+<hr style="
+    margin-top: 0px;
+    margin-bottom: 0px;
+">
+   <a href="{php echo $this->createMobileUrl('ptjing',array('ground'=>$ground));}" style="font-size:15px;color:black;background:#fff" type="button" class="btn-lg btn-block"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我要提问<span class="glyphicon glyphicon-chevron-right" style="margin-left:50%"></span></a>
+   <br/>
+</div>
+{else}
+<div class="jumbotron" style="margin-top:55px;">
+        <h3 style="color:black">抱歉！你没有激活你的全部属性,请速去<a href="{php echo $this->createMobileUrl('ptjmyinfo');}">“我的”</a>完善信息吧...</h3>  
+</div>
+{/if}
+</body>
