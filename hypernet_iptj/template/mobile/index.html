@@ -2,8 +2,6 @@
 <html>
 
 <link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>
-<link rel="stylesheet" href="./weui/dist/example/example.css"/>
-
 <script type="text/javascript">
     sharedata = {
         title: "{$share['mainpage_title']}",
@@ -16,10 +14,28 @@
       };
 </script>
 
- <body style="background-color:#ededed">  
- <nav class="navbar navbar-default navbar-fixed-bottom" style="background:#00b26d">
-  <div class="weui_tabbar">
-       {if !$searchinfo}
+ <body style="background:#ededed">  
+ 
+ <div id="actionSheet_wrap" >
+    <div class="weui_mask_transition" id="mask"></div>
+    <div class="weui_actionsheet" id="weui_actionsheet">
+        <div class="weui_actionsheet_menu">
+            <div class="weui_actionsheet_cell">示例菜单</div>
+            <div class="weui_actionsheet_cell">示例菜单</div>
+            <div class="weui_actionsheet_cell">示例菜单</div>
+            <div class="weui_actionsheet_cell">示例菜单</div>
+        </div>
+        <div class="weui_actionsheet_action">
+            <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
+        </div>
+    </div>
+</div>
+ 
+ 
+ 
+ <nav class="navbar navbar-default navbar-fixed-bottom" style="background:#00b26d" id="btmnav">
+  <div class="weui_tabbar" id="tabbar">
+{if !$searchinfo}
         <div  class="weui_tabbar_item weui_bar_item_on" >
             <div class="weui_tabbar_icon">
                 <img src="./weui/dist/example/images/icon_nav_button.png" alt="">
@@ -125,19 +141,19 @@
 
 </ul>
 </div>
-<div style="height:60px;background-color:#ededed">
-<div style="margin-left:5%;margin-bottom:10px;width:90%;margin-top:0px">
-<br/>
-    <form action=" " method="post" class="form-inline" >
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="搜索...." style="width:100%" name="Ptjindex[Search]">
-      <span class="input-group-btn">
-			<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-      </span>
-      </div>
-      </form>
-      
-</div>
+<div class="weui_search_bar" id="search_bar" style="z-index:-2">
+    <form class="weui_search_outer" action="" method="post">
+        <div class="weui_search_inner">
+            <i class="weui_icon_search"></i>
+            <input type="search" class="weui_search_input" id="search_input" placeholder="搜索" name="Search" required/>
+            <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+        </div>
+        <label for="search_input" class="weui_search_text" id="search_text">
+            <i class="weui_icon_search"></i>
+            <span>搜索</span>
+        </label>
+    </form>
+    <a href="javascript:" class="weui_search_cancel" id="search_cancel">取消</a>
 </div>
 
 
@@ -203,7 +219,7 @@
   	<div style="color:#00b26d">
  		<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;最新
 	 </div> 
- 	{/if}
+ {/if}
 	<div class="list-group" style="margin-bottom:5px">
  		 <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active" style="background-color:#fff;border-color:#ededed">
    			 <h4 class="list-group-item-heading" style="background-color:#fff;color:#333">{$v['title']}</h4>
@@ -211,15 +227,15 @@
          		<span class="badge" style="font-size:13px;background-color:#fff;color:#333">工资:{$v['salary']}元/天</span>
         
    		 <p class="list-group-item-text" style="background-color:#fff;color:#333">地点:{$v['workplace']}</p>
-   		 <br/>
+    <br/>
 		<p class="list-group-item-text" style="background-color:#fff;color:#333">发布方相关:@{$v['cname']} <!--span style="margin-left:25%">已报名:{$v['exists']}/{$v['mount']}</span--> </p>
  		 </a>
-	</div> 
+</div> 
 {/loop}
 {/if}
 
-{if $ground AND !$type AND !$search}
-{loop $ground $k $v}
+{if $Ground AND !$type AND !$search}
+{loop $Ground $k $v}
   {if $k>=($pageindex-1)*$pagesize && $k<($pageindex)*$pagesize}
   {if $v['privacy']==1 AND $k==0}
  <div style="color:#00b26d">
@@ -230,48 +246,111 @@
  <span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;最新
  </div> 
  {/if}
-<div class="list-group" style="margin-bottom:0px">
-  <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active" style="background-color:#fff;border-color:#ededed">
-    <h4 class="list-group-item-heading" style="background-color:#fff;color:#333">{$v['title']}</h4>
-       
-         <span class="badge" style="font-size:13px;background-color:#fff;color:#333;">工资:{$v['salary']}元/天</span>
-        
-    <p class="list-group-item-text" style="background-color:#fff;color:#333">地点:{$v['workplace']}</p>
-    <br/>
-<p class="list-group-item-text" style="background-color:#fff;color:#333">发布方相关:@{$v['cname']} <!--span style="margin-left:25%">已报名:{$v['exists']}/{$v['mount']}</span--> </p>
-  </a>
+<div class="weui_cells">
+  <div class="tinfo" rel="{$v['jobid']}">
+   	 <div class="weui_cell_hd">
+   	<p> {$v['title']}</p> 
+   	 <div align="right" style="margin-top:-20px">
+   	    	<p style="color:red">悬赏:{$v['credit']}积分</p>
+   	 </div>
+   	 </div>
+               
+         <div class="weui_cell_bd weui_cell_primary">
+          {if $v['pic1'] || $v['pic2'] || $v['pic3']}  
+           <div style="width:300px;height:80px;margin-top:20px;margin-bottom:10px">  
+           		{if $v['pic1']}  
+					<img src="{$v['pic1']}" alt="" style="width:100px;height:80px"/>
+				{/if}
+				{if $v['pic2']}
+					<img src="{$v['pic2']}" alt="" style="width:100px;height:80px;margin-left:110px;margin-top:-105px">
+				{/if}
+				{if $v['pic3']}
+					<img src="{$v['pic2']}" alt="" style="width:100px;height:80px;margin-left:230px;margin-top:-148px">
+				{/if}				
+		  </div>				
+			{/if}
+		  <br/>	 
+		  <p>{$v['content']} </p> 
+		  <br/>			
+			<p  style="color:#333">发布方相关:@{$v['name']} </p>
+			</div>
+  </div>
 </div> 
-<br/>
-  {/if}
 {/loop}
+  {/if}
 
 {$page}
 {/if}
 
-<br/>
-<br/>
-<br/>
+
 {if $bottom}
 <p class="text-center"><a href="{php echo $bottom['linkURL']}">{$bottom['adminLable']}</a></p>
 {/if} 
 <br/>
 <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
 </body>
 
 
 <script>
-require(['jquery', 'util'], function($, util){
-	$(function(){
-		$('#searchbtn').click(function(){
-			$.post("{php echo $this->createMobileUrl('Ptjindex');}",{searchinfo:$("#searchsth").val()},function(data,status){
-				alert(data);
-			});
-		});	
+require(['jquery'], function($){
+	
+	$(".tinfo").click(function(){
+		var jobid=$(this).attr('rel')
+        window.location.href="{php echo $this->createMobileUrl('ptjdetails');}"+"&jobid="+jobid;
 	});
 	
-	$('#submit').click(function(){
-		window.location.href="{php echo $this->createMobileUrl('ptjpostinfo');}";
+	$("#search_input").focus(function(){
+		$("#search_bar").addClass('weui_search_focusing');
 	});
+	$("#search_input").blur(function(){
+		$("#search_bar").removeClass('weui_search_focusing');
+		if($("#search_input").val()){
+			$("#search_text").hide();
+		}else{
+			$("#search_text").show();
+		}
+	});
+	$("#search_cancel").click(function(){
+		$("#search_show").hide();
+		$("#search_input").val('');
+	});
+	$("#search_clear").click(function(){
+		$("#search_show").hide();
+		$("#search_input").val('');
+	});	
+	
+	$('#submit').click(function(){
+		$("#btmnav").hide();
+		var mask=$("#mask");
+		var actionsheet=$("#weui_actionsheet");
+		actionsheet.addClass("weui_actionsheet_toggle");
+		mask.show().addClass("weui_fade_toggle").one('click',function(){
+			$("#btmnav").show();
+			hideSheet(mask,actionsheet);
+		});
+		$("#actionsheet_cancel").one('click',function(){
+			$("#btmnav").show();
+			hideSheet($("#mask"),$("#weui_actionsheet"));
+		});		
+		actionsheet.unbind('transitionend').unbind('webkitTransitionEnd');
+	    function hideSheet(mask, actionSheet) {
+	    	actionSheet.removeClass('weui_actionsheet_toggle');
+	        mask.removeClass('weui_fade_toggle');
+	        actionSheet.on('transitionend', function () {
+	            mask.hide();
+	        }).on('webkitTransitionEnd', function () {
+	            mask.hide();
+	        })
+	    }		
+	});
+			
 	$('#mine').click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjmyinfo');}";
 	});
@@ -281,9 +360,6 @@ require(['jquery', 'util'], function($, util){
 	
 });
 </script>
- <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="http://unslider.com/unslider.js"></script>      
-<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-
 </html>
 {template 'common/footer'}

@@ -1,6 +1,5 @@
 {template 'common/header'}
-<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-<script src="http://libs.baidu.com/jquery/1.11.1/jquery.js"></script>
+<link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>
 <script type="text/javascript">
     sharedata = {
         title: "{$share['topic_title']}",
@@ -14,33 +13,28 @@
 </script>
 <html>
 <body style="background-color:#ededed">
-<nav class="navbar navbar-default navbar-fixed-bottom" style="width:50%">
-  <div class="container-fluid" style="width:70%">
-    <!-- Brand and toggle get grouped for better mobile display -->
+<nav class="navbar navbar-default navbar-fixed-bottom" style="background:#00b26d">
+	<div class="weui_tabbar">
+        <div class="weui_tabbar_item " id="untag">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-star-empty"></span>&nbsp;&nbsp;收藏</p>
+        </div>
+        <div class="weui_tabbar_item " id="taged" style="display:none">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;取消收藏</p>
+        </div>
+         <div  class="weui_tabbar_item" id="contact">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;问问ta</p>
+        </div> 	
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-      <ul class="nav navbar-nav"  >
-        <li><a href="{php echo $this->createMobileUrl('ptjindex');}"><span class="glyphicon glyphicon-home"></span>兼职广场</a></li>  
-      </ul>
-  </div><!-- /.container-fluid -->
-  
-</nav>
-
-<nav class="navbar navbar-default navbar-fixed-bottom" style="margin-left:50%">
-  <div class="container-fluid" style="width:70%">
-    <!-- Brand and toggle get grouped for better mobile display -->
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-      <ul class="nav navbar-nav">
-        <li><a href="{php echo $this->createMobileUrl('ptjmyinfo');}"><span class="glyphicon glyphicon-user"></span>个人中心</a></li>  
-      </ul>
-  </div><!-- /.container-fluid --> 
+         <div  class="weui_tabbar_item " id="action">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-play"></span>&nbsp;&nbsp;立即报名</p>
+        </div> 
+	</div>
 </nav>
 {if $flag==2}
 <nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
    <div class="container-fluid">
    <div style="width:30%;margin-top:10px">
-    <a href="{php echo $this->createMobileUrl('ptjmodel',array('id'=>'owner'));}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    <div  id="oback"  style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
     </div> 
     <div style="margin-top:-36px">   
       <ul class="nav navbar-nav" style="text-align:center">
@@ -55,7 +49,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
    <div class="container-fluid">
    <div style="width:30%;margin-top:10px">
-    <a href="{php echo $this->createMobileUrl('ptjindex');}" type="button"  style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    <div  id="back"  style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
     </div> 
     <div style="margin-top:-36px">   
       <ul class="nav navbar-nav" style="text-align:center">
@@ -77,50 +71,45 @@
 {/if}
 </div>
 </div>
-<div style="font-size:20px">
-&nbsp;&nbsp;{$ground['title']}
-</div>
 <!--information  -->
-<div class="jumbotron" style="background-color:#fff">
+<div class="jumbotron" style="background-color:#fff;margin-bottom:10px">
+ <p style="font-size:15px">标题:&nbsp;&nbsp;{$ground['title']}</p>
+  {if $isworker==1 && $commitFlag==2||$commitFlag==1}
+ 	 <p style="font-size:15px" ><span class="glyphicon glyphicon-phone" style="color:red"></span>&nbsp;&nbsp;&nbsp;&nbsp;【新增】联系电话:{$ground['phone']}</p>
+  {else}
+		 <p style="font-size:15px" >联系电话:&nbsp;&nbsp;<b>此栏于报名后揭晓</b></p>  
+  {/if}
+ <p style="font-size:15px">具体内容:&nbsp;&nbsp;{$ground['content']}</p>
 
-<p style="font-size:15px"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发布时间:{$ground['nowtime']}</p>
-<p style="font-size:15px"><span class="glyphicon glyphicon-globe"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作地点:{$ground['workplace']}</p>
-<!--p style="font-size:15px"><span class="glyphicon glyphicon-flag"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作时间:{$ground['date']}至{$ground['stopdate']}</p-->
-  <p style="font-size:15px"><span class="glyphicon glyphicon-usd"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;薪资待遇:{$ground['salary']}元/天</p>
-  {if $ground['exists']}
-   <p style="font-size:15px"><span class="glyphicon glyphicon-check"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已报名:{$ground['exists']}/{$ground['mount']} 人</p> 
-   {else if $exists!=NULL}
-   <p style="font-size:15px"><span class="glyphicon glyphicon-check"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已报名:{$exists}/{$ground['mount']} 人</p> 
-   {else}
-   <p style="font-size:15px"><span class="glyphicon glyphicon-check"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已报名:0/{$ground['mount']} 人</p> 
-   {/if}
-{if $ground['haslimit']=='No'}  
-   <p style="font-size:15px"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作要求:男女不限</p>
-   {else if $ground['haslimit']=='仅限男生'}
-    <p style="font-size:15px"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作要求:只限男生</p>
-    {else if $ground['haslimit']=='仅限女生'}
-     <p style="font-size:15px"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;工作要求:只限女生</p>   
-{/if}   
- <p style="font-size:15px"><span class="glyphicon glyphicon-align-center"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;具体内容:{$ground['content']}</p>
- {if $isworker==1 && $commitFlag==2||$commitFlag==1}
-  <div style="font-size:15px;color:red" ><span class="glyphicon glyphicon-phone" style="color:red"></span>&nbsp;&nbsp;&nbsp;&nbsp;【新增】联系电话:{$ground['phone']}</div>
-  <br/>
-    {/if}
-  <p style="font-size:15px"><span class="glyphicon glyphicon-align-center"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;招聘状态:</p>
+  <p style="font-size:15px">状态:</p>
   {if !$commitFlag}  
-    <div style="font-size:15px"><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;发布招聘&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right"style="color:red" ></span><span class="glyphicon glyphicon-remove-sign" style="color:red"></span>&nbsp;&nbsp;&nbsp;未报名&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:red"></span><span class="glyphicon glyphicon-remove-sign" style="color:red"></span>&nbsp;&nbsp;&nbsp;未录取</div>
+    <div style="font-size:15px"><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;发布&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right"style="color:red" ></span><span class="glyphicon glyphicon-remove-sign" style="color:red"></span>&nbsp;&nbsp;&nbsp;未加入&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:red"></span><span class="glyphicon glyphicon-remove-sign" style="color:red"></span>&nbsp;&nbsp;&nbsp;未确认</div>
     {/if}  
   {if $commitFlag==1}
-  <div style="font-size:15px"><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;发布招聘&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:#00dd00"></span><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;已报名&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:red"></span><span class="glyphicon glyphicon-remove-sign" style="color:red"></span>&nbsp;&nbsp;&nbsp;未录取</div>
+  <div style="font-size:15px"><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;发布&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:#00dd00"></span><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;已加入&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:red"></span><span class="glyphicon glyphicon-remove-sign" style="color:red"></span>&nbsp;&nbsp;&nbsp;未确认</div>
   {/if}
   {if $commitFlag==2}
-    <div style="font-size:15px" ><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;发布招聘&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;已报名&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;已录取</div>
+    <div style="font-size:15px" ><span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;发布&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;已加入&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-ok-sign" style="color:#00dd00"></span>&nbsp;&nbsp;&nbsp;已确认</div>
    {/if}
- 
 </div>
-
+{if $ground['pic1'] || $ground['pic2'] || $ground['pic3']}
+<div  >
+<p style="font-size:18px">图片预览</p>
+{if $ground['pic1']}
+<img src="{$ground['pic1']}" alt="" style="height:200px ;width:100%">
+{/if}
+<br/>
+{if $ground['pic2']}
+<img src="{$ground['pic2']}" alt="" style="height:200px ;width:100%">
+{/if}
+<br/>
+{if $ground['pic3']}
+<img src="{$ground['pic3']}" alt="" style="height:200px ;width:100%">
+{/if}
+</div>
+{/if}
 {if $isworker==1 AND !$commitFlag}
-<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px;height: 60px;">
+<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
 
   <div class="btn-group " role="group" style="background-color:#fff">
     <div style="border-style:solid; border-width:1px;border-color:#D3D3D2">
@@ -131,7 +120,7 @@
   </div>
 </div>
 {else if $isworker==3}
-<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px;height: 60px;">
+<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
 
   <div class="btn-group " role="group" style="background-color:#fff">
     <div style="border-style:solid; border-width:1px;border-color:#D3D3D2 ">
@@ -156,7 +145,7 @@
 {/if}
 
  {if !$user}
- <div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:-20px;height: 60px;">
+ <div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
   <div class="btn-group " role="group" style="background-color:#fff">
     <div style="border-style:solid; border-width:1px;border-color:#D3D3D2">
     <a type="button"  onclick="alert('先去完善信息咯,右下个人中心->完善信息,好走,不谢~~~~~')" class="btn btn-default text-center" >
@@ -166,23 +155,7 @@
   </div>
 </div>
  {/if}
-  <!--div class="btn-group danger" role="group">
-    <a type="button" class="btn btn-default btn btn-danger" data-toggle="modal" data-target="#jbmodal">我要举报</a>
-  </div>
-  <div class="modal fade" id="jbmodal" tabindex="-1" role="dialog" aria-labelledby="jbmodalLabel" style="margin-top:200px">
-  <div class="modal-dialog jbmodal">
-    <div class="modal-title">
-     <h3 class="text-danger" style="text-align:center ;">举&nbsp;报&nbsp;结&nbsp;果</h3>
-     <br/>
-     </div>
-    <div class="modal-content">
-     <h3 class="text-danger" style="text-align:center ; ">O(∩_∩)O 举报成功啦!<br/><br/>我们会处理你的请求哒~~</h3>
-     <br/>
-     <br/>
-     <br/>
-    </div>
-  </div>
-</div-->
+
 
 
 
@@ -195,14 +168,23 @@
 </body>
 
 <script>
-require(['jquery', 'util'], function($, util){
-	$(function(){
-		$('#flag').click(function(){
-			$.post("{php echo $this->createMobileUrl('Ptjdetails');}",{button:'on'},function(){
-				alert("回调成功");
-			});
-		}
-		);	
+require(['jquery'],function($){
+	$("#untag").click(function(){
+		$("#untag").hide();
+		$("#taged").show();
+	});
+	$("#taged").click(function(){
+		$("#taged").hide();
+		$("#untag").show();
+		
+	});
+
+	$("#oback").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjmodel',array('id'=>'owner'));}";
+	});
+	$("#back").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjindex');}";
+	});
 });
 </script>
 

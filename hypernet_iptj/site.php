@@ -68,10 +68,17 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 				if($v['privacy']==0){																							
 					array_push($farr,$k);				
 				}
-			}		
+			    $uinfo=$this->DboperateSearchUser($v['openid']);
+			//	$fansinfo=mc_fansinfo($v['openid'],$_W['acid'],$_W['uniacid']);
+				$v['name']=$uinfo['name'];
+				$ground[$k]=$v;
+			}
+	
+			$Ground=$ground;
+		//	var_dump($Ground);
 		}
 ///////////搜索后的排序
-		$search=$_GPC['Ptjindex']['Search'];
+		$search=$_GPC['Search'];
         if($search){
 	     	$searchinfo=$this->DboperateSearchGround($search,0,0,0,0);
 			foreach($searchinfo as $k=>$v){
@@ -400,7 +407,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
         load()->model('mc');
 		$openid=$_W['openid'];
 		$flag=$_GPC['flag'];
-		$ground=$_GPC['ground'];
+		$jobid=$_GPC['jobid'];
+		$ground=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$jobid));
 	//	$exists=$ground['exists'];
 		$uid=mc_openid2uid($openid);
 	    $creditarray=mc_credit_fetch($uid);
