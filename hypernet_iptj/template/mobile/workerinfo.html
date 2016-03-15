@@ -5,7 +5,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
    <div class="container-fluid">
    <div style="width:30%;margin-top:10px">
-    <a href="{php echo $this->createMobileUrl('ptjmodel');}" type="button" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    <div id="mback" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
     </div> 
     <div style="margin-top:-36px">   
       <ul class="nav navbar-nav" style="text-align:center">
@@ -18,7 +18,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
    <div class="container-fluid">
    <div style="width:30%;margin-top:10px">
-    <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$ground,'openid'=>$openid,'exists'=>$exists));}" type="button" style="color:#fff;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></a>
+    <div id="dback"  style="color:#fff;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
     </div> 
     <div style="margin-top:-36px">   
       <ul class="nav navbar-nav" style="text-align:center">
@@ -66,4 +66,14 @@
 <br>
 <br>
 </body>
+<script>
+require(['jquery'],function($){
+	$("#mback").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjmodel');}";
+	});
+	$("#dback").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjdetails',array('jobid'=>$ground['jobid']));}";		
+	});
+});
+</script>
 </html>

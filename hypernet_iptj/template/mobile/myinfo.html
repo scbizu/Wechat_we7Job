@@ -1,18 +1,5 @@
 {template 'common/header'}
-<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-<script src="http://libs.baidu.com/jquery/1.11.1/jquery.js"></script>
 <link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>
-<script type="text/javascript">
-    sharedata = {
-        title: "{$share['center_title']}",
-        desc: "{$share['center_desc']}",
-        imgUrl: "{$share['center_imgurl']}",
-        link:'',
-        success: function(){
-          alert('分享成功!');
-        }
-      };
-</script>
 <html> 
   	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_normalize.css" />
 	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_styles.css" />
@@ -52,7 +39,12 @@
 <div class="weui_cells weui_cells_access" id="btn_login">
    <div class="weui_cell" >  
    	 <div class="weui_cell_hd">
-   	 	 <img src="{php echo $src}" alt="icon" style="width:90px; height:90px; border-radius:50px; ">
+   	    {if !$user['avatar']}
+   	 	 	<img src="{$src}" alt="icon" style="width:90px; height:90px; ">
+   	 	 {else}
+			<img src="{$user['avatar']}" alt="icon" style="width:90px; height:90px; ">   	 	 	
+   	 	 {/if}
+   	 	 
    	 </div>
      <div class="weui_cell_bd weui_cell_primary">
      <p>{$nickname}</p>
@@ -69,7 +61,11 @@
    <div class="weui_cells" >
    <div class="weui_cell" >  
    	 <div class="weui_cell_hd">
-   	 	 <img src="{php echo $src}" alt="icon" style="width:90px; height:90px; border-radius:50px; ">
+   	    {if !$user['avatar']}
+   	 	 	<img src="{php echo $src}" alt="icon" style="width:90px; height:90px; border-radius:50px; ">
+   	 	 {else}
+			<img src="{php echo $user['avatar']}" alt="icon" style="width:90px; height:90px; border-radius:50px; ">   	 	 	
+   	 	 {/if}
    	 </div>
      <div class="weui_cell_bd weui_cell_primary">
      	<p>{$user['name']}(小黑屋)</p>
@@ -78,14 +74,20 @@
    </div>
  </div>    
    {else}
-  <div class="weui_cells" >
-   <div class="weui_cell" >  
+  <div class="weui_cells weui_cells_access" id="edit_info">
+   <div class="weui_cell " >  
    	 <div class="weui_cell_hd">
-   	 	 <img src="{php echo $src}" alt="icon" style="width:90px; height:90px; border-radius:50px; ">
+   	     {if !$user['avatar']}
+   	 	 	<img src="{$src}" style="width:90px; height:90px; ">
+   	 	 {else}
+			<img src="{$user['avatar']}" alt="icon" style="width:90px; height:90px; ">   	 	 	
+   	 	 {/if}
    	 </div>
      <div class="weui_cell_bd weui_cell_primary">
-     	<p>{$user['name']}</p>
-     	<p style="font:10px;color:grey">ID:{$user['phone']}</p>
+     	<p>&nbsp;&nbsp;&nbsp;{$user['name']}</p>
+     	<p style="font:10px;color:grey">&nbsp;&nbsp;&nbsp;ID:{$user['phone']}</p>
+     </div>
+     <div class="weui_cell_ft">
      </div>
    </div>
  </div>           
@@ -198,9 +200,6 @@
 <br/>
 
 </body>
-
-<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-<script src="http://libs.baidu.com/jquery/1.11.1/jquery.js"></script>
 <script type="text/javascript">
 
 require(['jquery','util'],function($,util){
@@ -240,20 +239,21 @@ require(['jquery','util'],function($,util){
 	$('#btn_credit_no').click(function(){
 		alert('需要注册哦~');
 	});
+	$("#edit_info").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjeditprofile');}";
+	});
 });
-
-
-function confirm_disp(){
-	     var r=confirm("真的要撤销咩/(ㄒoㄒ)/~~")
-	     
-	    if(r==true){
-	      location.href="{php echo $this->createMobileUrl('ptjmyinfo',array('undowker'=>'on','myworkerbtn'=>'on'));}"
-	      //尝试post
-	    }   
-	    else{
-	    	return false;
-	    }
-}
+</script>
+<script type="text/javascript">
+    sharedata = {
+        title: "{$share['center_title']}",
+        desc: "{$share['center_desc']}",
+        imgUrl: "{$share['center_imgurl']}",
+        link:'',
+        success: function(){
+          alert('分享成功!');
+        }
+      };
 </script>
 </html>
 

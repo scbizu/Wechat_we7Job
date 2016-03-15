@@ -20,10 +20,10 @@
     <div class="weui_mask_transition" id="mask"></div>
     <div class="weui_actionsheet" id="weui_actionsheet">
         <div class="weui_actionsheet_menu">
-            <div class="weui_actionsheet_cell">示例菜单</div>
-            <div class="weui_actionsheet_cell">示例菜单</div>
-            <div class="weui_actionsheet_cell">示例菜单</div>
-            <div class="weui_actionsheet_cell">示例菜单</div>
+            <div class="weui_actionsheet_cell">招聘</div>
+            <div class="weui_actionsheet_cell">租房</div>
+            <div class="weui_actionsheet_cell">闲置</div>
+            <div class="weui_actionsheet_cell">问问</div>
         </div>
         <div class="weui_actionsheet_action">
             <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
@@ -185,8 +185,8 @@
 </div>
 
 
-{if $searchinfo AND $search}
-{loop $searchinfo $k $v}
+{if $Searchinfo AND $search}
+{loop $Searchinfo $k $v}
  		 {if $v['privacy']==1 AND $k==0}
  				<div style="color:#00b26d">
  					<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;老司机推荐
@@ -196,16 +196,35 @@
  					<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;最新
  				</div> 
  		{/if}
-	<div class="list-group" style="margin-bottom:5px">
-  		<a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active" style="background-color:#fff;border-color:#ededed">
-   			 <h4 class="list-group-item-heading" style="background-color:#fff;color:#333">{$v['title']}</h4>     
-         		<span class="badge" style="font-size:13px;background-color:#fff;color:#333">工资:{$v['salary']}元/天</span>       
- 			<!-- img -->
-   			 <br/>
-				<p class="list-group-item-text" style="background-color:#fff;color:#333">发布方相关:@{$v['cname']}</p>
- 		</a>
-
-	</div> 
+<div class="weui_cells">
+  <div class="tinfo" rel="{$v['jobid']}">
+   	 <div class="weui_cell_hd">
+   	<p> {$v['title']}</p> 
+   	 <div align="right" style="margin-top:-20px">
+   	    	<p style="color:red">悬赏:{$v['credit']}积分</p>
+   	 </div>
+   	 </div>             
+         <div class="weui_cell_bd weui_cell_primary">
+          {if $v['pic1'] || $v['pic2'] || $v['pic3']}  
+           <div style="width:300px;height:80px;margin-top:20px;margin-bottom:10px">  
+           		{if $v['pic1']}  
+					<img src="{$v['pic1']}" alt="" style="width:100px;height:80px"/>
+				{/if}
+				{if $v['pic2']}
+					<img src="{$v['pic2']}" alt="" style="width:100px;height:80px;margin-left:110px;margin-top:-105px">
+				{/if}
+				{if $v['pic3']}
+					<img src="{$v['pic2']}" alt="" style="width:100px;height:80px;margin-left:230px;margin-top:-148px">
+				{/if}				
+		  </div>				
+			{/if}
+		  <br/>	 
+		  <p>{$v['content']} </p> 
+		  <br/>			
+			<p  style="color:#333">发布方相关:@{$v['nickname']} </p>
+			</div>
+  </div>
+</div> 
 {/loop}
 {/if}
 
@@ -220,17 +239,36 @@
  		<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;最新
 	 </div> 
  {/if}
-	<div class="list-group" style="margin-bottom:5px">
- 		 <a href="{php echo $this->createMobileUrl('ptjdetails',array('ground'=>$v,'openid'=>$openid));}" class="list-group-item active" style="background-color:#fff;border-color:#ededed">
-   			 <h4 class="list-group-item-heading" style="background-color:#fff;color:#333">{$v['title']}</h4>
-       
-         		<span class="badge" style="font-size:13px;background-color:#fff;color:#333">工资:{$v['salary']}元/天</span>
-        
-   		 <p class="list-group-item-text" style="background-color:#fff;color:#333">地点:{$v['workplace']}</p>
-    <br/>
-		<p class="list-group-item-text" style="background-color:#fff;color:#333">发布方相关:@{$v['cname']} <!--span style="margin-left:25%">已报名:{$v['exists']}/{$v['mount']}</span--> </p>
- 		 </a>
-</div> 
+<div class="weui_cells">
+  <div class="tinfo" rel="{$v['jobid']}">
+   	 <div class="weui_cell_hd">
+   	<p> {$v['title']}</p> 
+   	 <div align="right" style="margin-top:-20px">
+   	    	<p style="color:red">悬赏:{$v['credit']}积分</p>
+   	 </div>
+   	 </div>
+               
+         <div class="weui_cell_bd weui_cell_primary">
+          {if $v['pic1'] || $v['pic2'] || $v['pic3']}  
+           <div style="width:300px;height:80px;margin-top:20px;margin-bottom:10px">  
+           		{if $v['pic1']}  
+					<img src="{$v['pic1']}" alt="" style="width:100px;height:80px"/>
+				{/if}
+				{if $v['pic2']}
+					<img src="{$v['pic2']}" alt="" style="width:100px;height:80px;margin-left:110px;margin-top:-105px">
+				{/if}
+				{if $v['pic3']}
+					<img src="{$v['pic2']}" alt="" style="width:100px;height:80px;margin-left:230px;margin-top:-148px">
+				{/if}				
+		  </div>				
+			{/if}
+		  <br/>	 
+		  <p>{$v['content']} </p> 
+		  <br/>			
+			<p  style="color:#333">发布方相关:@{$v['nickname']} </p>
+			</div>
+  </div>
+</div>  
 {/loop}
 {/if}
 
@@ -272,7 +310,7 @@
 		  <br/>	 
 		  <p>{$v['content']} </p> 
 		  <br/>			
-			<p  style="color:#333">发布方相关:@{$v['name']} </p>
+			<p  style="color:#333">发布方相关:@{$v['nickname']} </p>
 			</div>
   </div>
 </div> 

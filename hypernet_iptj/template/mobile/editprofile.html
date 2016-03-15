@@ -1,0 +1,110 @@
+{template 'common/header'}
+<html>
+<head>
+	<link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>
+</head>
+<body style="background-color:#ededed">
+	<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
+  		 <div class="container-fluid">
+ 			  <div style="width:30%;margin-top:10px">
+  				  <div  id="back"  style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
+   			 </div> 
+  			  <div style="margin-top:-36px">   
+   				   <ul class="nav navbar-nav" style="text-align:center">
+    				    <p style="font-size:20px;color:white">修改资料</p> 
+    			  </ul>
+   		   	 </div>    
+ 		 </div>
+	</nav>
+<br/>
+<br/>
+	<form class="weui_cells weui_cell_form" enctype="multipart/form-data" action="" method="post" id="edit_form">
+      <input id="ava" class="weui_uploader_input" type="file" accept="image/*" name="avatar" id="ava" style="position:absolute; top:-900px;">  	
+		<div class="weui_cell" id="change_ava">
+			<div class="weui_cell_bd weui_cell_primary">
+				<p>头像</p>
+              </div>
+              <div class="weui_cell_ft">
+                <div class="weui_uploader_bd" >
+                    <ul class="weui_uploader_files">
+                    {if $user['avatar']}
+                    	<li class="weui_uploader_file" id="avatar" style="background-image:url('{$user['avatar']}')"></li>
+                    {else}
+                    	<li class="weui_uploader_file" id="avatar" style="background-image:url('{$src}')"></li>
+                    {/if}
+                    </ul>
+                </div>                      	
+              </div>
+		</div>
+		<div class="weui_cell">
+			<div class="weui_cell_bd weui_cell_primary">
+				<p>姓名</p>
+			</div>
+			<div class="weui_cell_ft">
+			   <p>{$user['name']}</p>
+			</div>
+		</div>
+		<div class="weui_cell">
+		 	<div class="weui_cell_bd weui_cell_primary">
+		 		<p>手机号</p>
+		 	</div>
+			<div class="weui_cell_ft">
+			   <p>{$user['phone']}</p>
+			</div>		 	
+		</div>
+		<div class="weui_cell">
+		 	<div class="weui_cell_hd ">
+		 		<p>昵称</p>
+		 	</div>
+		 	<div class="weui_cell_bd weui_cell_primary">
+
+		 	</div>		 	
+			<div class="weui_cell_ft" style="width:100px">
+			    <input type="text" class="weui_input" name="nickname" value="{$user['nickname']}"/>
+			</div>		 	
+		</div>
+		<div class="weui_cell">
+       		 <div class="weui_cell_hd">
+        		    性别
+      		  </div>		
+		 	<div class="weui_cell_bd weui_cell_primary">
+
+		 	</div>
+			<div class="weui_cell_ft">
+            	<select class="weui_select" name="sex">
+              		 <option value="male">男</option>
+               		 <option value="female">女</option>
+            	</select>			
+			</div>		 	
+		</div>						
+	</form>	
+	<br/>
+	<br/>
+		<button  class="weui_btn weui_btn_primary" id="edit">修改信息</button>		
+</body>
+<script>
+	require(['jquery'],function($){
+		$("#back").click(function(){
+			window.location.href="{php echo $this->createMobileUrl('ptjmyinfo');}";
+		});
+		$("#change_ava").click(function(){
+			$("#ava").click();
+		});
+		$("#ava").change(function(){
+			var file=this.files[0];
+			if(file){
+				var reader=new FileReader();
+				reader.onload=function(e){
+					$("#avatar").attr('style',"background-image:url("+e.target.result+");display:block");
+				};
+				reader.readAsDataURL(file);
+			}
+		});
+		$("#edit").click(function(){
+			//TODO:
+			alert('修改成功');
+			$("#edit_form").submit();
+		});
+	});
+</script>
+</html>

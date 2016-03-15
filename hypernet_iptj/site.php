@@ -69,13 +69,10 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 					array_push($farr,$k);				
 				}
 			    $uinfo=$this->DboperateSearchUser($v['openid']);
-			//	$fansinfo=mc_fansinfo($v['openid'],$_W['acid'],$_W['uniacid']);
-				$v['name']=$uinfo['name'];
+				$v['nickname']=$uinfo['nickname']?$uinfo['nickname']:$uinfo['name'];
 				$ground[$k]=$v;
-			}
-	
+			}	
 			$Ground=$ground;
-		//	var_dump($Ground);
 		}
 ///////////搜索后的排序
 		$search=$_GPC['Search'];
@@ -85,7 +82,11 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 				if($v['privacy']==0){
                     array_push($farr,$k);
 				}	
+				$sinfo=$this->DboperateSearchUser($v['openid']);
+				$v['nickname']=$sinfo['nickname']?$sinfo['nickname']:$sinfo['name'];
+				$searchinfo[$k]=$v;				
             }
+            $Searchinfo=$searchinfo;
         }
         $avatar=$_W['account']['avatar'];
         $first=$farr[0];
@@ -96,7 +97,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 
 		$attachroot=$_W['attachurl'];
        $Tinfo=pdo_fetch("SELECT COUNT(*) as count FROM".tablename('ptj_ground')."WHERE visible=:vis",array(':vis'=>1));
-      // var_dump($Tinfo);
+
        $count=$Tinfo['count']; 
        //本页Record 数量
        $pagesize=20;
@@ -306,12 +307,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
         load()->func('tpl');
 		$avatar = '';
 		$openid=$_W['openid'];
-		$count=0;
-		
-		$avatar = '';
-		$openid=$_W['openid'];
-		$count=0;
-		
+		$count=0;		
 		$uid=$_W['member']['uid'];
 				$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE linkid=:id",array(':id'=>1));
 		$url=$sinfo['url']; 
@@ -343,6 +339,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$image=$_W['attachurl'].'confirm.jpg';
 
 		$user=$this->DboperateSearchUser($openid);
+		//var_dump($user);
 		if($user['identity']=='worker'){
 			$isworker=1;
 		}
@@ -413,7 +410,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$uid=mc_openid2uid($openid);
 	    $creditarray=mc_credit_fetch($uid);
 		$credit=$creditarray['credit1'];
-		
+		$url=$this->createMobileUrl('ptjdetails',array('jobid'=>$ground['jobid']));
+	//	var_dump($url);
 		if(empty($ground)){
 // 			$ground=pdo_fetch("SELECT * FROM".tablename('ptj_ground')." AS A left join ".tablename('ptj_working')
 // 				." AS B on A.jobid=B.jobid left join ".tablename('ptj_profile')." AS C on ownerid=C.id and c.openid=:jopenid WHERE A.jobid=:jid"
@@ -423,17 +421,16 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 			$exists=$this->DboperateGetIntworkers($_GPC['jobid']);
 			
 		}
-		//获取商家的信息
+		//获取用户信息
 		$oid=$ground['openid'];
-		$Ownerinfo=$this->DboperateSearchUser($oid);
-		$user=$this->DboperateSearchUser($_W['openid']);
-		$name=$Ownerinfo['cname']?$Ownerinfo['cname']:$Ownerinfo['name'];
-		 
+		$Ownerinfo=$this->DboperateSearchUser($oid);	
+		$name=$Ownerinfo['nickname']?$Ownerinfo['nickname']:$Ownerinfo['name'];
+		$user=$this->DboperateSearchUser($_W['openid']);		 
 		$bmbutton=$_GPC['button'];
 		$entry='details';
 		$user=$this->DboperateSearchUser($openid);
 		//工人1 其他商家2 本商家和管理员3 
-		$isworker=$user['identity']=='worker'?1:2;
+		//$isworker=$user['identity']=='worker'?1:2;
 		if(($_W['openid']==$oid) OR $user['identity']=='admin'){
 			$isworker=3;
 		}
@@ -454,44 +451,24 @@ class hypernet_iptjModuleSite extends WeModuleSite {
                   		}
                   	}
                   	else if($bmbutton=='on'){
-                  		$this->DboperateSurepostinfo($oid, $openid, $ground['jobid'], $ground['mount']);
+                  		$this->DboperateSurepostinfo($oid, $openid, $ground['jobid']);
                   		//获取报名人数
                   		$worker=$this->DboperateGetIntworkers($ground['jobid']);
-                  		
-                  		
-                  		//发送模板消息
-                  		if($worker==intval($ground['mount']/3)){
-                  			$this->SendTpl($oid, $ground,'first_third');
-                  		}
-                  		else if($worker==intval($ground['mount']/3*2)){
-                  			$this->SendTpl($oid, $ground, 'second_third');
-                  		}
-                  		else if($worker==$ground['mount']){
-                  			$this->SendTpl($oid, $ground, 'full');
-                  		}
-
-                  		
-                  		
+                  		               		
                   		$this->SendTpl($openid,$Ownerinfo,'apply');
-                  		echo "<script language='javascript'>
-					alert('报名成功 请联系商家核实报名信息哦~');
-                  	location.reload();
-					</script>";
-
+                  		$this->SendTpl($oid, $ground, 'full');  
+                  		//发送模板消息                  		                		
+                  		message('checkin_success');
                   	}
                  }
                  else if($bmbutton=='on'){
-                 	echo "<script language='javascript'>
-					alert('ლ(╹◡╹ლ)商家号不能参与报名哦~');
-                 				location.reload();
-					</script>";
+                 	//checkin_fail_1      -------------------   商家号不允许报名
+                 	message('checkin_fail_1');
                  }
 			}
 			else if ($bmbutton=='on' AND !$this->DboperateCheckUser($openid)){
-				echo "<script language='javascript'>
-					alert('(～￣▽￣)～先去个人中心完善信息并等待管理员确认哦~');
-							location.reload();
-					</script>";
+				//checkin_fail_2   ------------------  还没有注册
+				message('checkin_fail_2');				
 			}
 			
 						//查看当前招聘是否被置顶
@@ -499,18 +476,19 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 			$ifprivacy=$ginfo['privacy'];
 			if($_GPC['top']=='on'){
 				if($this->GetPrivacyNum()>=10){
-					message('置顶已经满啦,请下一次早点来哦。。');
+					message('full');
 				}
 				else if($credit>=100){
 				$f=pdo_update('ptj_ground',array('privacy'=>1,'pdate'=>date('Y-m-d H:i:s')),array('jobid'=>$ground['jobid']));		
 				$s=mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-100);	
 						if($f AND $s ){
-							$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);
-							message('置顶成功!','','success');
+							$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);							
+							message('success');
 						}				
 				}
 		       else{
-				   message('所需积分不足,请前往个人中心充值!');
+				   message('fail');
+				 //  echo 'fail';
 			   }
 			}
 		include $this->template('details');
@@ -528,7 +506,42 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$url=$sinfo['url']; 
 		include $this->template('divfunc');
 	}
-	
+	public function doMobilePtjeditprofile(){
+		global $_W,$_GPC;
+		load()->model('mc');
+		load()->func('file');
+		$user=$this->DboperateSearchUser($_W['openid']);
+		$avatar='';
+		if (empty($avatar)) {
+			$userinfo = mc_oauth_userinfo();
+			if (!is_error($userinfo) && !empty($userinfo) && is_array($userinfo) && !empty($userinfo['avatar'])) {
+				$avatar = $userinfo['avatar'];
+				$nickname=$userinfo['nickname'];
+			}
+		}
+		if (empty($avatar)) {
+			// 提示用户关注公众号。;
+			//	echo "请先关注该公众号";
+		} else {
+			$src=$avatar;
+		}
+	//	$avatar=$_GPC['avatar'];
+		$nickname=$_GPC['nickname'];
+		$sex=$_GPC['sex'];
+		if( $nickname AND $sex){
+			$afile=file_upload($_FILES['avatar'],'image');
+			$t=pdo_update('ptj_profile',array('nickname'=>$nickname,'sex'=>$sex,'avatar'=>tomedia($afile['path'])),array('openid'=>$_W['openid']));
+	if($t){
+		$url=$this->createMobileUrl('ptjmyinfo');
+			echo "<script>
+					window.location.href='$url';
+					</script>";
+	}
+		}
+		
+		
+		include $this->template('editprofile');
+	}	
 	public function doWebPtjshare(){
 		//分享设置
 		global $_W,$_GPC;
@@ -637,7 +650,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	public function doMobilePtjWorkerinfo(){
 		//已报名的用户
 		global $_W,$_GPC;
-        $exists=$_GPC['exists'];
+       // $exists=$_GPC['exists'];
 		$ground=$_GPC['ground'];
 		$openid=$ground['openid'];
 		$jobid=$ground['jobid'];
@@ -781,19 +794,17 @@ if($_GPC){
 		//用户详情
 		global $_W,$_GPC;
         load()->model('mc');
-		$exists=$_GPC['exists'];
+	//	$exists=$_GPC['exists'];
 		$ground=$_GPC['ground'];
-		//$des=$_GPC['description'];
-		$wopenid=$_GPC['wopenid'];
 		$entry=$_GPC['entry'];
-		$wuid=mc_openid2uid($wopenid);
+		$wuid=mc_openid2uid($ground['openid']);
 		$member = mc_fetch(intval($wuid), array('avatar','nickname'));
 		$src=$member['avatar'];
 		
-		$winfo=$this->DboperateSearchUser($wopenid);
+		$winfo=$this->DboperateSearchUser($ground['openid']);
 	//	$last=$_GPC['last'];
 	   
-		$wEx=$this->DboperationSearchMyworkEx($wopenid);
+		$wEx=$this->DboperationSearchMyworkEx($ground['openid']);
 		
 	//	var_dump($wEx);
 		
@@ -1034,9 +1045,9 @@ private  function  DboperateSearchTopicinfo($order,$search){
  * @param unknown $hadmount
  * @return Ambigous <boolean, unknown>
  */
-private function DboperateSurepostinfo($owneroid,$workoid,$jobid,$hadmount){
+private function DboperateSurepostinfo($owneroid,$workoid,$jobid){
 	
-	$t=pdo_insert('ptj_working',array('owneroid'=>$owneroid,'workeroid'=>$workoid,'jobid'=>$jobid,'hadmount'=>$hadmount,'visible'=>1,'sure'=>0));
+	$t=pdo_insert('ptj_working',array('owneroid'=>$owneroid,'workeroid'=>$workoid,'jobid'=>$jobid,'visible'=>1,'sure'=>0));
 	return $t;	
 }
 /**

@@ -24,10 +24,39 @@
          <div  class="weui_tabbar_item" id="contact">
             <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;问问ta</p>
         </div> 	
-
-         <div  class="weui_tabbar_item " id="action">
-            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-play"></span>&nbsp;&nbsp;立即报名</p>
+{if $isworker==3  AND !$commitFlag}
+  	{if !$ifprivacy}
+         <div  class="weui_tabbar_item " id="top">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-hand-up"></span>&nbsp;&nbsp;置顶</p>
         </div> 
+         <div  class="weui_tabbar_item " id="toped" style="display:none">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;已置顶</p>
+        </div>         
+     {/if}
+{else if $isworker==4}
+         <div  class="weui_tabbar_item " >
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-ban-circle"></span>&nbsp;&nbsp;小黑屋中~</p>
+        </div> 
+{else if !$commitFlag}
+        <div  class="weui_tabbar_item " id="checkin">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-play"></span>&nbsp;&nbsp;立即报名</p>
+        </div>  
+        <div  class="weui_tabbar_item " id="waiting" style="display:none">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp;处理中..</p>
+        </div>
+        <div  class="weui_tabbar_item " id="admit" style="display:none">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;报名成功</p>
+        </div>  
+{else if $commitFlag==1}
+        <div  class="weui_tabbar_item " >
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-time"></span>&nbsp;&nbsp;处理中..</p>
+        </div>
+{else if $commitFlag==2}    
+        <div  class="weui_tabbar_item ">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;报名成功</p>
+        </div>                          
+{/if}
+
 	</div>
 </nav>
 {if $flag==2}
@@ -64,18 +93,16 @@
 <div style="background:white;;margin-top: 30px;margin-bottom:5px">
 <br/>
 <div style="margin-top:-20px;border-style:solid; border-width:1px; border-color:#D3D3D2">
-{if $Ownerinfo['cname']}
-<a href="{php echo $this->createMobileUrl('ptjownerindex',array('ground'=>$ground));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block" style="margin-top:-10px">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{$name} </a>
-{else}
-<a href="{php echo $this->createMobileUrl('ptjworkerindex',array('ground'=>$ground,'wopenid'=>$oid,'entry'=>'details'));}" style="font-size:15px;color:black" type="button" class="btn-lg btn-block" style="margin-top:-10px">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{$name} </a>
-{/if}
+
+<div id="user_detail"  style="font-size:15px;color:black" type="button" class="btn-lg btn-block" style="margin-top:-10px">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{$name} </div>
+
 </div>
 </div>
 <!--information  -->
 <div class="jumbotron" style="background-color:#fff;margin-bottom:10px">
  <p style="font-size:15px">标题:&nbsp;&nbsp;{$ground['title']}</p>
   {if $isworker==1 && $commitFlag==2||$commitFlag==1}
- 	 <p style="font-size:15px" ><span class="glyphicon glyphicon-phone" style="color:red"></span>&nbsp;&nbsp;&nbsp;&nbsp;【新增】联系电话:{$ground['phone']}</p>
+ 	 <p style="font-size:15px" >【新增】联系电话:{$ground['phone']}</p>
   {else}
 		 <p style="font-size:15px" >联系电话:&nbsp;&nbsp;<b>此栏于报名后揭晓</b></p>  
   {/if}
@@ -108,18 +135,9 @@
 {/if}
 </div>
 {/if}
-{if $isworker==1 AND !$commitFlag}
-<div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
 
-  <div class="btn-group " role="group" style="background-color:#fff">
-    <div style="border-style:solid; border-width:1px;border-color:#D3D3D2">
-    <a type="button"  href="{php echo $this->createMobileUrl('Ptjdetails',array('button'=>'on','ground'=>$ground,'openid'=>$openid));}" class="btn btn-default text-center" >
-       我要报名
-    </a>
-    </div>
-  </div>
-</div>
-{else if $isworker==3}
+
+{if $isworker==3  AND !$commitFlag}
 <div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
 
   <div class="btn-group " role="group" style="background-color:#fff">
@@ -128,22 +146,9 @@
     <a type="button" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'exists'=>$exists));}" class="btn btn-default">查看求职者信息<span class="glyphicon glyphicon-chevron-right" style="margin-left:65%"></span></a>
     </div>
   </div>
+</div>
 
-</div>
-  {if !$ifprivacy}
-<div style="margin-top:20px">
-<a href="{php echo $this->createMobileUrl('ptjdetails',array('top'=>'on','ground'=>$ground));}" type="button" class="btn btn-success text-center" style="width:100%">我要置顶</a>
-</div>
 {/if}
-{else if $isworker==2}
-
-
-{else if $isworker==4}
-<div style="margin-top:20px">
-<a href="#" type="button" class="btn btn-danger text-center" style="width:100%">对不起,您的账户已被小黑屋~~请与管理员联系.</a>
-</div>
-{/if}
-
  {if !$user}
  <div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
   <div class="btn-group " role="group" style="background-color:#fff">
@@ -178,12 +183,67 @@ require(['jquery'],function($){
 		$("#untag").show();
 		
 	});
-
 	$("#oback").click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjmodel',array('id'=>'owner'));}";
 	});
 	$("#back").click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjindex');}";
+	});
+	$("#checkin").click(function(){
+		$.ajax({
+			url:"{php echo $this->createMobileUrl('Ptjdetails');}",
+			method:"POST",
+			data:{
+				button:'on',
+				jobid:'{$jobid}',
+				openid:'{$openid}'
+			},
+		})
+		.done(function(data){
+			var obj=jQuery.parseJSON(data);
+			if(obj.message==='checkin_success'){
+				alert('报名成功了~~~~~');
+				$("checkin").hide();
+				$("waiting").show();
+			}else if(obj.message==='checkin_fail_1'){
+				//1表示商家模式
+				alert('商家不能参与报名哦~');
+			}else if(obj.message==='checkin_fail_2'){
+				//2表示游客模式
+				alert('请切换模式哦~');
+			}
+		});
+
+	//	window.location.href=;
+	});
+	$("#top").click(function(){
+
+		$.ajax({
+			url:"{php echo $this->createMobileUrl('ptjdetails');}",
+			method:"POST",
+			data:{
+				top:'on',
+				jobid:'{$jobid}',
+			},
+		})
+		
+		.done(function(data){
+			var obj= jQuery.parseJSON(data);
+			if(obj.message==='fail'){				
+				alert('积分不够了,充值了再来呗~');
+			}else if(obj.message==='full'){
+				alert('置顶栏被占满了哦~  下次早点来呗~');
+			}else if(obj.message==='success'){
+				$("#top").hide();
+				alert('耶~置顶完成了~');
+				$("toped").show();
+			}	
+		});
+
+	});
+	
+	$("#user_detail").click(function(){
+		window.location.href="{php echo $this->createMobileUrl('ptjworkerindex',array('ground'=>$ground,'entry'=>'details'));}";
 	});
 });
 </script>
