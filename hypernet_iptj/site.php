@@ -357,15 +357,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		//获取当前时间
 		$now=date("y-m-d");
 		    $work=$this->DboperationSearchMyworkEx($openid);
-		    foreach ($work as $k=>$v){	    	
-		    	$this->Dboperatechecktime($v['jobid'], $now, $openid);
-		    	//准备接收评论
-		    	$comment=$profile['comm'];
-		    	if($comment AND $v['status']){
-		    		$this->Dboperatepushcomment($comment, $v['jobid'], $openid);
-		    	
-		    	}
-		    }
+
 
 		   $workerEx=$this->DboperationSearchMyworkEx($openid);
 		
@@ -410,7 +402,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$uid=mc_openid2uid($openid);
 	    $creditarray=mc_credit_fetch($uid);
 		$credit=$creditarray['credit1'];
-		$url=$this->createMobileUrl('ptjdetails',array('jobid'=>$ground['jobid']));
+		$collection=pdo_fetch("SELECT * FROM".tablename('ptj_collection')."WHERE jobid=:jid AND openid=:oid",array('jid'=>$jobid,'oid'=>$openid));
 	//	var_dump($url);
 		if(empty($ground)){
 // 			$ground=pdo_fetch("SELECT * FROM".tablename('ptj_ground')." AS A left join ".tablename('ptj_working')
@@ -437,10 +429,29 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		if($user['identity']=='xued'){
 			$isworker=4;
 		}
-		//按钮按下 并且不是游客
+
 			if(  $this->DboperateCheckUser($openid)){
                  $arr=$this->DboperateGetjob($openid, $oid);
 
+                 if($_GPC['cbutton']==='collect'){
+                 	 $ifcexist=pdo_fetch("SELECT * FROM".tablename('ptj_collection')."WHERE jobid=:jid AND openid=:oid",array(':jid'=>$_GPC['jobid'],':oid'=>$_W['openid']));
+                 	 if($ifcexist){
+                 	    $iflag=pdo_update('ptj_collection',array('watching'=>1),array('jobid'=>$_GPC['jobid'],'openid'=>$_W['openid']));
+                 	 }else{
+                 		$iflag=pdo_insert('ptj_collection',array('jobid'=>$_GPC['jobid'],'openid'=>$_W['openid'],'watching'=>'1'));
+                 	 }
+                 	if($iflag){
+                 		message('success_collected');
+                 	}else{
+                 		message('fail_collected');
+                 	}
+                 }else if($_GPC['cbutton']==='uncollect'){
+                 	$uflag=pdo_update('ptj_collection',array('watching'=>'0'),array('jobid'=>$_GPC['jobid']));
+                 	if($uflag){
+                 		message('success_uncollect');
+                 	}
+                 }                 
+                 
                  if($oid!=$openid){
                   	if($arr AND in_array($ground['jobid'], $arr)){
                   		//表示已报名状态
@@ -650,10 +661,13 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	public function doMobilePtjWorkerinfo(){
 		//已报名的用户
 		global $_W,$_GPC;
+		load()->model('mc');
        // $exists=$_GPC['exists'];
-		$ground=$_GPC['ground'];
+       $jobid=$_GPC['jobid'];
+		$ground=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$jobid));
 		$openid=$ground['openid'];
-		$jobid=$ground['jobid'];
+		$uidarr=mc_credit_fetch(mc_openid2uid($openid));
+		$credit=$uidarr['credit1'];
 		$Ownerinfo=$this->DboperateSearchUser($openid);	
 
 		$url=$this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground));
@@ -668,46 +682,43 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 
 		
 		if($_GPC['ebutton']=='on'){
-			
-			
-			//检查该jobid对应的request是否全部确认
-			
-
-			
-			
+						
 			$t=$this->DboperateEmploy($_GPC['wopenid'],$jobid);
-			$this->SendTpl($_GPC['wopenid'],$Ownerinfo,'admit',$ground['date']);
-
+			mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-$ground['credit']);
+			//$this->SendTpl($_GPC['wopenid'],$Ownerinfo,'admit',$ground['date']);
+            if($t){
+            	message('w_success');
+            }else{
+            	message('w_fail');
+            }
 			
-			echo "<script language='javascript'>
-			alert('终于招到肯为你干活的了! 开心吧! ');
-			location.href=\"$url\";
-			</script>";
-
-
 		}
 		
 		if($_GPC['abutton']=='on'){
-			foreach ($Wkinfo as $k=>$v){
-				if($v['status']==0){
-					$All=$this->DboperateEmploy($v['wopenid'],$jobid);
-					$this->SendTpl($v['wopenid'],$Ownerinfo,'apply',$ground['date']);
+			//TODO: 积分操作
+			$needCredit=$ground['credit']*count($Wkinfo);
+			if($needCredit<=$credit){
+				
+				foreach ($Wkinfo as $k=>$v){
+					if($v['status']==0){
+						$All=$this->DboperateEmploy($v['wopenid'],$jobid);
+						//给报名用户增加积分
+						mc_credit_update(mc_openid2uid($v['wopenid']),'credit1',$ground['credit']);
+						//给雇主扣除全部积分
+				//		$this->SendTpl($v['wopenid'],$Ownerinfo,'apply',$ground['date']);							
+					}
 				}
+				mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-$needCredit);
+				message('success');
+			}else{
+				message('fail');
 			}
-			echo "<script language='javascript'>
-			alert('全部录用完毕了耶~');
-			location.href=\"$url\";
-			</script>";
+
 		}
 		
 		if($_GPC['sbutton']=='on'){
                 $url=$this->createMobileUrl('ptjindex');
 				$de=$this->DboperateUndoWanna($ground['jobid']);
-				echo "<script language='javascript'>
-				alert('你的招募令神奇地消失了!');
-				location.href=\"$url\";
-				</script>";
-
 		}
 		
 		include $this->template('workerinfo');
@@ -817,9 +828,22 @@ if($_GPC){
 		$id=$_GPC['id'];
 		if($id=='owner'){
 		$OwnerEx=$this->DboperateGetworkerinfo($_W['openid']);
-		}
-		else if($id=='worker'){
+		}else if($id=='worker'){
 		$wEx=$this->DboperationSearchMyworkEx($_W['openid']);
+		}else if($id==='collection'){
+			$collection=pdo_fetchall("SELECT * FROM".tablename('ptj_collection')."WHERE openid=:oid AND watching=:w",array(':oid'=>$_W['openid'],':w'=>'1'));
+			foreach ($collection as $k=>$v){
+				$cinfo=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$v['jobid']));
+				$v['title']=$cinfo['title'];
+				$v['pic1']=$cinfo['pic1'];
+				$v['pic2']=$cinfo['pic2'];
+				$v['pic3']=$cinfo['pic3'];
+				$v['content']=$cinfo['content'];
+
+				$collection[$k]=$v;
+			}
+	//		var_dump($collection);
+			$Coll=$collection;
 		}
 		include $this->template('usemodel');
 	}
@@ -1132,7 +1156,7 @@ private function  DboperationSearchMyworkEx($workeroid){
 	
 		$check=pdo_fetchall("SELECT * FROM".tablename('ptj_working')."WHERE workeroid=:woid",array(':woid'=>$workeroid));
 	foreach ($check as $key=>$value){
-		$this->Dboperatechecktime($value['jobid'],date('Y-m-d H:i:s'), $value['workeroid']);
+	//	$this->Dboperatechecktime($value['jobid'],date('Y-m-d H:i:s'), $value['workeroid']);
 	}
 	
 	$arr=array();

@@ -15,12 +15,21 @@
 <body style="background-color:#ededed">
 <nav class="navbar navbar-default navbar-fixed-bottom" style="background:#00b26d">
 	<div class="weui_tabbar">
-        <div class="weui_tabbar_item " id="untag">
+{if $collection['watching']==='0' || !$collection}	
+        <div class="weui_tabbar_item " id="tag">
             <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-star-empty"></span>&nbsp;&nbsp;收藏</p>
         </div>
         <div class="weui_tabbar_item " id="taged" style="display:none">
             <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;取消收藏</p>
         </div>
+{else if $collection['watching']==='1'}        
+        <div class="weui_tabbar_item " id="tag"style="display:none" >
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-star-empty"></span>&nbsp;&nbsp;收藏</p>
+        </div>
+        <div class="weui_tabbar_item " id="taged">
+            <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;取消收藏</p>
+        </div>
+{/if}
          <div  class="weui_tabbar_item" id="contact">
             <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;问问ta</p>
         </div> 	
@@ -124,14 +133,17 @@
 <p style="font-size:18px">图片预览</p>
 {if $ground['pic1']}
 <img src="{$ground['pic1']}" alt="" style="height:200px ;width:100%">
+<br/>
 {/if}
 <br/>
 {if $ground['pic2']}
 <img src="{$ground['pic2']}" alt="" style="height:200px ;width:100%">
+<br/>
 {/if}
 <br/>
 {if $ground['pic3']}
 <img src="{$ground['pic3']}" alt="" style="height:200px ;width:100%">
+
 {/if}
 </div>
 {/if}
@@ -143,7 +155,7 @@
   <div class="btn-group " role="group" style="background-color:#fff">
     <div style="border-style:solid; border-width:1px;border-color:#D3D3D2 ">
 
-    <a type="button" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'exists'=>$exists));}" class="btn btn-default">查看求职者信息<span class="glyphicon glyphicon-chevron-right" style="margin-left:65%"></span></a>
+    <a type="button" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('jobid'=>$ground['jobid'],'exists'=>$exists));}" class="btn btn-default">查看求职者信息<span class="glyphicon glyphicon-chevron-right" style="margin-left:65%"></span></a>
     </div>
   </div>
 </div>
@@ -172,15 +184,51 @@
 
 </body>
 
-<script>
+<script type="text/javascript">
+
 require(['jquery'],function($){
-	$("#untag").click(function(){
-		$("#untag").hide();
-		$("#taged").show();
+	$("#tag").click(function(){
+		$("#tag").hide();
+		$.ajax({
+			url:"{php echo $this->createMobileUrl('Ptjdetails');}",
+			method:"POST",
+			data:{
+				jobid:'{$jobid}',
+				cbutton:'collect',
+			},
+		})		
+		.done(function(data){
+			var obj=jQuery.parseJSON(data);
+			console.log(obj);
+			if(obj.message==='success_collected'){
+				$("#taged").show();				
+				alert('收藏成功lo~');
+			}else if(obj.message==='fail_collected'){
+				$("#tag").show();				
+				alert('收藏被干扰了 等会再试咯~');
+			}
+		});
+
 	});
 	$("#taged").click(function(){
 		$("#taged").hide();
-		$("#untag").show();
+		$.ajax({
+			url:"{php echo $this->createMobileUrl('ptjdetails');}",
+			method:"POST",
+			dataType:"html",
+			data:{
+				jobid:'{$jobid}',
+				cbutton:'uncollect',
+			}
+		})
+		.done(function(data){
+			var obj=jQuery.parseJSON(data);
+			if(obj.message==='success_uncollect'){
+				alert('对嘛  不好的就不要嘛~');
+				$("#tag").show();				
+			}
+		});
+
 		
 	});
 	$("#oback").click(function(){
@@ -192,19 +240,20 @@ require(['jquery'],function($){
 	$("#checkin").click(function(){
 		$.ajax({
 			url:"{php echo $this->createMobileUrl('Ptjdetails');}",
-			method:"POST",
+			method:"POST",		
 			data:{
 				button:'on',
 				jobid:'{$jobid}',
 				openid:'{$openid}'
 			},
+
 		})
 		.done(function(data){
 			var obj=jQuery.parseJSON(data);
 			if(obj.message==='checkin_success'){
-				alert('报名成功了~~~~~');
-				$("checkin").hide();
-				$("waiting").show();
+				$("#checkin").hide();
+				$("#waiting").show();
+				alert('报名成功了~~~~~');				
 			}else if(obj.message==='checkin_fail_1'){
 				//1表示商家模式
 				alert('商家不能参与报名哦~');
@@ -220,7 +269,7 @@ require(['jquery'],function($){
 
 		$.ajax({
 			url:"{php echo $this->createMobileUrl('ptjdetails');}",
-			method:"POST",
+			method:"POST",	
 			data:{
 				top:'on',
 				jobid:'{$jobid}',
@@ -236,7 +285,7 @@ require(['jquery'],function($){
 			}else if(obj.message==='success'){
 				$("#top").hide();
 				alert('耶~置顶完成了~');
-				$("toped").show();
+				$("#toped").show();
 			}	
 		});
 
@@ -246,6 +295,7 @@ require(['jquery'],function($){
 		window.location.href="{php echo $this->createMobileUrl('ptjworkerindex',array('ground'=>$ground,'entry'=>'details'));}";
 	});
 });
+
 </script>
 
 </html>

@@ -30,11 +30,11 @@
 {/if}
 {if $Wkinfo}
  <div style="width:40%;margin-left:70%;margin-top:60px;">
- <a type="button" class="btn btn-success" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'wopenid'=>$v['wopenid'],'abutton'=>'on'));}">全部录用</a>
+ 	<button id="a_admit" class="btn btn-success" >全部录用</button>
  </div>
  {loop $Wkinfo $k $v}
-  <div class="btn-group btn-group-justified" role="group" style="height: 60px;">
-  <div class="btn-group " role="group" >
+  <div class="btn-group btn-group-justified" id="info_w" rel="{$v['wopenid']}" style="height: 60px;">
+  <div class="btn-group " >
     <div style="border-style:solid; border-width:1px; border-color:#D3D3D2">
     <div style="margin-top:10px">
     <a href="{php echo $this->createmobileUrl('ptjworkerindex',array('ground'=>$ground,'exists'=>$exists,'wopenid'=>$v['wopenid']));}" style="color:black;font-size:18px;">
@@ -43,7 +43,8 @@
     </div>
      {if !$v['status']}
     <div style=" height: 10px;">
-     <a type="button" class="btn btn-default" style="width:20%;margin-left:70%;margin-top:-45px" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'wopenid'=>$v['wopenid'],'ebutton'=>'on'));}">录用</a>
+    	 <button id="admit" class="btn btn-default" style="width:20%;margin-left:70%;margin-top:-45px">录用</button>
+    	      <p id="admitted" style="display:none"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已录用</p>
     </div>
     {else}
      <div style="margin-top:-20px;margin-left:70%">
@@ -59,8 +60,8 @@
   <p style="color:#333">(空空荡荡~~~)你这里怎么没人来啊？要不试试撤掉 然后<b>加点薪水</b>什么的</p>
 </div>
 {/if}
-<div style="margin-top:20px">
-<a href="{php echo $this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground,'sbutton'=>'on'));}" type="button" class="btn btn-danger text-center" style="width:100%">终止招聘</a>
+<div style="margin-top:20px" id="stop">
+<button  class="btn btn-danger text-center" style="width:100%">终止招聘</button>
 </div>
 
 <br>
@@ -73,6 +74,50 @@ require(['jquery'],function($){
 	});
 	$("#dback").click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjdetails',array('jobid'=>$ground['jobid']));}";		
+	});
+	$("#a_admit").click(function(){
+		$.ajax({
+			url:"{php echo $this->createMobileUrl('ptjworkerinfo');}",
+			method:"POST",
+			data:{
+				jobid:'{$ground['jobid']}',
+				abutton:'on',
+			}
+		})
+		.done(function(data){
+			var obj=jQuery.parseJSON(data);
+			if(obj.message==='success'){
+				alert('全部录用完毕');
+			}else if(obj.message==='fail'){
+				alert('录用失败');
+			}
+		});
+	});
+	
+	$("#admit").click(function(){
+		var tid=$("#info_w").attr('rel');
+		$.ajax({
+			url:"",
+			method:"POST",
+			data:{
+				wopenid:tid,
+				jobid:'{$ground['jobid']}',
+				ebutton:'on',
+			}
+		})
+		.done(function(data){
+			var obj=jQuery.parseJSON(data);
+			if(obj.message==='w_success'){
+				$("#admit").hide();
+				$("admitted").show();
+				alert('招募成功~');
+			}else if(obj.message==='w_fail'){
+				alert('招募失败~');
+			}
+		});
+	});
+	$("#stop").click(function(){
+		location.href="{php echo $this->createMobileUrl('ptjworkerinfo',array('jobid'=>$ground['jobid'],'sbutton'=>'on'));}";
 	});
 });
 </script>
