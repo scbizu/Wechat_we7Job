@@ -49,6 +49,7 @@
 			<entry title="后台规则" do="ptjrules" state="" direct="false" />
 		</rule>
 		<menu>
+			<entry title="功能版块"   do="ptjmodel" state="" direct="false" />		
 			<entry title="用户管理中心" do="ptjadmin" state="" direct="false" />
 			<entry title="帖子管理中心" do="ptjtiezi" state="" direct="false" />
 			<entry title="功能介绍"   do="ptjfunc"  state="" direct="false" />

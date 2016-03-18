@@ -11,11 +11,6 @@
    <th>用户姓名</th>
    <th>用户微信号</th>
    <th>用户电话</th>
-   <th>用户地址</th>
-   <th>用户身份</th>
-   <th>企业名</th>
-   <th>企业电话</th>
-    <th>企业地址</th>
     <th>状态</th>
  </tr>
 {loop $pinfo $k $v}
@@ -24,19 +19,6 @@
    <td>{$v['name']}</td>
    <td>{$v['nickname']}</td>
    <td>{$v['phone']}</td>
-   <td>{$v['location']}</td>
-   {if $v['identity']=='worker'}
-   <td>个人</td>
-   {elseif $v['identity']=='owner'}
-    <td>企业</td>  
-    {elseif $v['identity']=='admin'}   
-    <td>管理员</td>  
-    {elseif $v['identity']=='xued'}   
-    <td>小黑屋中..</td> 
-    {/if}
-    <td>{$v['cname']}</td>
-    <td>{$v['cphone']}</td>
-    <td>{$v['clocation']}</td>
        {if $v['identity']=='worker'}
     <td>
     <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'setadmin'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="设为管理员"><span class="glyphicon glyphicon-eye-open"></span></a>  

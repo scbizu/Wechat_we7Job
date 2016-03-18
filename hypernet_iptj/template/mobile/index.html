@@ -20,10 +20,9 @@
     <div class="weui_mask_transition" id="mask"></div>
     <div class="weui_actionsheet" id="weui_actionsheet">
         <div class="weui_actionsheet_menu">
-            <div class="weui_actionsheet_cell">招聘</div>
-            <div class="weui_actionsheet_cell">租房</div>
-            <div class="weui_actionsheet_cell">闲置</div>
-            <div class="weui_actionsheet_cell">问问</div>
+        {loop $modelres $k $v}
+            <div class="weui_actionsheet_cell" rel="{$v['typecode']}">{$v['typename']}</div>
+		{/loop}
         </div>
         <div class="weui_actionsheet_action">
             <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
@@ -158,30 +157,16 @@
 
 
 <div class="weui_grids">
-    <a href="javascript:;" class="weui_grid">
+{loop $modelres $k $v}
+    <div id="grid" rel="{$v['typecode']}" class="weui_grid">
         <div class="weui_grid_icon">
-            <img src="./weui/dist/example/images/icon_nav_cell.png" alt="">
+            <img src="{$v['typeicon']}" alt="">
         </div>
         <p class="weui_grid_label">
-                   招聘
+                   {$v['typename']}
         </p>
-    </a>
-    <a href="javascript:;" class="weui_grid">
-        <div class="weui_grid_icon">
-            <img src="./weui/dist/example/images/icon_nav_article.png" alt="">
-        </div>
-        <p class="weui_grid_label">
-            	闲置/租房
-        </p>
-    </a>
-    <a href="javascript:;" class="weui_grid">
-        <div class="weui_grid_icon">
-            <img src="./weui/dist/example/images/icon_nav_msg.png" alt="">
-        </div>
-        <p class="weui_grid_label">
-            	问问
-        </p>
-    </a>    
+    </div>
+ {/loop} 
 </div>
 
 
@@ -228,8 +213,8 @@
 {/loop}
 {/if}
 
-{if $groundtype AND $type}
-{loop $groundtype $k $v}
+{if $Groundtype AND $type}
+{loop $Groundtype $k $v}
   {if $v['privacy']==1 AND $k==0}
  	<div style="color:#00b26d">
  		<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;老司机推荐
@@ -395,7 +380,15 @@ require(['jquery'], function($){
 	$('#index').click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjindex');}";
 	});
+	$(".weui_actionsheet_menu").children('div').click(function(){
+		var value=$(this).attr('rel');
+		location.href="{php echo $this->createMobileUrl('ptjpostinfo');}"+"&type="+value;
+	});
 	
+	$(".weui_grid").click(function(){
+		var value=$(this).attr('rel');
+		location.href="{php echo $this->createMobileUrl('ptjindex');}"+"&typecode="+value;
+	});
 });
 </script>
 <script src="http://unslider.com/unslider.js"></script>      

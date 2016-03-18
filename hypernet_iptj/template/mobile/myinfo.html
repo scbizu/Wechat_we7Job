@@ -6,11 +6,27 @@
 	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_default.css" />  
 <body style="background-color:#ededed">
 
+
+ <div id="actionSheet_wrap" >
+    <div class="weui_mask_transition" id="mask"></div>
+    <div class="weui_actionsheet" id="weui_actionsheet">
+        <div class="weui_actionsheet_menu">
+        {loop $modelres $k $v}
+            <div class="weui_actionsheet_cell" rel="{$v['typecode']}">{$v['typename']}</div>
+		{/loop}
+        </div>
+        <div class="weui_actionsheet_action">
+            <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
+        </div>
+    </div>
+</div>
+
+
 <nav class="navbar navbar-default" style="background-color:#00b26d;border-color:#00b26d;">
      <h2 style="color:#fff" align="center">个人中心 </h2>
 </nav>
 
-	<div class="weui_tabbar">
+	<div class="weui_tabbar" id="btmnav">
         <div class="weui_tabbar_item " id="index">
             <div class="weui_tabbar_icon">
                 <img src="./weui/dist/example/images/icon_nav_button.png" alt="">
@@ -231,9 +247,7 @@
 <script type="text/javascript">
 
 require(['jquery','util'],function($,util){
-	$('#submit').click(function(){
-		window.location.href="{php echo $this->createMobileUrl('ptjpostinfo');}";
-	});
+
 	$('#index').click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjindex');}";
 	});
@@ -272,6 +286,36 @@ require(['jquery','util'],function($,util){
 	});
 	$("#edit_info").click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjeditprofile');}";
+	});
+	
+	$('#submit').click(function(){
+		$("#btmnav").hide();
+		var mask=$("#mask");
+		var actionsheet=$("#weui_actionsheet");
+		actionsheet.addClass("weui_actionsheet_toggle");
+		mask.show().addClass("weui_fade_toggle").one('click',function(){
+			$("#btmnav").show();
+			hideSheet(mask,actionsheet);
+		});
+		$("#actionsheet_cancel").one('click',function(){
+			$("#btmnav").show();
+			hideSheet($("#mask"),$("#weui_actionsheet"));
+		});		
+		actionsheet.unbind('transitionend').unbind('webkitTransitionEnd');
+	    function hideSheet(mask, actionSheet) {
+	    	actionSheet.removeClass('weui_actionsheet_toggle');
+	        mask.removeClass('weui_fade_toggle');
+	        actionSheet.on('transitionend', function () {
+	            mask.hide();
+	        }).on('webkitTransitionEnd', function () {
+	            mask.hide();
+	        })
+	    }		
+	});
+	
+	$(".weui_actionsheet_menu").children('div').click(function(){
+		var value=$(this).attr('rel');
+		location.href="{php echo $this->createMobileUrl('ptjpostinfo');}"+"&type="+value;
 	});
 });
 </script>

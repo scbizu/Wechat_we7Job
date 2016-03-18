@@ -25,7 +25,7 @@
    <th>帖子编号<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'jobid'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'jobid DESC'));}" type="button" class="btn btn-small">↓</a></th>
    <th>发帖人<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'cname'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'cname DESC'));}" type="button" class="btn btn-small">↓</a></th>
    <th>帖子标题<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'title'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'title DESC'));}" type="button" class="btn btn-small">↓</a></th>
-   <th>已有/应有<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'exists'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'exists DESC'));}" type="button" class="btn btn-small">↓</a></th>
+   <th>已有<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'exists'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'exists DESC'));}" type="button" class="btn btn-small">↓</a></th>
    <th>是否置顶<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'privacy'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'privacy DESC'));}" type="button" class="btn btn-small">↓</a></th>
     <th>操作<a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'visible'));}" type="button" class="btn btn-small">↑</a><a href="{php echo $this->createWebUrl('ptjtiezi',array('order'=>'visible DESC'));}" type="button" class="btn btn-small">↓</a></th>
    </tr>
@@ -34,7 +34,7 @@
    <td>{$v['jobid']}</td>
    <td>{$v['cname']}</td>
    <td>{$v['title']}</td>
-   <td>{$v['exists']}/{$v['mount']}</td>
+   <td>{$v['exists']}</td>
   {if $v['privacy']==1}
      <td>
      已置顶 

@@ -22,6 +22,9 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$farr=array();
 
 		
+		$modelres=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:so",array(':so'=>'on'));
+		
+		
 		
 		
 		$user=$this->DboperateSearchUser($_W['openid']);
@@ -43,27 +46,22 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		
 		
 		//查看广场
-		if($_GPC['salarybtn']){
-			$ground=$this->DboperateSorybysalary();
-		}
-		else if($_GPC['timebtn']){
-			$ground=$this->DboperateSortbytime();
-		}
-		else if($_GPC['ownerbtn']){
-			$ground=$this->DboperateSortbyownerid();
-		}
-		else if($_GPC['type']){
-			$type=$_GPC['type'];
+        if($_GPC['typecode']){
+			$type=$_GPC['typecode'];
 			$groundtype=$this->DboperateSearchGround($type, FALSE, FALSE,FALSE, TRUE);
 			foreach($groundtype as $k=>$v){
 				if($v['privacy']==0){
                    array_push($farr,$k);
 				}
+				$uinfo=$this->DboperateSearchUser($v['openid']);
+				$v['nickname']=$uinfo['nickname']?$uinfo['nickname']:$uinfo['name'];
+				$groundtype[$k]=$v;
 			}
+			$Groundtype=$groundtype;
 		}
 		else {
 			$ground=$this->DboperateSearchGroundinfo();
-
+           // var_dump($ground);
 			foreach($ground as $k=>$v){
 				if($v['privacy']==0){																							
 					array_push($farr,$k);				
@@ -311,7 +309,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$uid=$_W['member']['uid'];
 				$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE linkid=:id",array(':id'=>1));
 		$url=$sinfo['url']; 
-
+		$modelres=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:so",array(':so'=>'on'));
 		if (empty($avatar)) {
 			$userinfo = mc_oauth_userinfo();
 			if (!is_error($userinfo) && !empty($userinfo) && is_array($userinfo) && !empty($userinfo['avatar'])) {
@@ -580,6 +578,29 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		fclose($share_file);
 		self::doWebPtjshare();
 	}
+	
+	public function doWebPtjmodel(){
+	   global $_W,$_GPC;
+	   load()->func('tpl');
+	   load()->func('file');
+	 //  $icon=$_FILES['icon'];
+	 //  $iconarr=file_upload($icon,'image');
+	  // var_dump(tomedia($_GPC['icon']));
+	   if($_GPC['modelcode'] && $_GPC['modelname'] && $_GPC['check']){	   	
+	   	 pdo_insert('ptj_model',array('typecode'=>$_GPC['modelcode'],'typename'=>$_GPC['modelname'],'vis'=>$_GPC['check'],'typeicon'=>tomedia($_GPC['icon'])));
+	   }
+	   
+	   $allinfo=pdo_fetchall("SELECT * FROM".tablename('ptj_model'));
+	   foreach ($allinfo as $k=>$v){
+	   	  $count=pdo_fetchall("SELECT COUNT(*) AS count FROM".tablename('ptj_ground')."WHERE type=:ty",array(':ty'=>trim($v['typecode'])));
+	      $v['hotrate']=$count[$k]['count'];
+	   	  $allinfo[$k]=$v;
+	   }
+	   $All=$allinfo;
+	   include $this->template('model');
+	}
+	
+	
 	public function doMobilePtjshare(){
 		require_once('config.php');
 		echo $share_config;
@@ -751,6 +772,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$credit=$creditarray['credit1'];
 		
 		$ground=$_GPC['ground'];
+		$type=$_GPC['type'];
 	//	$mypost=$_GPC['Ptjpostinfo'];
 		$user=$this->DboperateSearchUser($_W['openid']);		
 
@@ -794,7 +816,7 @@ if($_GPC){
 			}
          $jobid=substr(md5(substr(time(), 4,8)),4,9);
       
-        $this->DboperateInsertGroundInfo($_W['openid'], $jobid, $title, $content,$phone, $privacy,$path1,$path2,$path3,intval($c_pay));                  
+        $this->DboperateInsertGroundInfo($_W['openid'], $jobid, $title, $content,$phone, $privacy,$path1,$path2,$path3,intval($c_pay),$type);                  
         }	
 }
 
@@ -904,13 +926,13 @@ private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,
 	 * @param unknown $date
 	 * @return Ambigous <boolean, unknown>
 	 */
-	private function DboperateInsertGroundInfo($openid,$jobid,$title,$content,$phone,$privay,$pic1=null,$pic2=null,$pic3=null,$credit){
+	private function DboperateInsertGroundInfo($openid,$jobid,$title,$content,$phone,$privay,$pic1=null,$pic2=null,$pic3=null,$credit,$type){
 		
-		$t=pdo_insert('ptj_ground',array('title'=>$title,'jobid'=>$jobid,'content'=>$content,'phone'=>$phone,'openid'=>$openid,'visible'=>1,'privacy'=>$privay,'pic1'=>$pic1,'pic2'=>$pic2,'pic3'=>$pic3,'credit'=>$credit));
+		$t=pdo_insert('ptj_ground',array('title'=>$title,'jobid'=>$jobid,'content'=>$content,'phone'=>$phone,'openid'=>$openid,'visible'=>1,'privacy'=>$privay,'pic1'=>$pic1,'pic2'=>$pic2,'pic3'=>$pic3,'credit'=>$credit,'type'=>$type));
 		$admin=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid='admin'",array(),'');
 		if (empty($admin)) {
 			//如果没有默认管理员，则添加一个默认管理员
-			$t=pdo_insert('ptj_profile',array('sure'=>1,'openid'=>'admin','count'=>0,'name'=>'administrator','identity'=>'admin','sex'=>'Man','email'=>'admin@admin.admin'));
+			$t=pdo_insert('ptj_profile',array('sure'=>1,'openid'=>'admin','name'=>'administrator','identity'=>'admin','sex'=>'Man'));
 		}
 		return $t;
 	}
@@ -920,40 +942,21 @@ private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,
 	 */
 private  function  DboperateSearchGroundinfo(){
 	$ground=array();
+	$type=array();
 	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi ORDER BY privacy DESC",array(':vi'=>1),'');
-/*
-	foreach ($Ground as $k=>$v){
-		//$this->DboperateCheckGroundTime($v['jobid'], $v['date'], date('Y-m-d'));
-	//	$this->RefreshPrivacy($v['pdate'], $v['jobid']);
-		$oprofile=$this->DboperateSearchUser($v['openid']);
-		$oname=$oprofile['cname']?$oprofile['cname']:$oprofile['name'];
-		$phone=$oprofile['cphone']?$oprofile['cphone']:$oprofile['phone'];
-		$exists=$this->DboperateGetIntworkers($v['jobid']);
-		if($exists<=$v['mount']){
+	$nowtype=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:vi",array(':vi'=>'on'));
+	foreach ($nowtype as $key => $value){
+		array_push($type, trim($value['typecode']));
+	}
+	foreach ($Ground as $k => $v){
+	//	 $t=in_array($v['type'], $type);
 
-		$arr=array(
-				'phone'=>$phone,
-			   'exists'=>$exists,
-			   'nowtime'=>$v['nowtime'],
-				'jobid'=>$v['jobid'],
-				'title'=>$v['title'],
-				'content'=>$v['content'],
-				'mount'=>$v['mount'],
-				'salary'=>$v['salary'],
-				'date'=>$v['date'],
-				'openid'=>$v['openid'],
-				'now'=>$v['nowtime'],
-				'haslimit'=>$v['haslimit'],
-				'stopdate'=>$v['stopdate'],
-				'workplace'=>$v['workplace'],
-				'cname'=>$oname,
-				'privacy'=>$v['privacy'],
-		);
-		array_push($ground, $arr);
+		if(in_array(trim($v['type']), $type)){
+			array_push($ground, $v);
+		}
 	}
-	}
-*/
-	return $Ground;
+
+	return $ground;
 }	
 /**
  * 
@@ -1108,42 +1111,32 @@ private function  DboperateSearchGround($info,$salary,$time,$owner,$type){
 	$ground=array();
 	if($salary){
 		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY salary DESC",array(':ti'=>$info,':vi'=>1),'');
+		$ground=$t;
 	}
 	else if($time){
 		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY date ",array(':ti'=>$info,':vi'=>1),'');
+		$ground=$t;
 	}
 	else if($owner){
 		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY openid DESC",array(':ti'=>$info,':vi'=>1),'');
+		$ground=$t;
 	}
 	else if($type) {
 		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE type=:ti  AND  visible=:vi ORDER BY privacy DESC",array(':ti'=>$info,':vi'=>1),'');
+		$ground=$t;
 	}
 	else {
 		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND visible=:vi ORDER BY privacy DESC",array(':ti'=>$info,':vi'=>1),'');
-	}
-	foreach ($t as $k=>$v){
-		$exists=$this->DboperateGetIntworkers($v['jobid']);
-				$oprofile=$this->DboperateSearchUser($v['openid']);
-		$oname=$oprofile['cname']?$oprofile['cname']:$oprofile['name'];
-		$arr=array(
-			   'exists'=>$exists,
-			   'now'=>$v['nowtime'],
-				'jobid'=>$v['jobid'],
-				'title'=>$v['title'],
-				'content'=>$v['content'],
-				'mount'=>$v['mount'],
-				'salary'=>$v['salary'],
-				'date'=>$v['date'],
-				'openid'=>$v['openid'],
-				'now'=>$v['nowtime'],
-				'limit'=>$v['limit'],
-				'stopdate'=>$v['stopdate'],
-				'workplace'=>$v['workplace'],
-				'vis'=>$v['visible'],
-				'cname'=>$oname,
-				'privacy'=>$v['privacy'],
-		);
-		array_push($ground, $arr);
+		$nowtype=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:vi",array(':vi'=>'on'));
+		foreach ($nowtype as $key => $value){
+			array_push($type, trim($value['typecode']));
+		}
+		foreach ($t as $k => $v){
+		
+			if(in_array(trim($v['type']), $type)){
+				array_push($ground, $v);
+			}
+		}
 	}
 	return $ground;
 }
