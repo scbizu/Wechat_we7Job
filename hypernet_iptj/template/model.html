@@ -24,7 +24,11 @@
      <td>0</td>   
     {/if}
 
-    <td>{$v['vis']}</td>
+    <td>
+		<div class="col-sm-5">
+				<input type="checkbox" class="check" rel="{$v['id']}" name="check" {php echo ($v['vis']==='on')?'checked':''}/>
+		</div>	    
+    </td>
 </tr>
 {/loop}
 </table>
@@ -56,7 +60,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label">是否启用</label>
 		<div class="col-sm-5">
-				<input type="checkbox" id="check" name="check" checked/>
+				<input type="checkbox" class="check" name="check" checked/>
 		</div>		
 	</div>
 <br/>	
@@ -66,8 +70,37 @@
 </form>
 <script>
 require(['jquery','../addons/hypernet_iptj/template/js/bootstrap-switch.js'],function($){
-	$("#check").bootstrapSwitch();
-	
+	$(".check").bootstrapSwitch();
+
+$(".check").on('switchChange.bootstrapSwitch', function(event, state) {
+  var value=$(this).attr('rel'); // DOM element
+  var flag;
+  if(state){
+	  flag='on';
+  }else{
+	  flag='off';
+  }
+  $.ajax({
+	  url:"{php echo $this->createWebUrl('ptjmodel');}",
+	  method:"POST",
+	  data:{
+		  id:value,
+		  btn_switch:'on',
+		  flag:flag,
+	  }
+  })
+  .done(function(data){
+	//  console.log(data);
+	  var obj=jQuery.parseJSON(data);
+	  if(obj.message==='switched'){
+		  alert('修改成功！');
+	  }else{
+		  alert('修改失败!');
+	  }
+  });
+ // console.log(state);
+});
+
 	$("#add").click(function(){
 		$("#add").hide();
 		$("#cancel").show();
@@ -81,6 +114,8 @@ require(['jquery','../addons/hypernet_iptj/template/js/bootstrap-switch.js'],fun
 		$("#add_info").hide();				
 		$("#allinfo").show();
 	});
+	
+	
 });
 
 </script>

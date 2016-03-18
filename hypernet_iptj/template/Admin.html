@@ -19,17 +19,7 @@
    <td>{$v['name']}</td>
    <td>{$v['nickname']}</td>
    <td>{$v['phone']}</td>
-       {if $v['identity']=='worker'}
-    <td>
-    <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'setadmin'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="设为管理员"><span class="glyphicon glyphicon-eye-open"></span></a>  
-    <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'xu'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="嘘!"><span class="glyphicon glyphicon-volume-off"></span></a>    	
-    </td>
-    {else if $v['identity']=='owner'}
-     <td>
-    <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'redo'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="撤销企业权利(注:该操作不可逆!)"><span class="glyphicon glyphicon-remove-sign"></span></a>
-	<a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'xu'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="嘘!"><span class="glyphicon glyphicon-volume-off"></span></a>    	
-    </td>
-    {else if $v['identity']=='admin'}
+    {if $v['identity']=='admin'}
     <td>
      <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'redo'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="撤销管理员权利"><span class="glyphicon glyphicon-eye-close"></span></a>
 	 <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'xu'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="嘘!"><span class="glyphicon glyphicon-volume-off"></span></a>    	
@@ -37,7 +27,12 @@
 	{else if $v['identity']=='xued'}
 	  <td>  
 	 <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'rexu'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="回来吧"><span class="glyphicon glyphicon-volume-up"></span></a>    	
-     </td>   	 
+     </td>
+    {else}
+    <td>
+    <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'setadmin'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="设为管理员"><span class="glyphicon glyphicon-eye-open"></span></a>  
+    <a href="{php echo $this->createWebUrl('ptjadmin',array('id'=>$v['id'],'xu'=>'on'));}" type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="top" title="嘘!"><span class="glyphicon glyphicon-volume-off"></span></a>    	
+    </td>        	 
     {/if}
      </tr>
  {/if}

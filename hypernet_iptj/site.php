@@ -129,7 +129,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		}	
 		$order = empty($_GPC['order'])?"privacy DESC":$_GPC['order'];
 		$ground=$this->DboperateSearchTopicinfo($order,$search);
-		
+		$modelres=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:so",array(':so'=>'on'));
 		if($_GPC['status']){
 			if($_GPC['status']=='down'){
 				pdo_update('ptj_ground',array('privacy'=>0),array('jobid'=>$_GPC['jobid']));
@@ -168,17 +168,16 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		global $_W,$_GPC;
 		
 		$jobid=$_GPC['jobid'];
-		pdo_update('ptj_ground',array('title'=>$_GPC['title'],
-			'workplace'=>$_GPC['workplace'],'salary'=>$_GPC['salary'],'date'=>$_GPC['date']
-			,'stopdate'=>$_GPC['stopdate'],'type'=>$_GPC['type'],'mount'=>$_GPC['mount'],'content'=>$_GPC['content'],
-			'haslimit'=>$_GPC['haslimit'],)
+		pdo_update('ptj_ground',array('title'=>$_GPC['title'],'credit'=>$_GPC['credit'],'phone'=>$_GPC['phone'],
+			'type'=>$_GPC['type'],'content'=>$_GPC['content'],
+			)
 			,array('jobid'=>$jobid));
 		
     	$this->doWebPtjtiezi();
 	}
 	public function dowebPtjtopic_add(){	
 		global $_W,$_GPC;
-		
+
 		$jobid = substr(md5(substr(time(), 4,8)),4,9);
 		$nowtime=date('Y-m-d');
         $now=date('Y-m-d H:i:s');
@@ -191,7 +190,9 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$limit = $_GPC['haslimit'];
 		$endtime = $_GPC['endtime'];
 		$workplace = $_GPC['workplace'];
-		$this->DboperateInsertGroundInfo('admin', $jobid, $title, $content, $salary, $mount, $starttime, $type, $limit, $endtime, $nowtime, $workplace,0,$now);
+		$phone=$_GPC['phone'];
+		$credit=$_GPC['credit'];
+		$this->DboperateInsertGroundInfo('admin', $jobid, $title, $content,$phone,0,null,null,null,$credit,$type);
     	$this->doWebPtjtiezi();
 	}
 	public function doWebPtjadmin() {
@@ -597,6 +598,14 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   	  $allinfo[$k]=$v;
 	   }
 	   $All=$allinfo;
+	   
+	   
+	   if($_GPC['btn_switch']=='on'){
+	   		$t=pdo_update('ptj_model',array('vis'=>$_GPC['flag']),array('id'=>$_GPC['id']));
+	   		if($t){
+	   	     	message('switched');
+	   		}
+	   }
 	   include $this->template('model');
 	}
 	
