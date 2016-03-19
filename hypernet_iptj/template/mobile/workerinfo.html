@@ -1,33 +1,7 @@
 {template 'common/header'}
 <html>
 <body style="background-color:#ededed">
-{if $flag==1}
-<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
-   <div class="container-fluid">
-   <div style="width:30%;margin-top:10px">
-    <div id="mback" style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
-    </div> 
-    <div style="margin-top:-36px">   
-      <ul class="nav navbar-nav" style="text-align:center">
-        <p style="color:white;font-size:20px">求职者名单</p> 
-      </ul>
-      </div>    
-  </div>
-</nav>
-{else}
-<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
-   <div class="container-fluid">
-   <div style="width:30%;margin-top:10px">
-    <div id="dback"  style="color:#fff;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
-    </div> 
-    <div style="margin-top:-36px">   
-      <ul class="nav navbar-nav" style="text-align:center">
-        <p style="font-size:20px;color:#fff">求职者名单</p> 
-      </ul>
-      </div>    
-  </div>
-</nav>
-{/if}
+
 {if $Wkinfo}
  <div style="width:40%;margin-left:70%;margin-top:60px;">
  	<button id="a_admit" class="btn btn-success" >全部录用</button>
@@ -117,7 +91,25 @@ require(['jquery'],function($){
 		});
 	});
 	$("#stop").click(function(){
-		location.href="{php echo $this->createMobileUrl('ptjworkerinfo',array('jobid'=>$ground['jobid'],'sbutton'=>'on'));}";
+		$.ajax({
+			url:"{php echo $this->createMobileUrl('ptjworkerinfo')}",
+			method:"POST",
+			data:{
+				jobid:"{$ground['jobid']}",
+				sbutton:'on',
+			}
+		})
+		.done(function(data){
+			var obj=jQuery.parseJSON(data);
+			if(obj.message==='success_stop'){
+				alert('终止成功');
+				location.href="{php echo $this->createMobileUrl('ptjindex');}";
+			}else{
+				alert('好像哪里出现错误了');
+				location.href="{php echo $this->createMobileUrl('ptjindex');}"				
+			}
+		});
+		//location.href="{php echo $this->createMobileUrl('ptjworkerinfo',array('jobid'=>$ground['jobid'],'sbutton'=>'on'));}";
 	});
 });
 </script>

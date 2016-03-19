@@ -68,37 +68,7 @@
 
 	</div>
 </nav>
-{if $flag==2}
-<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
-   <div class="container-fluid">
-   <div style="width:30%;margin-top:10px">
-    <div  id="oback"  style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
-    </div> 
-    <div style="margin-top:-36px">   
-      <ul class="nav navbar-nav" style="text-align:center">
-        <p style="font-size:20px;color:white">详情</p> 
-      </ul>
-      </div>    
-  </div>
-</nav>
-<br/>
-<br/>
-{else}
-<nav class="navbar navbar-default navbar-fixed-top" style="background:#00b26d">
-   <div class="container-fluid">
-   <div style="width:30%;margin-top:10px">
-    <div  id="back"  style="color:white;font-size:20px"><span class="glyphicon glyphicon-chevron-left"></span><b>&nbsp;返回</b></div>
-    </div> 
-    <div style="margin-top:-36px">   
-      <ul class="nav navbar-nav" style="text-align:center">
-        <p style="font-size:20px;color:white">详情</p> 
-      </ul>
-      </div>    
-  </div>
-</nav>
-<br/>
-<br/>
-{/if}
+
 <div style="background:white;;margin-top: 30px;margin-bottom:5px">
 <br/>
 <div style="margin-top:-20px;border-style:solid; border-width:1px; border-color:#D3D3D2">
@@ -111,9 +81,11 @@
 <div class="jumbotron" style="background-color:#fff;margin-bottom:10px">
  <p style="font-size:15px">标题:&nbsp;&nbsp;{$ground['title']}</p>
   {if $isworker==1 && $commitFlag==2||$commitFlag==1}
- 	 <p style="font-size:15px" >【新增】联系电话:{$ground['phone']}</p>
+ 	 <p style="font-size:15px" id="s_phone">【新增】联系电话:{$ground['phone']}</p>
+ 	  	 <p style="font-size:15px;display:none" id="h_phone"  >联系电话:&nbsp;&nbsp;<b>此栏于报名后揭晓</b></p>
   {else}
-		 <p style="font-size:15px" >联系电话:&nbsp;&nbsp;<b>此栏于报名后揭晓</b></p>  
+   	 <p style="font-size:15px;display:none" id="s_phone" >【新增】联系电话:{$ground['phone']}</p>
+		 <p style="font-size:15px" id="h_phone">联系电话:&nbsp;&nbsp;<b>此栏于报名后揭晓</b></p>  
   {/if}
  <p style="font-size:15px">具体内容:&nbsp;&nbsp;{$ground['content']}</p>
 
@@ -253,6 +225,8 @@ require(['jquery'],function($){
 			if(obj.message==='checkin_success'){
 				$("#checkin").hide();
 				$("#waiting").show();
+				$("#h_phone").hide();
+				$("#s_phone").show();
 				alert('报名成功了~~~~~');				
 			}else if(obj.message==='checkin_fail_1'){
 				//1表示商家模式

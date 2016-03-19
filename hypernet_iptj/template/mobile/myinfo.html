@@ -22,25 +22,29 @@
 </div>
 
 
-<nav class="navbar navbar-default" style="background-color:#00b26d;border-color:#00b26d;">
-     <h2 style="color:#fff" align="center">个人中心 </h2>
-</nav>
-
-	<div class="weui_tabbar" id="btmnav">
+<nav class="navbar navbar-default navbar-fixed-bottom" id="btmnav">
+	<div class="weui_tabbar ">
         <div class="weui_tabbar_item " id="index">
             <div class="weui_tabbar_icon">
                 <img src="./weui/dist/example/images/icon_nav_button.png" alt="">
             </div>
             <p class="weui_tabbar_label">首页</p>
         </div>
-
+{if !user}
+         <div  class="weui_tabbar_item"  onclick="alert('先注册哦 ~')">
+            <div class="weui_tabbar_icon">
+                <img src="./weui/dist/example/images/icon_nav_cell.png" alt="">
+            </div>
+            <p class="weui_tabbar_label">发布</p>
+        </div> 	
+{else}
          <div  class="weui_tabbar_item" id="submit">
             <div class="weui_tabbar_icon">
                 <img src="./weui/dist/example/images/icon_nav_cell.png" alt="">
             </div>
             <p class="weui_tabbar_label">发布</p>
         </div> 	
-
+{/if}
          <div  class="weui_tabbar_item weui_bar_item_on" >
             <div class="weui_tabbar_icon">
                 <img src="./weui/dist/example/images/icon_nav_msg.png" alt="">
@@ -48,7 +52,7 @@
             <p class="weui_tabbar_label">我的</p>
         </div> 
 	</div>
-
+</nav>
 <div style="margin-top:-20px">
 
 {if !$user}	
@@ -56,9 +60,9 @@
    <div class="weui_cell" >  
    	 <div class="weui_cell_hd">
    	    {if !$user['avatar']}
-   	 	 	<img src="{$src}" alt="icon" style="width:90px; height:90px; ">
+   	 	 	<img src="{$src}" alt="icon" style="width:60px; height:60px; ">
    	 	 {else}
-			<img src="{$user['avatar']}" alt="icon" style="width:90px; height:90px; ">   	 	 	
+			<img src="{$user['avatar']}" alt="icon" style="width:60px; height:60px; ">   	 	 	
    	 	 {/if}
    	 	 
    	 </div>

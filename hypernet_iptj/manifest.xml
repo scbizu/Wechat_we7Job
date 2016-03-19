@@ -78,10 +78,51 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2015-11-20 17:48:33
+Date: 2016-03-18 21:25:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for ims_ptj_collection
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_ptj_collection`;
+CREATE TABLE `ims_ptj_collection` (
+  `id` int(30) NOT NULL AUTO_INCREMENT,
+  `jobid` varchar(30) NOT NULL,
+  `openid` varchar(30) NOT NULL,
+  `watching` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ims_ptj_collection
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for ims_ptj_ground
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_ptj_ground`;
+CREATE TABLE `ims_ptj_ground` (
+  `id` int(30) NOT NULL AUTO_INCREMENT,
+  `jobid` varchar(30) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `title` text NOT NULL,
+  `content` text NOT NULL,
+  `visible` int(10) NOT NULL,
+  `type` varchar(60) NOT NULL,
+  `privacy` int(30) NOT NULL DEFAULT '0',
+  `pic1` varchar(255) DEFAULT NULL,
+  `pic2` varchar(255) DEFAULT NULL,
+  `pic3` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) NOT NULL,
+  `credit` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ims_ptj_ground
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for ims_ptj_link
@@ -92,23 +133,27 @@ CREATE TABLE `ims_ptj_link` (
   `Linkid` int(10) NOT NULL,
   PRIMARY KEY (`Linkid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-	
-/*
-Navicat MySQL Data Transfer
 
-Source Server         : localhost_3306
-Source Server Version : 50617
-Source Host           : localhost:3306
-Source Database       : we7
+-- ----------------------------
+-- Records of ims_ptj_link
+-- ----------------------------
 
-Target Server Type    : MYSQL
-Target Server Version : 50617
-File Encoding         : 65001
+-- ----------------------------
+-- Table structure for ims_ptj_model
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_ptj_model`;
+CREATE TABLE `ims_ptj_model` (
+  `id` int(30) NOT NULL AUTO_INCREMENT,
+  `typecode` varchar(255) NOT NULL,
+  `typename` varchar(255) NOT NULL,
+  `typeicon` varchar(255) NOT NULL,
+  `vis` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-Date: 2016-02-29 16:21:32
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Records of ims_ptj_model
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for ims_ptj_pic
@@ -132,24 +177,6 @@ INSERT INTO `ims_ptj_pic` VALUES ('3', '', '1', '0', '');
 INSERT INTO `ims_ptj_pic` VALUES ('4', '', '1', '0', '');
 INSERT INTO `ims_ptj_pic` VALUES ('5', '', '1', '0', '');
 
-	
-	/*
-Navicat MySQL Data Transfer
-
-Source Server         : localhost_3306
-Source Server Version : 50617
-Source Host           : localhost:3306
-Source Database       : we7
-
-Target Server Type    : MYSQL
-Target Server Version : 50617
-File Encoding         : 65001
-
-Date: 2015-11-20 17:48:52
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
-
 -- ----------------------------
 -- Table structure for ims_ptj_profile
 -- ----------------------------
@@ -158,36 +185,18 @@ CREATE TABLE `ims_ptj_profile` (
   `sure` int(10) NOT NULL,
   `id` int(30) NOT NULL AUTO_INCREMENT,
   `openid` varchar(30) NOT NULL,
-  `count` varchar(30) NOT NULL,
   `name` varchar(30) NOT NULL,
   `phone` varchar(30) NOT NULL,
-  `identity` varchar(30) NOT NULL,
-  `location` varchar(60) NOT NULL,
-  `sex` varchar(30) NOT NULL,
-  `cname` varchar(60) DEFAULT NULL,
-  `cphone` varchar(30) DEFAULT NULL,
-  `clocation` varchar(60) DEFAULT NULL,
-  `email` varchar(60) NOT NULL,
+  `sex` varchar(30) DEFAULT NULL,
   `nickname` varchar(60) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `identity` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-	
-	/*
-Navicat MySQL Data Transfer
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-Source Server         : localhost_3306
-Source Server Version : 50617
-Source Host           : localhost:3306
-Source Database       : we7
-
-Target Server Type    : MYSQL
-Target Server Version : 50617
-File Encoding         : 65001
-
-Date: 2015-11-20 17:49:05
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Records of ims_ptj_profile
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for ims_ptj_working
@@ -202,48 +211,12 @@ CREATE TABLE `ims_ptj_working` (
   `hadmount` int(10) NOT NULL,
   `visible` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
-	
-	/*
-Navicat MySQL Data Transfer
-
-Source Server         : localhost_3306
-Source Server Version : 50617
-Source Host           : localhost:3306
-Source Database       : we7
-
-Target Server Type    : MYSQL
-Target Server Version : 50617
-File Encoding         : 65001
-
-Date: 2015-11-20 17:48:24
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for ims_ptj_ground
+-- Records of ims_ptj_working
 -- ----------------------------
-DROP TABLE IF EXISTS `ims_ptj_ground`;
-CREATE TABLE `ims_ptj_ground` (
-  `id` int(30) NOT NULL AUTO_INCREMENT,
-  `jobid` varchar(30) NOT NULL,
-  `openid` varchar(60) NOT NULL,
-  `title` text NOT NULL,
-  `content` text NOT NULL,
-  `salary` int(30) NOT NULL,
-  `mount` int(10) NOT NULL,
-  `date` datetime NOT NULL,
-  `visible` int(10) NOT NULL,
-  `type` varchar(60) NOT NULL,
-  `haslimit` varchar(60) NOT NULL,
-  `stopdate` datetime NOT NULL,
-  `nowtime` date NOT NULL,
-  `workplace` varchar(100) NOT NULL,
-  `privacy` int(30) NOT NULL DEFAULT '0',
-  `pdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+
 	
 		
 	]]></install>

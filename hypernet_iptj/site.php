@@ -20,8 +20,6 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$avatar='';
 		$date=date('Y-m-d');
 		$farr=array();
-
-		
 		$modelres=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:so",array(':so'=>'on'));
 		
 		
@@ -204,7 +202,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
         $adminget=$_GPC['PtjAdmin'];
 	   if($adminget){
 		    $info=pdo_fetch("SELECT * from".tablename('ptj_profile')."WHERE id=:i",array(':i'=>$_GPC['id']));
-		  $this->SendTpl($info['openid'],$info,'refuse',$adminget['Res']);
+		//  $this->SendTpl($info['openid'],$info,'refuse',$adminget['Res']);
 	
 		  $t=$this->DboperateDeleteUserInfo($_GPC['id']);
 		  
@@ -218,7 +216,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   if($_GPC['surebtn']==1){
 	   	 $t=$this->DboperateAdminSurePro($_GPC['id']);
 	   	 $info=pdo_fetch("SELECT * from".tablename('ptj_profile')."WHERE id=:i",array(':i'=>$_GPC['id']));
-	   	 $this->SendTpl($info['openid'],$info,'auth');
+	  // 	 $this->SendTpl($info['openid'],$info,'auth');
 		 
 	   	 $url=$this->createWebUrl('ptjadmin');
 		 
@@ -272,7 +270,13 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		global $_W,$_GPC;
 		
 		$url=$_GPC['Ptjfunc']['Link'];
-		pdo_update('ptj_link',array('url'=>$url),array('Linkid'=>1));
+		$t=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE Linkid=:lid",array(':lid'=>1));
+		if($t){
+			pdo_update('ptj_link',array('url'=>$url),array('Linkid'=>1));
+		}else{
+			pdo_insert('ptj_link',array('url'=>$url,'Linkid'=>1));
+		}
+		
 		
     	include $this->template('webfunc');
 	}
@@ -308,7 +312,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$openid=$_W['openid'];
 		$count=0;		
 		$uid=$_W['member']['uid'];
-				$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE linkid=:id",array(':id'=>1));
+		$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE linkid=:id",array(':id'=>1));
 		$url=$sinfo['url']; 
 		$modelres=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:so",array(':so'=>'on'));
 		if (empty($avatar)) {
@@ -465,8 +469,9 @@ class hypernet_iptjModuleSite extends WeModuleSite {
                   		//获取报名人数
                   		$worker=$this->DboperateGetIntworkers($ground['jobid']);
                   		               		
-                  		$this->SendTpl($openid,$Ownerinfo,'apply');
-                  		$this->SendTpl($oid, $ground, 'full');  
+
+                  		//$this->SendTpl($openid,$Ownerinfo,'apply');
+                  		//$this->SendTpl($oid, $ground, 'full');  
                   		//发送模板消息                  		                		
                   		message('checkin_success');
                   	}
@@ -492,7 +497,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 				$f=pdo_update('ptj_ground',array('privacy'=>1,'pdate'=>date('Y-m-d H:i:s')),array('jobid'=>$ground['jobid']));		
 				$s=mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-100);	
 						if($f AND $s ){
-							$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);							
+					//		$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);							
 							message('success');
 						}				
 				}
@@ -584,11 +589,14 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   global $_W,$_GPC;
 	   load()->func('tpl');
 	   load()->func('file');
-	 //  $icon=$_FILES['icon'];
-	 //  $iconarr=file_upload($icon,'image');
-	  // var_dump(tomedia($_GPC['icon']));
 	   if($_GPC['modelcode'] && $_GPC['modelname'] && $_GPC['check']){	   	
-	   	 pdo_insert('ptj_model',array('typecode'=>$_GPC['modelcode'],'typename'=>$_GPC['modelname'],'vis'=>$_GPC['check'],'typeicon'=>tomedia($_GPC['icon'])));
+	   	 $f=pdo_insert('ptj_model',array('typecode'=>$_GPC['modelcode'],'typename'=>$_GPC['modelname'],'vis'=>$_GPC['check'],'typeicon'=>tomedia($_GPC['icon'])));
+	   	 if($f){
+	   	 	$url=wurl('site/entry',array('eid'=>$_GPC['eid']));
+	   	 	echo "<script>
+	   	 			location.href='$url';
+	   	 			</script>";
+	   	 }
 	   }
 	   
 	   $allinfo=pdo_fetchall("SELECT * FROM".tablename('ptj_model'));
@@ -747,10 +755,13 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		}
 		
 		if($_GPC['sbutton']=='on'){
-                $url=$this->createMobileUrl('ptjindex');
 				$de=$this->DboperateUndoWanna($ground['jobid']);
-		}
-		
+				if($de){
+					message('success_stop');
+				}else{
+					message('fail_stop');
+				}
+		}		
 		include $this->template('workerinfo');
 	}
 
@@ -816,7 +827,7 @@ if($_GPC){
         	else{
 			        	if($privacy AND $credit>=100){
         		$value=mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-100);
-        		$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);				
+        		//$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);				
                       	}	
 						else if($privacy){
 							message('积分不足,您无权进行此操作,请前往个人中心充值。如有问题,请与管理员联系!');
@@ -825,7 +836,13 @@ if($_GPC){
 			}
          $jobid=substr(md5(substr(time(), 4,8)),4,9);
       
-        $this->DboperateInsertGroundInfo($_W['openid'], $jobid, $title, $content,$phone, $privacy,$path1,$path2,$path3,intval($c_pay),$type);                  
+        $t=$this->DboperateInsertGroundInfo($_W['openid'], $jobid, $title, $content,$phone, $privacy,$path1,$path2,$path3,intval($c_pay),$type);
+        if($t){
+        	$url=murl('entry//ptjindex',array('m'=>$this->modulename));      	
+        	echo "<script>
+        			location.href='$url';
+        			</script>";
+        	}                  
         }	
 }
 
@@ -886,6 +903,112 @@ if($_GPC){
 		$ground=$_GPC['ground'];
 		include $this->template('ing');
 	}
+	
+	public function doMobileRecharge(){
+		
+		//积分充值入口
+		global $_W, $_GPC;
+		if (empty($_W['member']['uid'])) {
+			checkauth();
+		}
+		$credit1_lv = $this->module['config']['credit1_lv']?$this->module['config']['credit1_lv']:1;
+		$username = $_W['member']['email'] ? $_W['member']['email'] : $_W['member']['mobile'];
+		if(empty($username)) {
+			message('您的用户信息不完整,请完善用户信息后再充值', '', 'error');
+		}
+		if (checksubmit('submit', true) || !empty($_GPC['ajax'])) {
+			$fee = floatval($_GPC['money']);
+			if($fee <= 0) {
+				message('支付错误, 积分小于0');
+			}
+			$chargerecord = pdo_fetch("SELECT * FROM ".tablename('mc_credits_recharge')." WHERE uniacid = :uniacid AND uid = :uid AND fee = :fee AND status = '0'", array(
+					':uniacid' => $_W['uniacid'],
+					':uid' => $_W['member']['uid'],
+					':fee' => $fee*$credit1_lv,
+			));
+			if (empty($chargerecord)) {
+				$chargerecord = array(
+						'uid' => $_W['member']['uid'],
+						'uniacid' => $_W['uniacid'],
+						'tid' => date('YmdHi').random(10, 1),
+						'fee' => $fee*$credit1_lv,
+						'status' => 0,
+						'createtime' => TIMESTAMP,
+				);
+				if (!pdo_insert('mc_credits_recharge', $chargerecord)) {
+					message('创建充值订单失败，请重试！', $this->createMobileUrl('index'), 'error');
+				}
+			}
+			$params = array(
+					'tid' => $chargerecord['tid'],
+					'ordersn' => $chargerecord['tid'],
+					'title' => '系统充值积分',
+					'fee' => $chargerecord['fee'],
+					'user' => $_W['member']['uid'],
+			);
+			$this->pay($params);
+		} else {
+			include $this->template('recharge');
+		}		
+	}
+
+	protected function pay($params = array()) {
+		global $_W;
+		$params['module'] = $this->module['name'];
+		$sql = 'SELECT * FROM ' . tablename('core_paylog') . ' WHERE `uniacid`=:uniacid AND `module`=:module AND `tid`=:tid';
+		$pars = array();
+		$pars[':uniacid'] = $_W['uniacid'];
+		$pars[':module'] = $params['module'];
+		$pars[':tid'] = $params['tid'];
+		$log = pdo_fetch($sql, $pars);
+		if(!empty($log) && $log['status'] == '1') {
+			message('这个订单已经支付成功, 不需要重复支付.');
+		}
+		$setting = uni_setting($_W['uniacid'], array('payment', 'creditbehaviors'));
+		if(!is_array($setting['payment'])) {
+			message('没有有效的支付方式, 请联系网站管理员.');
+		}
+		$pay = $setting['payment'];
+		$pay['credit']['switch'] = false;
+		$pay['delivery']['switch'] = false;
+		include $this->template('common/paycenter');
+	}
+	public function payResult($params) {
+		load()->model('mc');
+		$status = pdo_fetchcolumn("SELECT status FROM ".tablename('mc_credits_recharge')." WHERE tid = :tid", array(':tid' => $params['tid']));
+		if (empty($status)) {
+			$credit1_lv = $this->module['config']['credit1_lv']?$this->module['config']['credit1_lv']:1;
+			$fee = $params['fee']/$credit1_lv;
+			$data = array('status' => $params['result'] == 'success' ? 1 : -1);
+			if ($params['type'] == 'wechat') {
+				$data['transid'] = $params['tag']['transaction_id'];
+				$params['user'] = mc_openid2uid($params['user']);
+			}
+			pdo_update('mc_credits_recharge', $data, array('tid' => $params['tid']));
+			if ($params['result'] == 'success' && $params['from'] == 'notify') {
+				$setting = uni_setting($_W['uniacid'], array('creditbehaviors'));
+				//a:2:{s:8:"activity";s:7:"credit1";s:8:"currency";s:7:"credit2";}
+				$credit = $setting['creditbehaviors']['activity'];
+				if(empty($credit)) {
+					message('站点积分行为参数配置错误,请联系服务商', '', 'error');
+				} else {
+					$paydata = array('wechat' => '微信', 'alipay' => '支付宝');
+					$record[] = $params['user'];
+					$record[] = '用户通过' . $paydata[$params['type']] . '充值' . $fee.'积分';
+					mc_credit_update($params['user'], $credit, $fee, $record);
+				}
+			}
+		}
+		if ($params['from'] == 'return') {
+			if ($params['result'] == 'success') {
+				message('支付成功！', '../../app/' . url('mc/home'), 'success');
+			} else {
+				message('支付失败！', '../../app/' . url('mc/home'), 'error');
+			}
+		}
+	}	
+	
+	
 	
 	
 ///////////////////////////////////////////数据库操作操作函数      开始///////////////////////////////////////
