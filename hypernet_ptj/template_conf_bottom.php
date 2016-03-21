@@ -1,2 +1,0 @@
-<?php
-$bottom='{"c":"profile","a":"module","do":"setting","m":"hypernet_iptj","adminLable":"2333","linkURL":"2345","type":"bottom","submit":"\u63d0\u4ea4","__session":"eyJ1aWQiOiIxIiwibGFzdHZpc2l0IjoiMTQ1NDYwOTU5OCIsImxhc3RpcCI6Ijo6MSIsImhhc2giOiIxNzYwMDRiZWEwZjM2YjUzNTA1ZjI3MDBmZWJmMWYwYSJ9","__uniacid":"6"}';

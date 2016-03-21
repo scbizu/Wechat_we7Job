@@ -1,2 +1,0 @@
-<?php
-$apply='{"c":"profile","a":"module","do":"setting","m":"hypernet_iptj","apply_tid":"1234","apply_first":"\u554a\u98d2\u98d2\u5927\u795e\u4ece","apply_fcolor":"#000000","apply_keynote1":"\u4e3a\u6211\u800c\u6e29\u67d4","apply_kfcolor":"#000000","apply_remark":"\u53ef\u5783\u573e\u6536\u4ee3\u7406\u554a","apply_mkcolor":"#000000","type":"apply","submit":"\u63d0\u4ea4","__session":"eyJ1aWQiOiIxIiwibGFzdHZpc2l0IjoiMTQ1NDQzMjkxNyIsImxhc3RpcCI6Ijo6MSIsImhhc2giOiIxNzYwMDRiZWEwZjM2YjUzNTA1ZjI3MDBmZWJmMWYwYSJ9","__uniacid":"6"}';
