@@ -318,7 +318,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		
 				$credit=$_GPC['credit'];
 		//./index.php?i=1&c=entry&do=index&m=meepo_credit1
-		$shopUrl=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE id=:id",array(':id'=>2));
+		$shopUrl=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE Linkid=:id",array(':id'=>2));
 		include $this->template('pay');
 
 	}
@@ -340,7 +340,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$openid=$_W['openid'];
 		$count=0;		
 		$uid=$_W['member']['uid'];
-		$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE linkid=:id",array(':id'=>1));
+		$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE Linkid=:id",array(':id'=>1));
 		$url=$sinfo['url']; 
 		$modelres=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:so",array(':so'=>'on'));
 		if (empty($avatar)) {
@@ -545,7 +545,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	public function doMobilePtjfunc(){
 		//功能封面 外链接
 		global $_W,$_GPC;
-		$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE linkid=:id",array(':id'=>1));
+		$sinfo=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE Linkid=:id",array(':id'=>1));
 		$url=$sinfo['url']; 
 		include $this->template('divfunc');
 	}
