@@ -44,9 +44,19 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		
 		
 		//查看广场
-        if($_GPC['typecode']){
+        if($_GPC['typecode'] AND !$_GPC['Search']){
+        	$tprivacy=$_GPC['privacy'];
 			$type=$_GPC['typecode'];
-			$groundtype=$this->DboperateSearchGround($type, FALSE, FALSE,FALSE, TRUE);
+			if($_GPC['privacy']){
+				if($_GPC['privacy']=='new'){
+					$groundtype=$this->DboperateSearchGround($type, FALSE, FALSE,FALSE, TRUE,0);
+				}else if($_GPC['privacy']=='top'){
+					$groundtype=$this->DboperateSearchGround($type, FALSE, FALSE,FALSE, TRUE,1);
+				}				
+			}else {
+				$groundtype=$this->DboperateSearchGround($type, FALSE, FALSE,FALSE, TRUE,0);
+			}
+
 			foreach($groundtype as $k=>$v){
 				if($v['privacy']==0){
                    array_push($farr,$k);
@@ -56,10 +66,15 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 				$groundtype[$k]=$v;
 			}
 			$Groundtype=$groundtype;
-		}
-		else {
-			$ground=$this->DboperateSearchGroundinfo();
-           // var_dump($ground);
+		}else{
+			$privacy=$_GPC['privacy'];
+			if($_GPC['privacy']=='new'){
+				$ground=$this->DboperateSearchGroundinfo(0);				
+			}else if($_GPC['privacy']=='top'){
+				$ground=$this->DboperateSearchGroundinfo(1);
+			}else{
+				$ground=$this->DboperateSearchGroundinfo(0);
+			}
 			foreach($ground as $k=>$v){
 				if($v['privacy']==0){																							
 					array_push($farr,$k);				
@@ -70,23 +85,35 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 			}	
 			$Ground=$ground;
 		}
-///////////搜索后的排序
-		$search=$_GPC['Search'];
-        if($search){
-	     	$searchinfo=$this->DboperateSearchGround($search,0,0,0,0);
-			foreach($searchinfo as $k=>$v){
-				if($v['privacy']==0){
-                    array_push($farr,$k);
-				}	
-				$sinfo=$this->DboperateSearchUser($v['openid']);
-				$v['nickname']=$sinfo['nickname']?$sinfo['nickname']:$sinfo['name'];
-				$searchinfo[$k]=$v;				
-            }
-            $Searchinfo=$searchinfo;
-        }
+
+		if($_GPC['Search']){
+			///////////搜索后的排序
+			$search=$_GPC['Search'];
+			if($search){
+				$sprivacy=$_GPC['privacy'];
+				if($_GPC['privacy']=='new'){
+					$searchinfo=$this->DboperateSearchGround($search, TRUE, FALSE, FALSE, FALSE, 0);
+				}else if($_GPC['privacy']=='top'){
+					$searchinfo=$this->DboperateSearchGround($search, TRUE, FALSE, FALSE, FALSE, 1);
+				}else{
+					$searchinfo=$this->DboperateSearchGround($search, TRUE, FALSE, FALSE, FALSE, 0);
+				}
+				//var_dump($searchinfo);
+				foreach($searchinfo as $k=>$v){
+					if($v['privacy']==0){
+						array_push($farr,$k);
+					}
+					$sinfo=$this->DboperateSearchUser($v['openid']);
+					$v['nickname']=$sinfo['nickname']?$sinfo['nickname']:$sinfo['name'];
+					$searchinfo[$k]=$v;
+				}
+				$Searchinfo=$searchinfo;
+			}
+		}
+
+
         $avatar=$_W['account']['avatar'];
         $first=$farr[0];
-
         $img=pdo_fetchall("SELECT * FROM".tablename('ptj_pic')."WHERE ison=:io ORDER BY priority",array(':io'=>1),'');
 		$proot=$_W['attachurl'];
 		
@@ -291,6 +318,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		
 				$credit=$_GPC['credit'];
 		//./index.php?i=1&c=entry&do=index&m=meepo_credit1
+		$shopUrl=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE id=:id",array(':id'=>2));
 		include $this->template('pay');
 
 	}
@@ -887,7 +915,7 @@ if($_GPC){
 				$v['pic2']=$cinfo['pic2'];
 				$v['pic3']=$cinfo['pic3'];
 				$v['content']=$cinfo['content'];
-
+				$v['type']=$cinfo['type'];
 				$collection[$k]=$v;
 			}
 	//		var_dump($collection);
@@ -1072,10 +1100,10 @@ private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,
 	 * 查看广场
 	 * @return Ambigous <boolean, multitype:unknown >
 	 */
-private  function  DboperateSearchGroundinfo(){
+private  function  DboperateSearchGroundinfo($pri=1){
 	$ground=array();
 	$type=array();
-	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi ORDER BY privacy DESC",array(':vi'=>1),'');
+	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi AND privacy=:pa",array(':vi'=>1,':pa'=>$pri),'');
 	$nowtype=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:vi",array(':vi'=>'on'));
 	foreach ($nowtype as $key => $value){
 		array_push($type, trim($value['typecode']));
@@ -1239,11 +1267,23 @@ private function DboperateGetjob($wopenid,$oopenid){
  * @param string $info
  * @return Ambigous <boolean, multitype:unknown >
  */	
-private function  DboperateSearchGround($info,$salary,$time,$owner,$type){
+private function  DboperateSearchGround($info,$search,$time,$owner,$type,$privacy){
 	$ground=array();
-	if($salary){
-		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY salary DESC",array(':ti'=>$info,':vi'=>1),'');
-		$ground=$t;
+	$Type=array();
+	if($search){
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND visible=:vi AND privacy=:pr",array(':ti'=>trim($info),':vi'=>1,':pr'=>$privacy),'');
+		$nowtype=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:vi",array(':vi'=>'on'));
+		foreach ($nowtype as $key => $value){
+			array_push($Type, trim($value['typecode']));
+		}
+		foreach ($t as $k => $v){
+		
+			if(in_array(trim($v['type']), $Type)){
+				array_push($ground, $v);
+			//	$ground=$v;
+			}
+		}
+
 	}
 	else if($time){
 		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND WHERE visible=:vi ORDER BY date ",array(':ti'=>$info,':vi'=>1),'');
@@ -1254,22 +1294,10 @@ private function  DboperateSearchGround($info,$salary,$time,$owner,$type){
 		$ground=$t;
 	}
 	else if($type) {
-		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE type=:ti  AND  visible=:vi ORDER BY privacy DESC",array(':ti'=>$info,':vi'=>1),'');
+		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE type=:ti  AND  visible=:vi AND privacy=:pr ",array(':pr'=>$privacy,':ti'=>$info,':vi'=>1),'');
 		$ground=$t;
 	}
-	else {
-		$t=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE title REGEXP :ti AND visible=:vi ORDER BY privacy DESC",array(':ti'=>$info,':vi'=>1),'');
-		$nowtype=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:vi",array(':vi'=>'on'));
-		foreach ($nowtype as $key => $value){
-			array_push($type, trim($value['typecode']));
-		}
-		foreach ($t as $k => $v){
-		
-			if(in_array(trim($v['type']), $type)){
-				array_push($ground, $v);
-			}
-		}
-	}
+
 	return $ground;
 }
 /**

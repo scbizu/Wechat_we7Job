@@ -173,6 +173,30 @@ class hypernet_iptjModule extends WeModule {
 				echo "<script>location.href='$href';</script>";
 				$_GPC['type']=NULL;
 			}
+			if($_GPC['token']){
+				if($_W['ispost']) {
+				//字段验证, 并获得正确的数据$dat
+				$dat = $_GPC;
+				$this->saveSettings($dat);
+				message('保存成功',referer(),'success');
+			}
+			$setting = $this->module['config'];
+			if(empty($setting)){
+				$setting = array('credit1_lv'=>1);
+			}			
+			
+			}
+			
+			
+			if($_GPC['shopUrl']){
+				$shopUrl=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE Linkid=:id",array(':id'=>2));
+				if($shopUrl){
+					pdo_update('ptj_link',array('url'=>$shopUrl),array('Linkid'=>2));
+				}else{
+					pdo_insert('ptj_link',array('url'=>$shopUrl,'Linkid'=>2));
+				}
+
+			}
 		include $this->template('setting');
 	}
 	

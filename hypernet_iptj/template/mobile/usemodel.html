@@ -5,7 +5,7 @@
 
 
 
-<div style="margin-top:80px">
+<div style="">
 {if $OwnerEx}
 {loop $OwnerEx $k $v}
 {if !$v['vis']}
@@ -76,7 +76,7 @@
 <div class="weui_cells" style="margin-top:5px">
   <div class="tinfo" rel="{$v['jobid']}">
    	 <div class="weui_cell_hd">
-   	<p> {$v['title']}</p> 
+   	<p> 【{$v['type']}】&nbsp;{$v['title']}</p> 
    	 </div>              
          <div class="weui_cell_bd weui_cell_primary">
           {if $v['pic1'] || $v['pic2'] || $v['pic3']}  
@@ -92,9 +92,8 @@
 				{/if}				
 		  </div>				
 			{/if}
-		  <br/>	 
-		  <p>{$v['content']} </p> 
-		  <br/>			
+
+		  <p>&nbsp;&nbsp;&nbsp;{$v['content']} </p> 		
 			</div>
   </div>
 </div>  		

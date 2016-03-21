@@ -675,5 +675,38 @@
 <br/>
 </form>
 
-
+<h2>#4 积分设置</h2>
+ <blockquote>积分=?RMB设置</blockquote>
+		<form class="form-horizontal form" action="" method="post">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">1积分多少元</label>
+				<div class="col-sm-9">
+					<input type="text" name="credit1_lv" class="form-control" value="{php echo $setting['credit1_lv']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+				<div class="col-sm-9" >
+					<input type="hidden" name="token" value="{$_W['token']}" />
+				</div>
+			</div>
+	<div class="form-group" style="margin-left:38px;margin-top:50px">
+					<input type="submit" value="提交" class="btn btn-primary">
+      <input style="margin-left:10px" name="reset" type="reset" value="重置" class="btn btn-danger" />
+	</div>				
+		</form>
+<br/>
+<h2>#4 商城链接设置</h2>
+<form class="form-horizontal form" action="" method="post">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">积分商城地址</label>
+				<div class="col-sm-9">
+					<input type="text" name="shopUrl" class="form-control" value="{php echo $shopUrl}">
+				</div>
+	<div class="form-group" style="margin-left:38px;margin-top:50px">
+      <input name="submit" type="submit" value="提交" class="btn btn-primary" />
+      <input style="margin-left:10px" name="reset" type="reset" value="重置" class="btn btn-danger" />
+	</div>				
+			</div>
+</form>
 
