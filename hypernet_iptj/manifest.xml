@@ -53,20 +53,14 @@
 			<entry title="用户管理中心" do="ptjadmin" state="" direct="false" />
 			<entry title="帖子管理中心" do="ptjtiezi" state="" direct="false" />
 			<entry title="功能介绍"   do="ptjfunc"  state="" direct="false" />
+			<entry title="短信设置"   do="ptjmsg"  state="" direct="false" />			
 			<entry title="分享设置"   do="ptjshare"  state="" direct="false" />
 		</menu>
-		<home>
-			<entry title="首页导航" do="ptjlink" state="" direct="false" />
-		</home>
-		<profile>
-			<entry title="个人中心" do="ptjmyinfo" state="" direct="false" />
-		</profile>
-		<shortcut>
-			<entry title="快捷功能" do="ptjorders" state="" direct="false" />
-		</shortcut>
+
 	</bindings>
 	<install><![CDATA[
-	/*
+
+/*
 Navicat MySQL Data Transfer
 
 Source Server         : localhost_3306
@@ -78,7 +72,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-03-18 21:25:47
+Date: 2016-03-23 00:50:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -93,11 +87,19 @@ CREATE TABLE `ims_ptj_collection` (
   `openid` varchar(30) NOT NULL,
   `watching` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of ims_ptj_collection
+-- Table structure for ims_ptj_comment
 -- ----------------------------
+DROP TABLE IF EXISTS `ims_ptj_comment`;
+CREATE TABLE `ims_ptj_comment` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `jobid` int(10) NOT NULL,
+  `comment` text NOT NULL,
+  `workerid` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for ims_ptj_ground
@@ -118,11 +120,7 @@ CREATE TABLE `ims_ptj_ground` (
   `phone` varchar(255) NOT NULL,
   `credit` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of ims_ptj_ground
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for ims_ptj_link
@@ -133,10 +131,6 @@ CREATE TABLE `ims_ptj_link` (
   `Linkid` int(10) NOT NULL,
   PRIMARY KEY (`Linkid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of ims_ptj_link
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for ims_ptj_model
@@ -152,8 +146,53 @@ CREATE TABLE `ims_ptj_model` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of ims_ptj_model
+-- Table structure for ims_ptj_profile
 -- ----------------------------
+DROP TABLE IF EXISTS `ims_ptj_profile`;
+CREATE TABLE `ims_ptj_profile` (
+  `sure` int(10) NOT NULL,
+  `id` int(30) NOT NULL AUTO_INCREMENT,
+  `openid` varchar(30) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `phone` varchar(30) NOT NULL,
+  `sex` varchar(30) DEFAULT NULL,
+  `nickname` varchar(60) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `identity` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for ims_ptj_working
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_ptj_working`;
+CREATE TABLE `ims_ptj_working` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `jobid` varchar(30) NOT NULL,
+  `owneroid` varchar(30) NOT NULL,
+  `workeroid` varchar(30) NOT NULL,
+  `sure` int(10) NOT NULL,
+  `hadmount` int(10) NOT NULL,
+  `visible` int(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : localhost_3306
+Source Server Version : 50617
+Source Host           : localhost:3306
+Source Database       : we7
+
+Target Server Type    : MYSQL
+Target Server Version : 50617
+File Encoding         : 65001
+
+Date: 2016-03-23 00:50:34
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
 -- Table structure for ims_ptj_pic
@@ -171,53 +210,12 @@ CREATE TABLE `ims_ptj_pic` (
 -- ----------------------------
 -- Records of ims_ptj_pic
 -- ----------------------------
-INSERT INTO `ims_ptj_pic` VALUES ('1', '', '1', '0', '');
+INSERT INTO `ims_ptj_pic` VALUES ('1', '', '1', '1', '');
 INSERT INTO `ims_ptj_pic` VALUES ('2', '', '1', '0', '');
 INSERT INTO `ims_ptj_pic` VALUES ('3', '', '1', '0', '');
 INSERT INTO `ims_ptj_pic` VALUES ('4', '', '1', '0', '');
 INSERT INTO `ims_ptj_pic` VALUES ('5', '', '1', '0', '');
 
--- ----------------------------
--- Table structure for ims_ptj_profile
--- ----------------------------
-DROP TABLE IF EXISTS `ims_ptj_profile`;
-CREATE TABLE `ims_ptj_profile` (
-  `sure` int(10) NOT NULL,
-  `id` int(30) NOT NULL AUTO_INCREMENT,
-  `openid` varchar(30) NOT NULL,
-  `name` varchar(30) NOT NULL,
-  `phone` varchar(30) NOT NULL,
-  `sex` varchar(30) DEFAULT NULL,
-  `nickname` varchar(60) DEFAULT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
-  `identity` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of ims_ptj_profile
--- ----------------------------
-
--- ----------------------------
--- Table structure for ims_ptj_working
--- ----------------------------
-DROP TABLE IF EXISTS `ims_ptj_working`;
-CREATE TABLE `ims_ptj_working` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `jobid` varchar(30) NOT NULL,
-  `owneroid` varchar(30) NOT NULL,
-  `workeroid` varchar(30) NOT NULL,
-  `sure` int(10) NOT NULL,
-  `hadmount` int(10) NOT NULL,
-  `visible` int(10) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of ims_ptj_working
--- ----------------------------
-
-	
 		
 	]]></install>
 	<uninstall><![CDATA[]]></uninstall>

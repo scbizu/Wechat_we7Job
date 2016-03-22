@@ -2,12 +2,12 @@
 <html>
   	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_normalize.css" />
 	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_styles.css" />
-	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_default.css" />
+	<link rel="stylesheet" type="text/css" href="{$_W['siteroot']}app/resource/css/ptj_default.css" /> 
     <link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>	
-<body>	  
+<body style="background-color:#ededed">	  
 
-<br/>
-<div class="weui_cells weui_cells_form">
+
+<div class="weui_cells weui_cells_form" style="margin-top:10px">
 
     <div class="weui_cell">
         <div class="weui_cell_hd">
@@ -19,7 +19,7 @@
     </div>
 
 
-    <div class="weui_cell weui_cell_select weui_select_before">
+    <div class="weui_cell weui_cell_select weui_select_before" id="tellin">
         <div class="weui_cell_hd">
             <select class="weui_select" name="select" id="pretel">
                 <option value="+86">+86</option>
@@ -28,10 +28,28 @@
                 <option value="+87">+87</option>
             </select>
         </div>
-        <div class="weui_cell_bd weui_cell_primary">
+        <div class="weui_cell_bd weui_cell_primary" >
             <input class="weui_input" type="tel" id="tel" placeholder="请输入联系方式">
         </div>
-    </div>
+    <div class="weui_cell_ft" id="tellin">
+
+    </div>     
+	</div>  
+	
+	
+     <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label" style="width: 70px;">验证码</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary"  id="hack_code">
+            <input class="weui_input" type="text" id="code"  placeholder="请输入验证码">
+            <input class="weui_input" type="text" id="g_code"  style="display:none">
+        </div>
+        <div class="weui_cell_ft">
+        	<button id="verify" class="weui_btn weui_btn_plain_primary">获取验证码</button>        	
+        </div>
+    </div> 
+  
     
     <br/>
     <br/>
@@ -101,17 +119,65 @@
 <script>
 
 require(['jquery','util'],function($,util){
+
+	
 	$("#back").click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjmyinfo');}";
+	});
+	
+	$("#tel").blur(function(){
+		var tel=$("#tel").val();
+           $.ajax({
+        	   url:"{php echo $this->createMobileUrl('ptjperfect');}",
+        	   method:"POST",
+        	   data:{
+        		   tel:tel,
+        	   }
+           })
+           .done(function(data){
+        	   var obj=jQuery.parseJSON(data);
+        	   if(obj.message==="tel_success"){
+
+        		   $("#tellin").append('<i class="weui_icon_success"></i>');
+
+        	   }else if(obj.message==="tel_fail"){
+
+        		   $("#tellin").append('<i class="weui_icon_info"></i>');
+        	   }
+           });
+	});
+	
+	$("#verify").click(function(){
+		var tel=$("#tel").val();
+		$.ajax({
+			url:"{php echo $this->createMobileUrl('ptjperfect');}",
+			method:"POST",
+			data:{
+				tel:tel,
+				verify:"ing",
+			}
+		})
+		.done(function(data){
+			var Obj=jQuery.parseJSON(data);
+			if(Obj.message==="POSTED"){
+				$("#g_code").attr('value',Obj.redirect);
+				alert('你的code已经成功送出啦~');
+			}else{
+				alert('code堵住啦,请再发送一遍咯~');
+			}
+		})
 	});
 	
 	$("#s_btn").click(function(){
 		var name=$("#name").val();
 		var tel=$("#pretel").val()+$("#tel").val();
+		var code=$("#g_code").attr('value');
 		if(name===""){
 			$("#name_error_dia").attr("style","display:block");
 		}else if($("#tel").val()===""){
 			$("#tel_error_dia").attr("style","display:block");
+		}else if($("#code").val()!==code){
+			alert('验证码不对哦!');
 		}else{
 			$("#loadingToast").attr("style","display:block");
 		//alert(tel);
@@ -139,20 +205,6 @@ require(['jquery','util'],function($,util){
 	});
 });
 
-function click_a(Ifcompany)
-{
-    if(document.getElementById(Ifcompany).style.display != "block")
-    {
-        document.getElementById(Ifcompany).style.display = "block";
-    }
-}
-function click_orgin(Ifcompany)
-{
-    if(document.getElementById(Ifcompany).style.display != "none")
-    {
-        document.getElementById(Ifcompany).style.display = "none";
-    }
-}
 
 </script>
 

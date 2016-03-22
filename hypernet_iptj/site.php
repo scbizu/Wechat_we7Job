@@ -645,6 +645,25 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   include $this->template('model');
 	}
 	
+	public function doWebPtjmsg(){
+		global  $_W,$_GPC;
+		require_once ('sms.php');
+		$sms=json_decode($sms,true);	
+		
+if($_GPC){
+		$inithead="<?php\n";
+		$filelocale=fopen(dirname(__FILE__)."/sms.php", "w") or die('保存失败');
+		$model=$_GPC;
+		fwrite($filelocale, $inithead);
+		fclose($filelocale);
+		$dataSource=json_encode($model);
+		$data='$sms=\''.$dataSource.'\';';
+		file_put_contents(dirname(__FILE__)."/sms.php", $data,FILE_APPEND);		
+		include $this->template('msg');
+}
+	}
+	
+	
 	
 	public function doMobilePtjshare(){
 		require_once('config.php');
@@ -653,7 +672,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	public function doMobilePtjperfect(){
 		//这个操作被定义用户  呈现用户完善信息的页面
 		global $_W,$_GPC;
-		
+		require_once 'sms.php';
 		load()->model('mc');
 		load()->func('tpl');
 		$avatar = '';
@@ -693,7 +712,45 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		$src=$avatar;
 		}
 	//////////////////////////////////////mc调用结束////////////////////////////
-	
+	$sms=json_decode($sms,true);
+		if($_GPC['tel'] AND $_GPC['verify']!=='ing'){
+			//对TEL进行动态正则匹配
+			$tel=$_GPC['tel'];
+			$t=preg_match('/^1[34578]\d{9}$/', $tel);
+			if($t){
+				//给前端号码
+				$tel=$_GPC['tel'];
+				message('tel_success');
+			}else{
+				message('tel_fail');
+			}
+		}
+		
+		if($_GPC['verify']==='ing'){
+		     //开始构造短信信息
+			$statusStr = array(
+					"0" => "POSTED",
+					"-1" => "参数不全",
+					"-2" => "服务器空间不支持,请确认支持curl或者fsocket，联系您的空间商解决或者更换空间！",
+					"30" => "密码错误",
+					"40" => "账号不存在",
+					"41" => "余额不足",
+					"42" => "帐户已过期",
+					"43" => "IP地址限制",
+					"50" => "内容含有敏感词"
+			);
+			$smsapi = "http://api.smsbao.com/";
+			//$user = "sevenplus2016"; //短信平台帐号
+			$user = $sms['sms_account'];
+			//$pass = md5("wa7plus"); //短信平台密码
+			$pass = md5($sms['sms_password']);
+			$m_content=substr(time(),-4,4);//要发送的短信内容
+			$phone = $_GPC['tel'];//要发送短信的手机号码
+			$sendurl = $smsapi."sms?u=".$user."&p=".$pass."&m=".$phone."&c=".urlencode($m_content);
+			$result =file_get_contents($sendurl) ;
+			$msg=$statusStr[$result];		
+			message($msg,$m_content);     	
+		}
          $name=$_GPC['name'];
 		 $phone=$_GPC['phone'];
 		 $openid=$_W['openid'];

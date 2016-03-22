@@ -1,0 +1,21 @@
+{template 'common/header'}
+
+<h2>短信设置(SMS Settings)</h2>
+<blockquote>此模块需要验证手机号需要用到短信宝,戳<a href="http://www.smsbao.com/">这里</a>了解详情</blockquote>
+<br/>
+<form class="form-horizontal form" action="" method="post">
+	<div class="form-group" style="margin-left:18px;margin-top:50px">
+		<label class="col-sm-2 control-lable">短信宝账号:</label>
+		<input class="col-sm-8" name="sms_account" type="text" value="{$sms['sms_account']}"/>			
+	</div>
+	
+	<div class="form-group" style="margin-left:18px;margin-top:50px">
+		<label class="col-sm-2 control-lable">短信宝密码:</label>
+		<input class="col-sm-8" name="sms_password" type="password" value="{$sms['sms_password']}"/>			
+	</div>
+<br/>	
+<br/>
+	<div class="form-group" style="margin-left:250px" >
+		<input type="submit" value="保存" class="btn btn-primary">
+	</div>	
+</form>
