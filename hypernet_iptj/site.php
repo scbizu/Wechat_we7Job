@@ -933,7 +933,6 @@ if($_GPC){
 	}
 	
 	public function doMobileRecharge(){
-		
 		//积分充值入口
 		global $_W, $_GPC;
 		if (empty($_W['member']['uid'])) {
@@ -944,7 +943,8 @@ if($_GPC){
 		if(empty($username)) {
 			message('您的用户信息不完整,请完善用户信息后再充值', '', 'error');
 		}
-		if (checksubmit('submit', true) || !empty($_GPC['ajax'])) {
+		if (checksubmit('submit', true) || !empty($_GPC['ajax'])||!empty($_GPC['money'])) {
+		
 			$fee = floatval($_GPC['money']);
 			if($fee <= 0) {
 				message('支付错误, 积分小于0');
@@ -976,8 +976,8 @@ if($_GPC){
 			);
 			$this->pay($params);
 		} else {
-			include $this->template('recharge');
-		}		
+			include $this->template('index');
+		}	
 	}
 
 	protected function pay($params = array()) {
