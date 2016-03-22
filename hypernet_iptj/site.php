@@ -976,7 +976,7 @@ if($_GPC){
 			);
 			$this->pay($params);
 		} else {
-			include $this->template('index');
+			include $this->template('recharge');
 		}	
 	}
 
