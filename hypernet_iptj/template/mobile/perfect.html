@@ -159,11 +159,12 @@ require(['jquery','util'],function($,util){
 		})
 		.done(function(data){
 			var Obj=jQuery.parseJSON(data);
-			if(Obj.message==="POSTED"){
-				$("#g_code").attr('value',Obj.redirect);
-				alert('你的code已经成功送出啦~');
+			var inObj=jQuery.parseJSON(Obj.message);
+			if(inObj.msg==="POSTED"){
+				$("#g_code").attr('value',inObj.content);
+				alert('你的验证码已经成功送出啦~');
 			}else{
-				alert('code堵住啦,请再发送一遍咯~');
+				alert('验证码获取失败,请重新获取~');
 			}
 		})
 	});
@@ -178,6 +179,7 @@ require(['jquery','util'],function($,util){
 			$("#tel_error_dia").attr("style","display:block");
 		}else if($("#code").val()!==code){
 			alert('验证码不对哦!');
+			//alert(code);
 		}else{
 			$("#loadingToast").attr("style","display:block");
 		//alert(tel);

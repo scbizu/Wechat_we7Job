@@ -29,10 +29,12 @@
         <div class="weui_tabbar_item " id="taged">
             <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;取消收藏</p>
         </div>
+		
 {/if}
-         <div  class="weui_tabbar_item" id="contact">
+         <!--div  class="weui_tabbar_item" id="contact">
             <p class="weui_tabbar_label" style="font-size:20px;margin-top:10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;问问ta</p>
-        </div> 	
+        </div-->
+
 {if $isworker==3  AND !$commitFlag}
   	{if !$ifprivacy}
          <div  class="weui_tabbar_item " id="top">
@@ -82,10 +84,10 @@
  <p style="font-size:15px">标题:&nbsp;&nbsp;{$ground['title']}</p>
   {if $isworker==1 && $commitFlag==2||$commitFlag==1}
  	 <p style="font-size:15px" id="s_phone">【新增】联系电话:{$ground['phone']}</p>
- 	  	 <p style="font-size:15px;display:none" id="h_phone"  >联系电话:&nbsp;&nbsp;<b>此栏于报名后揭晓</b></p>
+ 	  	 <p style="font-size:15px;display:none" id="h_phone"  >联系电话:&nbsp;&nbsp;<b>报名后可见</b></p>
   {else}
    	 <p style="font-size:15px;display:none" id="s_phone" >【新增】联系电话:{$ground['phone']}</p>
-		 <p style="font-size:15px" id="h_phone">联系电话:&nbsp;&nbsp;<b>此栏于报名后揭晓</b></p>  
+		 <p style="font-size:15px" id="h_phone">联系电话:&nbsp;&nbsp;<b>报名后可见</b></p>  
   {/if}
  <p style="font-size:15px">具体内容:&nbsp;&nbsp;{$ground['content']}</p>
 
@@ -127,7 +129,7 @@
   <div class="btn-group " role="group" style="background-color:#fff">
     <div style="border-style:solid; border-width:1px;border-color:#D3D3D2 ">
 
-    <a type="button" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('jobid'=>$ground['jobid'],'exists'=>$exists));}" class="btn btn-default">查看求职者信息<span class="glyphicon glyphicon-chevron-right" style="margin-left:65%"></span></a>
+    <a type="button" href="{php echo $this->createMobileUrl('ptjworkerinfo',array('jobid'=>$ground['jobid'],'exists'=>$exists));}" class="btn btn-default">报名者清单<span class="glyphicon glyphicon-chevron-right" style="margin-left:65%"></span></a>
     </div>
   </div>
 </div>
@@ -137,7 +139,7 @@
  <div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
   <div class="btn-group " role="group" style="background-color:#fff">
     <div style="border-style:solid; border-width:1px;border-color:#D3D3D2">
-    <a type="button"  onclick="alert('先去完善信息咯,右下个人中心->完善信息,好走,不谢~~~~~')" class="btn btn-default text-center" >
+    <a type="button"  onclick="alert('先去完善信息咯,右下个人中心->完善信息')" class="btn btn-default text-center" >
        我要报名
     </a>
     </div>

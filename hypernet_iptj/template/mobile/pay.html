@@ -1,22 +1,19 @@
 {template 'common/header'}
 
-
-<div class="jumbotron" style="width:100% ;margin-bottom: 30px;margin-top: -50;margin-top: -50px;padding-bottom: 20px;">
-<div class="row" style="margin-top:30%">
-  <div class="col-xs-6 col-md-3" style="width:40%">
-   当前您拥有的积分为:<h2><b>{$credit}</b></h2>积分
-  </div>
+<link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>
+<div class="weui_msg">
+    <div class="weui_icon_area"><i class="weui_icon_safe weui_icon_safe_success"></i></div>
+    <div class="weui_text_area">
+        <h2 class="weui_msg_title">我的积分</h2>
+        <p class="weui_msg_desc"><h2><b>{$credit}</b></h2></p>
+    </div>
+    <div class="weui_opr_area">
+        <p class="weui_btn_area">
+            <a href="{php echo $this->createMobileUrl('recharge');}" class="weui_btn weui_btn_primary">充值</a>
+            <a href="{$shopUrl}" class="weui_btn weui_btn_default">兑换</a>
+        </p>
+    </div>
 </div>
-<div style="margin-left:80%;margin-top:-90px">
-<div style="margin-bottom:10px">
- 	<a type="button" href="{php echo $this->createMobileUrl('recharge');}" class="btn btn-success" style="font-size:15px"><span class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp;&nbsp;充值</a>
-</div>
- <div>
-  <a type="button" href="{$shopUrl}" class="btn btn-danger" style="font-size:15px"><span class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp;&nbsp;兑换</a>
-  </div>
-</div>
-</div>
-
 
 
 

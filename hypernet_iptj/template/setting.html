@@ -12,7 +12,7 @@
 
  <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">轮播#1 of 5:</h3>
+    <h3 class="panel-title">轮播#1 of 3:</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal" action="" method="post" >
@@ -70,7 +70,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">轮播#2 of 5:</h3>
+    <h3 class="panel-title">轮播#2 of 3:</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal" action="" method="post">
@@ -126,7 +126,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">轮播#3 of 5:</h3>
+    <h3 class="panel-title">轮播#3 of 3:</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal" action="" method="post" >
@@ -181,120 +181,6 @@
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">轮播#4 of 5:</h3>
-  </div>
-  <div class="panel-body">
-<form class="form-horizontal" action="" method="post" >
-
-<div class="form-group">
-    <label  class="col-sm-2 control-label">Slide Picture Preview</label>
-    <div class="col-sm-10">
-  {php  echo tpl_form_field_image('ImageUrl4',$src4['imgurl'],$src4['imgurl']);}
-    </div>
-</div>
-
-<div class="form-group" style="margin-left:10px;margin-top:10px">
-	<label class="col-sm-2 control-lable">优先级:</label>
-	<input class="col-sm-1" name="priority_fo" type="text" value="{$src4['priority']}"/>
-</div>
-
-<div class="form-group" style="margin-left:10px;margin-top:10px">
-	<label class="col-sm-2 control-lable">图文地址:</label>
-	<input class="col-sm-8" name="arti_fo" type="text" value="{$src4['arti']}"/>
-</div>
-
-<div class="form-group" style="margin-left:10px;margin-top:10px">
-	<label class="col-sm-2 control-lable">是否显示:</label>	
-	{if $src4['ison']}
-	<label class="radio-inline">
-  		<input type="radio" id="ison" value="1" name="ison_fo" checked> 显示
-	</label>
-	<label class="radio-inline">
-  		<input type="radio" id="isoff" value="0" name="ison_fo"> 不显示
-	</label>	
-	{else}
-	<label class="radio-inline">
-  		<input type="radio" id="ison" value="1" name="ison_fo"> 显示
-	</label>
-	<label class="radio-inline">
-  		<input type="radio" id="isoff" value="0" name="ison_fo" checked> 不显示
-	</label>	
-	{/if}
-</div>
-
-<div class="form-group" style="display:none">
-	<input name="type" type="text" value="pic4" />
-</div>
-
-	<div class="form-group" style="margin-top:20px">
-		<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
-			<input name="submit" type="submit" value="保存" class="btn btn-primary" />
-			<input name="reset" type="reset" value="重置" class="btn btn-primary" />
-		</div>
-	</div>
-</form>
-  </div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">轮播#5 of 5:</h3>
-  </div>
-  <div class="panel-body">
-<form class="form-horizontal" action="" method="post">
-
-<div class="form-group">
-    <label  class="col-sm-2 control-label">Slide Picture Preview</label>
-    <div class="col-sm-10">
-  {php  echo tpl_form_field_image('ImageUrl5',$src5['imgurl'],$src5['imgurl']);}
-    </div>
-</div>
-
-<div class="form-group" style="margin-left:10px;margin-top:10px">
-	<label class="col-sm-2 control-lable">优先级:</label>
-	<input class="col-sm-1" name="priority_fi" type="text" value="{$src5['priority']}"/>
-</div>
-
-<div class="form-group" style="margin-left:10px;margin-top:10px">
-	<label class="col-sm-2 control-lable">图文地址:</label>
-	<input class="col-sm-8" name="arti_fi" type="text" value="{$src5['arti']}"/>
-</div>
-
-<div class="form-group" style="margin-left:10px;margin-top:10px">
-	<label class="col-sm-2 control-lable">是否显示:</label>	
-	{if $src5['ison']}
-	<label class="radio-inline">
-  		<input type="radio" id="ison" value="1" name="ison_fi" checked> 显示
-	</label>
-	<label class="radio-inline">
-  		<input type="radio" id="isoff" value="0" name="ison_fi"> 不显示
-	</label>	
-	{else}
-	<label class="radio-inline">
-  		<input type="radio" id="ison" value="1" name="ison_fi"> 显示
-	</label>
-	<label class="radio-inline">
-  		<input type="radio" id="isoff" value="0" name="ison_fi" checked> 不显示
-	</label>	
-	{/if}
-</div>
-
-<div class="form-group" style="display:none">
-	<input name="type" type="text" value="pic5" />
-</div>
-
-	<div class="form-group" style="margin-top:20px">
-		<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
-			<input name="submit" type="submit" value="保存" class="btn btn-primary" />
-			<input name="reset" type="reset" value="重置" class="btn btn-primary" />
-		</div>
-	</div>
-</form>
-  </div>
-</div>
-
 
 
 
@@ -307,7 +193,7 @@
  
  <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title" style="color:red">报名成功通知:</h3>
+    <h3 class="panel-title" style="color:red">报名成功通知:模板库搜索“报名状态通知”，建议选择编号TM00574</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal" action="" method="post">
@@ -368,7 +254,7 @@
 <!-- auth -->
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title" style="color:red">新人加入通知:</h3>
+    <h3 class="panel-title" style="color:red">新人加入通知:模板库搜索“审核结果通知”，建议选择编号OPENTM201136105</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal" action="" method="post">
@@ -438,7 +324,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title" style="color:red">拒绝用户申请通知:</h3>
+    <h3 class="panel-title" style="color:red">拒绝用户申请通知:模板库搜索“审核结果通知”，建议选择编号OPENTM201136105</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal"  method="post">
@@ -507,7 +393,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title" style="color:red">积分操作:</h3>
+    <h3 class="panel-title" style="color:red">积分操作:模板库搜索“积分提醒”，建议选择编号TM00335</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal" action="" method="post">
@@ -595,7 +481,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title" style="color:red">招聘满员通知:</h3>
+    <h3 class="panel-title" style="color:red">报名满员通知:模板库搜索“任务处理通知”，建议选择编号OPENTM200605630</h3>
   </div>
   <div class="panel-body">
 <form class="form-horizontal" action="" method="post">
@@ -615,13 +501,13 @@
 </div>
 <!-- keyword1 -->
 <div class="form-group" style="margin-left:18px;margin-top:50px">
-	<label class="col-sm-2 control-lable">兼职名:</label>
-	<b>已指定为当前兼职名</b>
+	<label class="col-sm-2 control-lable">发布内容:</label>
+	<b>已指定为当前发布内容</b>
 </div>
 
 <!-- keyword2 -->
 <div class="form-group" style="margin-left:18px;margin-top:50px">
-	<label class="col-sm-2 control-lable">兼职时期:</label>
+	<label class="col-sm-2 control-lable">发布时期:</label>
 	<b>已指定为此兼职的时限</b>		
 </div>
 <!-- remark -->
@@ -696,7 +582,7 @@
 	</div>				
 		</form>
 <br/>
-<h2>#5 商城链接设置</h2>
+<h2>#5 积分兑换地址设置</h2>
 <form class="form-horizontal form" action="" method="post">
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-3 col-md-2 control-label">积分商城地址</label>

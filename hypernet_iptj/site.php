@@ -229,7 +229,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
         $adminget=$_GPC['PtjAdmin'];
 	   if($adminget){
 		    $info=pdo_fetch("SELECT * from".tablename('ptj_profile')."WHERE id=:i",array(':i'=>$_GPC['id']));
-		//  $this->SendTpl($info['openid'],$info,'refuse',$adminget['Res']);
+		 $this->SendTpl($info['openid'],$info,'refuse',$adminget['Res']);
 	
 		  $t=$this->DboperateDeleteUserInfo($_GPC['id']);
 		  
@@ -243,7 +243,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   if($_GPC['surebtn']==1){
 	   	 $t=$this->DboperateAdminSurePro($_GPC['id']);
 	   	 $info=pdo_fetch("SELECT * from".tablename('ptj_profile')."WHERE id=:i",array(':i'=>$_GPC['id']));
-	  // 	 $this->SendTpl($info['openid'],$info,'auth');
+	   	 $this->SendTpl($info['openid'],$info,'auth');
 		 
 	   	 $url=$this->createWebUrl('ptjadmin');
 		 
@@ -498,8 +498,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
                   		$worker=$this->DboperateGetIntworkers($ground['jobid']);
                   		               		
 
-                  		//$this->SendTpl($openid,$Ownerinfo,'apply');
-                  		//$this->SendTpl($oid, $ground, 'full');  
+                  		$this->SendTpl($openid,$Ownerinfo,'apply');
+                  		$this->SendTpl($oid, $ground, 'full');  
                   		//发送模板消息                  		                		
                   		message('checkin_success');
                   	}
@@ -525,7 +525,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 				$f=pdo_update('ptj_ground',array('privacy'=>1,'pdate'=>date('Y-m-d H:i:s')),array('jobid'=>$ground['jobid']));		
 				$s=mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-100);	
 						if($f AND $s ){
-					//		$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);							
+							$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);							
 							message('success');
 						}				
 				}
@@ -748,8 +748,13 @@ if($_GPC){
 			$phone = $_GPC['tel'];//要发送短信的手机号码
 			$sendurl = $smsapi."sms?u=".$user."&p=".$pass."&m=".$phone."&c=".urlencode($m_content);
 			$result =file_get_contents($sendurl) ;
-			$msg=$statusStr[$result];		
-			message($msg,$m_content);     	
+			$msg=$statusStr[$result];
+			$resarr=array(
+				"msg"=>$msg,
+				"content"=>$m_content,
+			);
+			$res=json_encode($resarr);
+			message($res);     	
 		}
          $name=$_GPC['name'];
 		 $phone=$_GPC['phone'];
@@ -808,7 +813,7 @@ if($_GPC){
 						
 			$t=$this->DboperateEmploy($_GPC['wopenid'],$jobid);
 			mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-$ground['credit']);
-			//$this->SendTpl($_GPC['wopenid'],$Ownerinfo,'admit',$ground['date']);
+			$this->SendTpl($_GPC['wopenid'],$Ownerinfo,'admit',$ground['date']);
             if($t){
             	message('w_success');
             }else{
@@ -828,7 +833,7 @@ if($_GPC){
 						//给报名用户增加积分
 						mc_credit_update(mc_openid2uid($v['wopenid']),'credit1',$ground['credit']);
 						//给雇主扣除全部积分
-				//		$this->SendTpl($v['wopenid'],$Ownerinfo,'apply',$ground['date']);							
+					$this->SendTpl($v['wopenid'],$Ownerinfo,'apply',$ground['date']);							
 					}
 				}
 				mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-$needCredit);
@@ -912,7 +917,7 @@ if($_GPC){
         	else{
 			        	if($privacy AND $credit>=100){
         		$value=mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-100);
-        		//$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);				
+        		$this->SendTpl($_W['openid'],$user, 'credit1', $credit-100);				
                       	}	
 						else if($privacy){
 							message('积分不足,您无权进行此操作,请前往个人中心充值。如有问题,请与管理员联系!');
@@ -1737,7 +1742,7 @@ private function SendTpl($openid,$info,$type,$res){
 	   		'color'=>$apply['apply_kfcolor'],
 		),
 		'keynote2'=>array(
-						'value'=>'请联系商家确认....',
+						'value'=>'请联系雇主确认....',
 						'color'=>'#000',
 				),
 	  'remark'=>array(
@@ -1890,7 +1895,7 @@ private function SendTpl($openid,$info,$type,$res){
 				'topcolor'=>'#FF0000',
 				'data'=>array(
 						'first'=>array(
-								'value'=>'请尽快去录取应聘者，完成本次招聘。',
+								'value'=>'请尽快去录取应答者，完成本次招募。',
 								'color'=>'#000',
 						),
 						'keyword1'=>array(
@@ -1903,7 +1908,7 @@ private function SendTpl($openid,$info,$type,$res){
 						),
 	
 						'remark'=>array(
-								'value'=>'招聘帖子人数有人啦,请速去验收.',
+								'value'=>'帖子有人认领啦,快去看看.',
 								'color'=>'#0542FA',
 						),
 				)
@@ -1944,7 +1949,7 @@ private function SendTpl($openid,$info,$type,$res){
 		'topcolor'=>'#FF0000',
 		'data'=>array(
 		'first'=>array(
-				'value'=>'congrats!你已被'.$info['name'].'录取',
+				'value'=>'congrats!你已被'.$info['name'].'招募',
 				'color'=>'#FF0000',
 			),
 	   'keynote1'=>array(
@@ -1952,11 +1957,11 @@ private function SendTpl($openid,$info,$type,$res){
 	   		'color'=>'#000',
 		),
 		'keynote2'=>array(
-						'value'=>'请联系商家确认....',
+						'value'=>'请联系雇主确认....',
 						'color'=>'#000',
 				),
 	  'remark'=>array(
-	   	'value'=>'要愉快地工作哦~~~~',
+	   	'value'=>'要愉快地玩耍哦~~~~',
 	  	'color'=>'#000',
 	   ),			
 	)			
