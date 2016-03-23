@@ -332,7 +332,7 @@ require(['jquery'], function($){
 
 	$('.banner').unslider({});
 	
-	$(".tinfo").click(function(){
+	$(".tinfo").on('click',function(){
 		var jobid=$(this).attr('rel')
         window.location.href="{php echo $this->createMobileUrl('ptjdetails');}"+"&jobid="+jobid;
 	});
@@ -348,16 +348,16 @@ require(['jquery'], function($){
 			$("#search_text").show();
 		}
 	});
-	$("#search_cancel").click(function(){
+	$("#search_cancel").on('click',function(){
 		$("#search_show").hide();
 		$("#search_input").val('');
 	});
-	$("#search_clear").click(function(){
+	$("#search_clear").on('click',function(){
 		$("#search_show").hide();
 		$("#search_input").val('');
 	});	
 	
-	$('#submit').click(function(){
+	$('#submit').on('click',function(){
 		$("#btmnav").hide();
 		var mask=$("#mask");
 		var actionsheet=$("#weui_actionsheet");
@@ -382,10 +382,10 @@ require(['jquery'], function($){
 	    }		
 	});
 			
-	$('#mine').click(function(){
+	$('#mine').on('click',function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjmyinfo');}";
 	});
-	$('#index').click(function(){
+	$('#index').on('click',function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjindex');}";
 	});
 	$(".weui_actionsheet_menu").children('div').click(function(){
@@ -393,32 +393,32 @@ require(['jquery'], function($){
 		location.href="{php echo $this->createMobileUrl('ptjpostinfo');}"+"&type="+value;
 	});
 	
-	$(".weui_grid").click(function(){
+	$(".weui_grid").on('click',function(){
 		var value=$(this).attr('rel');
 		location.href="{php echo $this->createMobileUrl('ptjindex');}"+"&typecode="+value;
 	});
 	
-	$("#new").click(function(){
+	$("#new").on('click',function(){
        location.href="{php echo $this->createMobileUrl('ptjindex',array('privacy'=>'new'));}";
 	});
 	
-	$("#su").click(function(){
+	$("#su").on('click',function(){
 	       location.href="{php echo $this->createMobileUrl('ptjindex',array('privacy'=>'top'));}";
 	});
 
-	$("#t_new").click(function(){
+	$("#t_new").on('click',function(){
 	       location.href="{php echo $this->createMobileUrl('ptjindex',array('privacy'=>'new','typecode'=>$type));}";
 		});
 	
-	$("#t_su").click(function(){
+	$("#t_su").on('click',function(){
 	       location.href="{php echo $this->createMobileUrl('ptjindex',array('privacy'=>'top','typecode'=>$type));}";
 	});
 	
-	$("#s_su").click(function(){
+	$("#s_su").on('click',function(){
 	       location.href="{php echo $this->createMobileUrl('ptjindex',array('privacy'=>'top','Search'=>$search));}";
 	});
 	
-	$("#s_new").click(function(){
+	$("#s_new").on('click',function(){
 	       location.href="{php echo $this->createMobileUrl('ptjindex',array('privacy'=>'new','Search'=>$search));}";
 	});
 

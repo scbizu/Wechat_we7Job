@@ -1,2 +1,0 @@
-<?php
-$sms='{"c":"site","a":"entry","eid":"217","sms_account":"sevenplus2016","sms_password":"wa7plus","__session":"eyJ1aWQiOiIxIiwibGFzdHZpc2l0IjoiMTQ1ODYzNDQ4NyIsImxhc3RpcCI6Ijo6MSIsImhhc2giOiIxNzYwMDRiZWEwZjM2YjUzNTA1ZjI3MDBmZWJmMWYwYSJ9","__uniacid":"6","__entry":"\u77ed\u4fe1\u8bbe\u7f6e","__state":""}';

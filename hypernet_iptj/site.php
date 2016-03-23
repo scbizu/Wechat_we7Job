@@ -497,10 +497,11 @@ class hypernet_iptjModuleSite extends WeModuleSite {
                   		//获取报名人数
                   		$worker=$this->DboperateGetIntworkers($ground['jobid']);
                   		               		
-
+                  		//发送模板消息
                   		$this->SendTpl($openid,$Ownerinfo,'apply');
+                  		
                   		$this->SendTpl($oid, $ground, 'full');  
-                  		//发送模板消息                  		                		
+                		                		
                   		message('checkin_success');
                   	}
                  }
@@ -649,8 +650,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 		global  $_W,$_GPC;
 		require_once ('sms.php');
 		$sms=json_decode($sms,true);	
-		
-if($_GPC){
+		//var_dump($sms);
+if($_GPC['sms_account'] && $_GPC['sms_password']){
 		$inithead="<?php\n";
 		$filelocale=fopen(dirname(__FILE__)."/sms.php", "w") or die('保存失败');
 		$model=$_GPC;
@@ -658,9 +659,16 @@ if($_GPC){
 		fclose($filelocale);
 		$dataSource=json_encode($model);
 		$data='$sms=\''.$dataSource.'\';';
-		file_put_contents(dirname(__FILE__)."/sms.php", $data,FILE_APPEND);		
-		include $this->template('msg');
+		$t=file_put_contents(dirname(__FILE__)."/sms.php", $data,FILE_APPEND);		
+		if($t){
+			$url=wurl('site/entry',array('eid'=>$_GPC['eid']));
+			echo "<script>
+			location.href='$url';
+			</script>";
+		}
 }
+
+include $this->template('msg');
 	}
 	
 	
@@ -745,8 +753,10 @@ if($_GPC){
 			//$pass = md5("wa7plus"); //短信平台密码
 			$pass = md5($sms['sms_password']);
 			$m_content=substr(time(),-4,4);//要发送的短信内容
+			$time=1;
+			$content="【老司机】"."您的验证码为: {$m_content},"."在{$time}分钟内有效---{$_W['account']['name']}";
 			$phone = $_GPC['tel'];//要发送短信的手机号码
-			$sendurl = $smsapi."sms?u=".$user."&p=".$pass."&m=".$phone."&c=".urlencode($m_content);
+			$sendurl = $smsapi."sms?u=".$user."&p=".$pass."&m=".$phone."&c=".urlencode($content);
 			$result =file_get_contents($sendurl) ;
 			$msg=$statusStr[$result];
 			$resarr=array(

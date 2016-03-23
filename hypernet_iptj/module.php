@@ -59,7 +59,8 @@ class hypernet_iptjModule extends WeModule {
 		$src3=$this->search_other(3);
 		$src4=$this->search_other(4);
 		$src5=$this->search_other(5);
-
+		$shopUrl=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE Linkid=:id",array(':id'=>2));
+		$setting = $this->module['config'];
 			if($_GPC['type']=='pic1'){
 				$dat1=$_GPC['ImageUrl1'];
 				if($dat1){	
@@ -178,22 +179,25 @@ class hypernet_iptjModule extends WeModule {
 				//字段验证, 并获得正确的数据$dat
 				$dat = $_GPC;
 				$this->saveSettings($dat);
-				message('保存成功',referer(),'success');
+				//message('保存成功',referer(),'success');
 			}
 			$setting = $this->module['config'];
 			if(empty($setting)){
-				$setting = array('credit1_lv'=>1);
-			}			
-			
+				$setting = array('credit1_lv'=>$_GPC['credit1_lv']);
+			}
+
 			}
 			
-			
+		
 			if($_GPC['shopUrl']){
-				$shopUrl=pdo_fetch("SELECT * FROM".tablename('ptj_link')."WHERE Linkid=:id",array(':id'=>2));
+
+			//	var_dump($shopUrl);
+
 				if($shopUrl){
-					pdo_update('ptj_link',array('url'=>$shopUrl),array('Linkid'=>2));
+					pdo_update('ptj_link',array('url'=>$_GPC['shopUrl']),array('Linkid'=>2));
+					
 				}else{
-					pdo_insert('ptj_link',array('url'=>$shopUrl,'Linkid'=>2));
+					pdo_insert('ptj_link',array('url'=>$_GPC['shopUrl'],'Linkid'=>2));
 				}
 
 			}
