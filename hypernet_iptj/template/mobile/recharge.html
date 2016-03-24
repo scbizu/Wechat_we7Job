@@ -20,25 +20,36 @@
 			<input type="hidden" name="m" value="meepo_credit1" />
 			<input type="hidden" name="i" value="{$_W['uniacid']}" />
 			<input type="hidden" name="do" value="index" />
-			<div class="form-group input-group">
-				<div class="input-group-addon"><i class="fa fa-user"></i></div>
-				<input type="text" class="form-control" placeholder="用户名" value="{$username}" readonly>
-			</div>
-			<div class="form-group" style="position:relative;">
-				<div class="input-group">
-					<div class="input-group-addon"><i class="fa fa-money"></i></div>
-					<select name="moneySe" id="moneySe" class="form-control">
-						<option value="0">请选择</option>
-						<option value="150">150积分</option>
-						<option value="300">300积分</option>
-						<option value="500">500积分</option>
-						<option value="1000">1000积分</option>
-					</select>
-				</div>
-				<span><input type="text" placeholder="请输入要充值的积分" name="money" id="money"></span>
-			</div>
-			<input type="submit" name="submit" class="btn btn-primary btn-block" value="立即充值">
+
+
+
 			<input type="hidden" name="token" value="{$_W['token']}">
+			<br/>
+			<br/>
+			<p class="text-center" style="font-size:16px">快速充值通道</p>
+			<br/>
+			<div style="margin-left:2%">
+			<div  class="text-center">
+
+            <a type="button" class="btn btn-default btn-lg" href="{php echo $this->createMobileUrl('recharge',array('money'=>150,'moneySe'=>150,'token'=>$_W['token']));}" role="button" style="margin-right:4%"><b>150积分</b></a>
+			<a type="button" class="btn btn-default btn-lg" href="{php echo $this->createMobileUrl('recharge',array('money'=>300,'moneySe'=>300,'token'=>$_W['token']));}" role="button" style="margin-right:4%"><b>300积分</b></a>
+			</div>
+			<br/>
+			<br/>
+			<div  class="text-center">
+            <a type="button" class="btn btn-default btn-lg" href="{php echo $this->createMobileUrl('recharge',array('money'=>500,'moneySe'=>500,'token'=>$_W['token']));}" role="button" style="margin-right:4%"><b>500积分</b></a>
+			<a type="button" class="btn btn-default btn-lg" href="{php echo $this->createMobileUrl('recharge',array('money'=>1000,'moneySe'=>1000,'token'=>$_W['token']));}" role="button" style="margin-right:4%"><b>1000积分</b></a>
+			</div>
+			<br/>
+			<br/>
+			<div class="text-center" style="font-size:20px;color:red">
+
+			<br/>
+			<br/>
+			</div>
+</div>
+
+			
 		</form>
 	</div>
 </div>

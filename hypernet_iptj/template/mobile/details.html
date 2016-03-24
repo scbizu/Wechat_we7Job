@@ -13,6 +13,7 @@
 </script>
 <html>
 <body style="background-color:#ededed">
+{if $user}
 <nav class="navbar navbar-default navbar-fixed-bottom" style="background:#00b26d">
 	<div class="weui_tabbar">
 {if $collection['watching']==='0' || !$collection}	
@@ -70,7 +71,7 @@
 
 	</div>
 </nav>
-
+{/if}
 <div style="background:white;margin-bottom:5px">
 <br/>
 <div style="margin-top:-20px;border-style:solid; border-width:1px; border-color:#D3D3D2">
@@ -135,17 +136,7 @@
 </div>
 
 {/if}
- {if !$user}
- <div class="btn-group btn-group-justified" role="group" aria-label="报名" style="margin-top:20px;height: 60px;">
-  <div class="btn-group " role="group" style="background-color:#fff">
-    <div style="border-style:solid; border-width:1px;border-color:#D3D3D2">
-    <a type="button"  onclick="alert('先去完善信息咯,右下个人中心->完善信息')" class="btn btn-default text-center" >
-       我要报名
-    </a>
-    </div>
-  </div>
-</div>
- {/if}
+
 
 
 
@@ -229,6 +220,15 @@ require(['jquery'],function($){
 				$("#waiting").show();
 				$("#h_phone").hide();
 				$("#s_phone").show();
+				$.ajax({
+					url:"{php echo $this->createMobileUrl('Ptjdetails');}",
+					method:"POST",
+					data:{
+					  sendTPL:'on',
+					  jobid:'{$jobid}',
+					  openid:'{$openid}'
+					}
+				});				
 				alert('报名成功了~~~~~');				
 			}else if(obj.message==='checkin_fail_1'){
 				//1表示商家模式
@@ -236,6 +236,8 @@ require(['jquery'],function($){
 			}else if(obj.message==='checkin_fail_2'){
 				//2表示游客模式
 				alert('请切换模式哦~');
+			}else{
+				alert('模板消息发送失败');
 			}
 		});
 

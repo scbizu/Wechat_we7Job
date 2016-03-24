@@ -142,8 +142,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 			if($_GPC['title']!==""){
 				$search['title'] = $_GPC['title'];
 			}
-			if($_GPC['cname']!==""){
-				$search['cname'] = $_GPC['cname'];
+			if($_GPC['name']!==""){
+				$search['name'] = $_GPC['name'];
 			}
 			if($_GPC['privacy']!==""){
 				$search['privacy'] = $_GPC['privacy'];
@@ -278,8 +278,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   }
 	   
 	   if($_GPC['rexu']=='on'){
-		   $user=pdo_fetch("SELECT cname FROM".tablename('ptj_profile')."WHERE id=:ID",array(':ID'=>$_GPC['id']));
-		   if($user['cname']){
+		   $user=pdo_fetch("SELECT name FROM".tablename('ptj_profile')."WHERE id=:ID",array(':ID'=>$_GPC['id']));
+		   if($user['name']){
 			   pdo_update('ptj_profile',array('identity'=>'owner'),array('id'=>$_GPC['id']));
 			   }
 		    else{
@@ -498,11 +498,16 @@ class hypernet_iptjModuleSite extends WeModuleSite {
                   		$worker=$this->DboperateGetIntworkers($ground['jobid']);
                   		               		
                   		//发送模板消息
-                  		$this->SendTpl($openid,$Ownerinfo,'apply');
+                  		$t1=$this->SendTpl($openid,$Ownerinfo,'apply');
                   		
-                  		$this->SendTpl($oid, $ground, 'full');  
-                		                		
-                  		message('checkin_success');
+                  		$t2=$this->SendTpl($oid, $ground,'full');  
+                		//var_dump($oid); 
+                		if($t1 && $t2){
+                			message('checkin_success');
+                		}else{
+                			message('send_fail');
+                		}               		
+                  		
                   	}
                  }
                  else if($bmbutton=='on'){
@@ -1132,8 +1137,8 @@ if($_GPC){
 	 * @param unknown $nickname
 	 * @return Ambigous <boolean, unknown>
 	 */
-private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,$location,$email,$iden,$Cname=NULL,$Caddress=NULL,$Cphone=NULL){
-	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'nickname'=>$nickname,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0,'sex'=>$sex,'email'=>$email,'sure'=>'0','cname'=>$Cname,'clocation'=>$Caddress,'cphone'=>$Cphone));
+private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,$location,$email,$iden,$name=NULL,$Caddress=NULL,$Cphone=NULL){
+	$T=pdo_insert('ptj_profile',array('openid'=>$openid,'name'=>$name,'nickname'=>$nickname,'phone'=>$phone,'location'=>$location,'identity'=>$iden,'count'=>0,'sex'=>$sex,'email'=>$email,'sure'=>'0'));
 
   	return $T;
 }	
@@ -1175,7 +1180,7 @@ private function DboperateInsertIntoProfile($openid,$name,$nickname,$phone,$sex,
 private  function  DboperateSearchGroundinfo($pri=1){
 	$ground=array();
 	$type=array();
-	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi AND privacy=:pa",array(':vi'=>1,':pa'=>$pri),'');
+	$Ground=pdo_fetchall("SELECT * FROM".tablename('ptj_ground')."WHERE visible=:vi AND privacy=:pa ORDER BY id DESC",array(':vi'=>1,':pa'=>$pri),'');
 	$nowtype=pdo_fetchall("SELECT * FROM".tablename('ptj_model')."WHERE vis=:vi",array(':vi'=>'on'));
 	foreach ($nowtype as $key => $value){
 		array_push($type, trim($value['typecode']));
@@ -1209,15 +1214,15 @@ private  function  DboperateSearchTopicinfo($order,$search){
 		//需要对数组进行降序排序
 		$sortcolumn = "exists";
 		$order = 'privacy DESC';
-	}elseif($order == 'cname'){
+	}elseif($order == 'name'){
 		$flag = 1;
 		//需要对数组进行升序排序
-		$sortcolumn = "cname";
+		$sortcolumn = "name";
 		$order = 'privacy DESC';
-	}elseif ($order == 'cname DESC') {
+	}elseif ($order == 'name DESC') {
 		$flag = 2;
 		//需要对数组进行降序排序
-		$sortcolumn = "cname";
+		$sortcolumn = "name";
 		$order = 'privacy DESC';
 	}
 	if($search['privacy']!=""&&$search['privacy']!="2") {
@@ -1230,11 +1235,11 @@ private  function  DboperateSearchTopicinfo($order,$search){
 			$where.=' AND title LIKE "%'.$search['title'].'%"';
 		}
 	}
-	if($search['cname']!=""){
+	if($search['name']!=""){
 		if($where == '1=1'){
-			$where = '(name LIKE "%'.$search['cname'].'%"  AND cname = "") OR (cname LIKE "%'.$search['cname'].'%")';
+			$where = '(name LIKE "%'.$search['name'].'%"  AND name = "") OR (name LIKE "%'.$search['name'].'%")';
 		}else{
-			$where.=' AND ((name LIKE "%'.$search['cname'].'%" AND cname = "") OR (cname LIKE "%'.$search['cname'].'%"))';
+			$where.=' AND ((name LIKE "%'.$search['name'].'%" AND name = "") OR (name LIKE "%'.$search['name'].'%"))';
 		}
 	}
 	if($search['visible']!=""&&$search['visible']!="2") {
@@ -1250,7 +1255,7 @@ private  function  DboperateSearchTopicinfo($order,$search){
 		//$this->DboperateCheckGroundTime($v['jobid'], $v['date'], date('Y-m-d'));
 		$this->RefreshPrivacy($v['pdate'], $v['jobid']);
 		$oprofile=$this->DboperateSearchUser($v['openid']);
-		$oname=$oprofile['cname']?$oprofile['cname']:$oprofile['name'];
+		$oname=$oprofile['name']?$oprofile['name']:$oprofile['name'];
 		$exists=$this->DboperateGetIntworkers($v['jobid']);
 		$arr=array(
 		       'vis'=>$v['visible'],
@@ -1267,7 +1272,7 @@ private  function  DboperateSearchTopicinfo($order,$search){
 				'limit'=>$v['limit'],
 				'stopdate'=>$v['stopdate'],
 				'workplace'=>$v['workplace'],
-				'cname'=>$oname,
+				'name'=>$oname,
 				'privacy'=>$v['privacy'],
 		);
 		array_push($ground, $arr);
@@ -1393,7 +1398,7 @@ private function  DboperationSearchMyworkEx($workeroid){
 		$profile=$this->DboperateSearchUser($T1['openid']);
     	//结构化array
         $Arr=array(
-				'cname'=>$profile['cname'],
+				'name'=>$profile['name'],
 				'name'=>$profile['name'],
         	    'jobid'=>$jobid,
         		'title'=>$T1['title'],

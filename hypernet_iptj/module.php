@@ -195,9 +195,10 @@ class hypernet_iptjModule extends WeModule {
 
 				if($shopUrl){
 					pdo_update('ptj_link',array('url'=>$_GPC['shopUrl']),array('Linkid'=>2));
-					
+					$this->we7_refresh();
 				}else{
 					pdo_insert('ptj_link',array('url'=>$_GPC['shopUrl'],'Linkid'=>2));
+					$this->we7_refresh();
 				}
 
 			}
