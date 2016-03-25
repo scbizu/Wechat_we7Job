@@ -63,6 +63,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 				}
 				$uinfo=$this->DboperateSearchUser($v['openid']);
 				$v['nickname']=$uinfo['nickname']?$uinfo['nickname']:$uinfo['name'];
+				$tprefer=pdo_fetch("SELECT * FROM".tablename('ptj_model')."WHERE typecode=:tc",array(':tc'=>$v['type']));
+				$v['type']=$tprefer['typename'];
 				$groundtype[$k]=$v;
 			}
 			$Groundtype=$groundtype;
@@ -80,7 +82,11 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 					array_push($farr,$k);				
 				}
 			    $uinfo=$this->DboperateSearchUser($v['openid']);
+
+			    
 				$v['nickname']=$uinfo['nickname']?$uinfo['nickname']:$uinfo['name'];
+				$tprefer=pdo_fetch("SELECT * FROM".tablename('ptj_model')."WHERE typecode=:tc",array(':tc'=>$v['type']));
+				$v['type']=$tprefer['typename'];
 				$ground[$k]=$v;
 			}	
 			$Ground=$ground;
@@ -105,6 +111,8 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 					}
 					$sinfo=$this->DboperateSearchUser($v['openid']);
 					$v['nickname']=$sinfo['nickname']?$sinfo['nickname']:$sinfo['name'];
+					$tprefer=pdo_fetch("SELECT * FROM".tablename('ptj_model')."WHERE typecode=:tc",array(':tc'=>$v['type']));
+					$v['type']=$tprefer['typename'];
 					$searchinfo[$k]=$v;
 				}
 				$Searchinfo=$searchinfo;
@@ -434,18 +442,20 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	    $creditarray=mc_credit_fetch($uid);
 		$credit=$creditarray['credit1'];
 		$collection=pdo_fetch("SELECT * FROM".tablename('ptj_collection')."WHERE jobid=:jid AND openid=:oid",array('jid'=>$jobid,'oid'=>$openid));
-	//	var_dump($url);
+
 		if(empty($ground)){
-// 			$ground=pdo_fetch("SELECT * FROM".tablename('ptj_ground')." AS A left join ".tablename('ptj_working')
-// 				." AS B on A.jobid=B.jobid left join ".tablename('ptj_profile')." AS C on ownerid=C.id and c.openid=:jopenid WHERE A.jobid=:jid"
-// 				,array(':jid'=>$_GPC['jobid'],':jopenid'=>$openid));
-// 			var_dump($ground);
 			$ground=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid ",array(':jid'=>$_GPC['jobid']));
-			$exists=$this->DboperateGetIntworkers($_GPC['jobid']);
-			
+			$exists=$this->DboperateGetIntworkers($_GPC['jobid']);			
 		}
+
 		//获取用户信息
 		$oid=$ground['openid'];
+		
+		if($_GPC['sendTPL']==='on'){
+			$this->SendTpl($oid, $ground,'full');
+		}
+		
+
 		$Ownerinfo=$this->DboperateSearchUser($oid);	
 		$name=$Ownerinfo['nickname']?$Ownerinfo['nickname']:$Ownerinfo['name'];
 		$user=$this->DboperateSearchUser($_W['openid']);		 
@@ -498,16 +508,10 @@ class hypernet_iptjModuleSite extends WeModuleSite {
                   		$worker=$this->DboperateGetIntworkers($ground['jobid']);
                   		               		
                   		//发送模板消息
-                  		$t1=$this->SendTpl($openid,$Ownerinfo,'apply');
+                  		$this->SendTpl($openid,$Ownerinfo,'apply');
                   		
-                  		$t2=$this->SendTpl($oid, $ground,'full');  
-                		//var_dump($oid); 
-                		if($t1 && $t2){
-                			message('checkin_success');
-                		}else{
-                			message('send_fail');
-                		}               		
-                  		
+                		message('checkin_success');  
+               		                          		
                   	}
                  }
                  else if($bmbutton=='on'){
@@ -807,6 +811,7 @@ include $this->template('msg');
 		load()->model('mc');
        // $exists=$_GPC['exists'];
        $jobid=$_GPC['jobid'];
+       $wopenid=$_GPC['wopenid'];
 		$ground=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$jobid));
 		$openid=$ground['openid'];
 		$uidarr=mc_credit_fetch(mc_openid2uid($openid));
@@ -826,12 +831,15 @@ include $this->template('msg');
 		
 		if($_GPC['ebutton']=='on'){
 						
-			$t=$this->DboperateEmploy($_GPC['wopenid'],$jobid);
-			mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-$ground['credit']);
-			$this->SendTpl($_GPC['wopenid'],$Ownerinfo,'admit',$ground['date']);
+			$t=$this->DboperateEmploy($wopenid,$jobid);
             if($t){
+            	mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-$ground['credit']);
+            	mc_credit_update(mc_openid2uid($wopenid),'credit1',$ground['credit']);
+            	
+            	$this->SendTpl($_GPC['wopenid'],$Ownerinfo,'admit',$ground['date']);
             	message('w_success');
             }else{
+            //	message($wopenid);
             	message('w_fail');
             }
 			
@@ -847,10 +855,11 @@ include $this->template('msg');
 						$All=$this->DboperateEmploy($v['wopenid'],$jobid);
 						//给报名用户增加积分
 						mc_credit_update(mc_openid2uid($v['wopenid']),'credit1',$ground['credit']);
-						//给雇主扣除全部积分
-					$this->SendTpl($v['wopenid'],$Ownerinfo,'apply',$ground['date']);							
+
+					$this->SendTpl($v['wopenid'],$Ownerinfo,'admit',$ground['date']);							
 					}
 				}
+				//给雇主扣除全部积分
 				mc_credit_update(mc_openid2uid($_W['openid']), 'credit1',-$needCredit);
 				message('success');
 			}else{
@@ -898,7 +907,6 @@ include $this->template('msg');
 		
 		$ground=$_GPC['ground'];
 		$type=$_GPC['type'];
-	//	$mypost=$_GPC['Ptjpostinfo'];
 		$user=$this->DboperateSearchUser($_W['openid']);		
 
 if($_GPC){
@@ -948,6 +956,10 @@ if($_GPC){
         			location.href='$url';
         			</script>";
         	}                  
+        }else if($credit<floatval($c_pay)){
+
+		message('积分不足,请前往个人中心充值。如有问题,请与管理员联系!','referer');
+   	
         }	
 }
 
@@ -1892,7 +1904,7 @@ private function SendTpl($openid,$info,$type,$res){
 	   		                  'color'=>'#000',
 		                       ),
 						'keyword2'=>array(
-								'value'=>'待办',
+								'value'=>"待办",
  								'color'=>'red',
 						),
 						'remark'=>array(

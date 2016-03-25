@@ -1,45 +1,104 @@
 {template 'common/header'}
 <html>
+<link rel="stylesheet" href="./weui/dist/style/weui.min.css"/>
 <body style="background-color:#ededed">
 
 {if $Wkinfo}
- <div style="width:40%;margin-left:70%;">
- 	<button id="a_admit" class="btn btn-success" >全部录用</button>
+ <div style="width:40%;margin-left:50%;">
+ 	<button id="a_admit"  class="weui_btn weui_btn_primary" >全部录用</button>
  </div>
+  <div class="weui_cells_title">报名人数</div>
+  <div class="weui_cells">
  {loop $Wkinfo $k $v}
-  <div class="btn-group btn-group-justified" id="info_w" rel="{$v['wopenid']}" style="height: 60px;">
-  <div class="btn-group " >
-    <div style="border-style:solid; border-width:1px; border-color:#D3D3D2">
-    <div style="margin-top:10px">
-    <a href="{php echo $this->createmobileUrl('ptjworkerindex',array('ground'=>$ground,'exists'=>$exists,'wopenid'=>$v['wopenid']));}" style="color:black;font-size:18px;">
-    &nbsp;&nbsp;&nbsp; {$v['wkname']}&nbsp;{$v['wkphone']}
-    </a>
-    </div>
+ <div class="info_w" rel="{$v['wopenid']}">
+    <div class="weui_cell" >
+        <div class="weui_cell_bd weui_cell_primary">
+            <p> &nbsp;&nbsp; {$v['wkname']}&nbsp;{$v['wkphone']}</p>
+        </div>
+        <div class="weui_cell_ft">
      {if !$v['status']}
-    <div style=" height: 10px;">
-    	 <button id="admit" class="btn btn-default" style="width:20%;margin-left:70%;margin-top:-45px">录用</button>
+    	 <button id="admit" class="weui_btn weui_btn_plain_primary" >录用</button>
     	      <p id="admitted" style="display:none"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已录用</p>
-    </div>
+
     {else}
-     <div style="margin-top:-20px;margin-left:70%">
      <p><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已录用</p>
-    </div>   
-    {/if}     
+    {/if}   
+        </div>
     </div>
-  </div>
-</div>
+ </div>
 {/loop}
+</div>
 {else}
 <div class="jumbotron" style="background-color:#fff">
   <p style="color:#333">(空空荡荡~~~)你这里怎么没人来啊？</p>
 </div>
 {/if}
+<br/>
 <div style="margin-top:20px" id="stop">
-<button  class="btn btn-danger text-center" style="width:100%">立即终止</button>
+<button  class="weui_btn weui_btn_warn text-center" style="width:100%">立即终止</button>
 </div>
 
 <br>
 <br>
+
+<div class="weui_dialog_alert" style="display:none" id="admit_s">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd">
+          <strong class="weui_dialog_title">老司机提醒</strong>
+      </div>
+        <div class="weui_dialog_bd">全部录用完毕</div>
+        <div class="weui_dialog_ft">
+            <div id="admit_s" class="weui_btn_dialog primary">确定</div>
+        </div>
+    </div>
+</div>
+
+
+<div class="weui_dialog_alert" style="display:none" id="admit_f">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd">
+          <strong class="weui_dialog_title">老司机提醒</strong>
+      </div>
+        <div class="weui_dialog_bd">录用失败</div>
+        <div class="weui_dialog_ft">
+            <div id="admit_f" class="weui_btn_dialog primary">确定</div>
+        </div>
+    </div>
+</div>
+
+<div id="toast_s" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content">招募完成</p>
+    </div>
+</div>
+
+<div id="toast_f" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content">招募失败</p>
+    </div>
+</div>
+
+<div id="toast_stop" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content">招募失败</p>
+    </div>
+</div>
+
+<div id="toast_error" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content">招募失败</p>
+    </div>
+</div>
 </body>
 <script>
 require(['jquery'],function($){
@@ -49,6 +108,12 @@ require(['jquery'],function($){
 	$("#dback").click(function(){
 		window.location.href="{php echo $this->createMobileUrl('ptjdetails',array('jobid'=>$ground['jobid']));}";		
 	});
+	$("admit_s").click(function(){
+		$("admit_s").hide();
+	});
+	$("admit_f").click(function(){
+		$("admit_f").hide();
+	});	
 	$("#a_admit").click(function(){
 		$.ajax({
 			url:"{php echo $this->createMobileUrl('ptjworkerinfo');}",
@@ -61,15 +126,17 @@ require(['jquery'],function($){
 		.done(function(data){
 			var obj=jQuery.parseJSON(data);
 			if(obj.message==='success'){
-				alert('全部录用完毕');
+				$("#admit_s").show();
+			//	alert('全部录用完毕');
 			}else if(obj.message==='fail'){
-				alert('录用失败');
+				$("#admit_f").show();
+				//alert('录用失败');
 			}
 		});
 	});
 	
 	$("#admit").click(function(){
-		var tid=$("#info_w").attr('rel');
+		var tid=$(".info_w").attr('rel');
 		$.ajax({
 			url:"",
 			method:"POST",
@@ -79,15 +146,25 @@ require(['jquery'],function($){
 				ebutton:'on',
 			}
 		})
-		.done(function(data){
+		.done(function(data){			
 			var obj=jQuery.parseJSON(data);
+
 			if(obj.message==='w_success'){
 				$("#admit").hide();
-				$("admitted").show();
-				alert('招募成功~');
+				$("#admitted").show();
+				$("#toast_s").show();
+				setTimeout(function(){
+					$("#toast_s").hide();
+				},1000);
+				//alert('招募成功~');
 			}else if(obj.message==='w_fail'){
-				alert('招募失败~');
+				$("#toast_f").show();
+				setTimeout(function(){
+					$("#toast_f").hide();
+				},1000);				
+			//alert('招募失败~');
 			}
+
 		});
 	});
 	$("#stop").click(function(){
@@ -102,10 +179,12 @@ require(['jquery'],function($){
 		.done(function(data){
 			var obj=jQuery.parseJSON(data);
 			if(obj.message==='success_stop'){
-				alert('终止成功');
+				$("#toast_stop").show();	
+			//	alert('终止成功');
 				location.href="{php echo $this->createMobileUrl('ptjindex');}";
 			}else{
-				alert('好像哪里出现错误了');
+				$("#toast_error").show();	
+			//	alert('好像哪里出现错误了');
 				location.href="{php echo $this->createMobileUrl('ptjindex');}"				
 			}
 		});

@@ -137,7 +137,13 @@
 
 {/if}
 
-
+<div id="toast" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content" id="toast_content"></p>
+    </div>
+</div>
 
 
 
@@ -166,11 +172,21 @@ require(['jquery'],function($){
 			var obj=jQuery.parseJSON(data);
 			console.log(obj);
 			if(obj.message==='success_collected'){
-				$("#taged").show();				
-				alert('收藏成功lo~');
+				$("#taged").show();		
+				$("#toast_content").text("收藏成功lo~");
+				$("#toast").show();
+				setTimeout(function(){
+					$("#toast").hide();
+				},1000);				
+
 			}else if(obj.message==='fail_collected'){
-				$("#tag").show();				
-				alert('收藏被干扰了 等会再试咯~');
+				$("#tag").show();	
+				$("#toast_content").text("收藏被干扰了 等会再试咯~");
+				$("#toast").show();
+				setTimeout(function(){
+					$("#toast").hide();
+				},1000);
+			//	alert('');
 			}
 		});
 
@@ -228,16 +244,19 @@ require(['jquery'],function($){
 					  jobid:'{$jobid}',
 					  openid:'{$openid}'
 					}
-				});				
-				alert('报名成功了~~~~~');				
+				});	
+				$("#toast_content").text("报名成功了~~~~~");
+				$("#toast").show();
+				setTimeout(function(){
+					$("#toast").hide();
+				},1000);
+				$("#tag").show();					
 			}else if(obj.message==='checkin_fail_1'){
 				//1表示商家模式
 				alert('商家不能参与报名哦~');
 			}else if(obj.message==='checkin_fail_2'){
 				//2表示游客模式
 				alert('请切换模式哦~');
-			}else{
-				alert('模板消息发送失败');
 			}
 		});
 
@@ -262,7 +281,11 @@ require(['jquery'],function($){
 				alert('置顶栏被占满了哦~  下次早点来呗~');
 			}else if(obj.message==='success'){
 				$("#top").hide();
-				alert('耶~置顶完成了~');
+				$("#toast_content").text("耶~置顶完成了~");
+				$("#toast").show();
+				setTimeout(function(){
+					$("#toast").hide();
+				},1000);
 				$("#toped").show();
 			}	
 		});
