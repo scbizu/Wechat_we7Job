@@ -8,16 +8,19 @@
  	<button id="a_admit"  class="weui_btn weui_btn_primary" >全部录用</button>
  </div>
   <div class="weui_cells_title">报名人数</div>
-  <div class="weui_cells">
+
  {loop $Wkinfo $k $v}
- <div class="info_w" rel="{$v['wopenid']}">
+   <div class="weui_cells">
+ <div class="info_w">
     <div class="weui_cell" >
         <div class="weui_cell_bd weui_cell_primary">
             <p> &nbsp;&nbsp; {$v['wkname']}&nbsp;{$v['wkphone']}</p>
         </div>
         <div class="weui_cell_ft">
      {if !$v['status']}
+     <div class="admit"  rel="{$v['wopenid']}">
     	 <button id="admit" class="weui_btn weui_btn_plain_primary" >录用</button>
+    	 </div>
     	      <p id="admitted" style="display:none"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已录用</p>
 
     {else}
@@ -26,8 +29,9 @@
         </div>
     </div>
  </div>
+ </div>
 {/loop}
-</div>
+
 {else}
 <div class="jumbotron" style="background-color:#fff">
   <p style="color:#333">(空空荡荡~~~)你这里怎么没人来啊？</p>
@@ -41,16 +45,11 @@
 <br>
 <br>
 
-<div class="weui_dialog_alert" style="display:none" id="admit_s">
-    <div class="weui_mask"></div>
-    <div class="weui_dialog">
-        <div class="weui_dialog_hd">
-          <strong class="weui_dialog_title">老司机提醒</strong>
-      </div>
-        <div class="weui_dialog_bd">全部录用完毕</div>
-        <div class="weui_dialog_ft">
-            <div id="admit_s" class="weui_btn_dialog primary">确定</div>
-        </div>
+<div id="admit_s" style="display: none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <i class="weui_icon_toast"></i>
+        <p class="weui_toast_content">招募完成</p>
     </div>
 </div>
 
@@ -88,7 +87,7 @@
     <div class="weui_mask_transparent"></div>
     <div class="weui_toast">
         <i class="weui_icon_toast"></i>
-        <p class="weui_toast_content">招募失败</p>
+        <p class="weui_toast_content">任务取消成功</p>
     </div>
 </div>
 
@@ -96,7 +95,7 @@
     <div class="weui_mask_transparent"></div>
     <div class="weui_toast">
         <i class="weui_icon_toast"></i>
-        <p class="weui_toast_content">招募失败</p>
+        <p class="weui_toast_content">任务出现错误</p>
     </div>
 </div>
 </body>
@@ -127,6 +126,9 @@ require(['jquery'],function($){
 			var obj=jQuery.parseJSON(data);
 			if(obj.message==='success'){
 				$("#admit_s").show();
+				setTimeout(function(){
+					$("#admit_s").hide();
+				},1000);
 			//	alert('全部录用完毕');
 			}else if(obj.message==='fail'){
 				$("#admit_f").show();
@@ -135,8 +137,8 @@ require(['jquery'],function($){
 		});
 	});
 	
-	$("#admit").click(function(){
-		var tid=$(".info_w").attr('rel');
+	$(".admit").click(function(){
+		var tid=$(".admit").attr('rel');
 		$.ajax({
 			url:"",
 			method:"POST",

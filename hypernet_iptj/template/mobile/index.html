@@ -185,6 +185,7 @@
  {/if}
 {if $Searchinfo}
 {loop $Searchinfo $k $v}
+  {if $k>=($pageindex-1)*$pagesize && $k<($pageindex)*$pagesize}
 <div class="weui_panel">
   <div class="tinfo" rel="{$v['jobid']}">   
     <div class="weui_panel_bd">
@@ -210,7 +211,9 @@
 
 
 </div>
+{/if}
 {/loop}
+{$page}
 {/if}
 {/if}
 
@@ -232,6 +235,7 @@
  {/if}
 {if $Groundtype}
 {loop $Groundtype $k $v}
+  {if $k>=($pageindex-1)*$pagesize && $k<($pageindex)*$pagesize}
 <div class="weui_panel">
   <div class="tinfo" rel="{$v['jobid']}">   
     <div class="weui_panel_bd">
@@ -257,7 +261,10 @@
 
 
 </div>
+{/if}
 {/loop}
+
+{$page}
 {/if}
 {/if}
 
@@ -279,7 +286,7 @@
  {/if}
  {if $Ground}
 {loop $Ground $k $v}
-
+  {if $k>=($pageindex-1)*$pagesize && $k<($pageindex)*$pagesize}
 <div class="weui_panel">
   <div class="tinfo" rel="{$v['jobid']}">   
     <div class="weui_panel_bd">
@@ -302,13 +309,14 @@
     	Post By {$v['nickname']}
     	<h5 align="right" style="margin-top:-20px">悬赏:{$v['credit']}积分</h5>
     	</div>
-
-
 </div>
 
-
+{/if}
  
 {/loop}
+<div>
+</div>
+{$page}
 {/if}
 {/if}
 

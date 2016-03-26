@@ -131,7 +131,7 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 
        $count=$Tinfo['count']; 
        //本页Record 数量
-       $pagesize=20;
+       $pagesize=15;
        //当前页码
        $pageindex=$_GPC['page']?$_GPC['page']:1;
        //HTML结构
@@ -638,9 +638,11 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   }
 	   
 	   $allinfo=pdo_fetchall("SELECT * FROM".tablename('ptj_model'));
+  
+
 	   foreach ($allinfo as $k=>$v){
 	   	  $count=pdo_fetchall("SELECT COUNT(*) AS count FROM".tablename('ptj_ground')."WHERE type=:ty",array(':ty'=>trim($v['typecode'])));
-	      $v['hotrate']=$count[$k]['count'];
+	      $v['hotrate']=$count[0]['count'];
 	   	  $allinfo[$k]=$v;
 	   }
 	   $All=$allinfo;
@@ -652,8 +654,41 @@ class hypernet_iptjModuleSite extends WeModuleSite {
 	   	     	message('switched');
 	   		}
 	   }
+	   
+	   if($_GPC['op']==='delete'){
+	   	$t=pdo_delete('ptj_model',array('id'=>$_GPC['mid']));
+	   	if($t){
+	   		message('deleted');
+	   	}
+	   }
+	   
 	   include $this->template('model');
 	}
+	
+	public function doWebPtjmodeledit(){
+		global $_W,$_GPC;
+		load()->func('tpl');
+		load()->func('file');		
+		if($_GPC['mid']){
+			$modelinfo=pdo_fetch("SELECT * FROM".tablename('ptj_model')."WHERE id=:mid",array(':mid'=>$_GPC['mid']));
+		}
+	if($_GPC['editcode'] || $_GPC['editname'] || $_GPC['editicon']){
+		if($_GPC['editcode']){
+			pdo_update('ptj_model',array('typecode'=>$_GPC['editcode']),array('id'=>$_GPC['mid']));
+			
+		}
+		 if($_GPC['editname']){
+			pdo_update('ptj_model',array('typename'=>$_GPC['editname']),array('id'=>$_GPC['mid']));
+		}
+		if($_GPC['editicon']){
+				pdo_update('ptj_model',array('typeicon'=>tomedia($_GPC['editicon'])),array('id'=>$_GPC['mid']));
+		}
+		$url=$this->createWebUrl('ptjmodel');
+		echo "<script>location.href='$url';</script>";
+	}
+		include $this->template('model_edit');
+	}
+	
 	
 	public function doWebPtjmsg(){
 		global  $_W,$_GPC;
@@ -820,6 +855,7 @@ include $this->template('msg');
 
 		$url=$this->createMobileUrl('ptjworkerinfo',array('ground'=>$ground));
 		$Wkinfo=$this->DboperateFindWk($openid,$jobid);
+		$wkinfoed=$this->DboperateFindWked($openid, $jobid);
 		if($_GPC['oid']){
 		  $Ownerinfo=$this->DboperateSearchUser($_GPC['oid']);		
 		  $Wkinfo=$this->DboperateFindWk($_GPC['oid'],$_GPC['jobid']);
@@ -847,7 +883,7 @@ include $this->template('msg');
 		
 		if($_GPC['abutton']=='on'){
 			//TODO: 积分操作
-			$needCredit=$ground['credit']*count($Wkinfo);
+			$needCredit=$ground['credit']*count($Wkinfoed);
 			if($needCredit<=$credit){
 				
 				foreach ($Wkinfo as $k=>$v){
@@ -1614,6 +1650,34 @@ private function DboperateFindWk($ownerid,$jobid){
 	}
 	return $Allarray;
 }
+/**
+ * 
+ * @param unknown $ownerid
+ * @param unknown $jobid
+ * @return multitype:
+ */
+private function DboperateFindWked($ownerid,$jobid){
+	$Allarray=array();
+	$info=pdo_fetchall("SELECT * FROM".tablename('ptj_working')."WHERE owneroid=:oid and jobid=:jid and sure=:su",array(':oid'=>$ownerid,':jid'=>$jobid,':su'=>0),'');
+	foreach ($info as $k=>$v){
+		$winfo=pdo_fetch("SELECT * FROM".tablename('ptj_profile')."WHERE openid=:oid",array(':oid'=>$v['workeroid']));
+		$speinfo=pdo_fetch("SELECT * FROM".tablename('ptj_ground')."WHERE jobid=:jid",array(':jid'=>$v['jobid']));
+		$wkinfo=array(
+				'wkinfo'=>$speinfo['title'],
+				'wkphone'=>$winfo['phone'],
+				'wksex'=>$winfo['sex'],
+				'wopenid'=>$winfo['openid'],
+				'wkname'=>$winfo['name'],
+				'wklocation'=>$winfo['location'],
+				'status'=>$v['sure'],
+				'wopenid'=>$v['workeroid'],
+		);
+		array_push($Allarray, $wkinfo);
+	}
+	return $Allarray;
+}
+
+
 /**
  * 雇佣员工
  * @param unknown $wopenid

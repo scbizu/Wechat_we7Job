@@ -13,6 +13,7 @@
  	<th>板块名</th>
  	<th>当前热度</th>
  	<th>是否启用</th>
+ 	<th>其他操作</th>
 </tr>
 {loop $All $k $v}
 <tr>
@@ -29,6 +30,16 @@
 				<input type="checkbox" class="check" rel="{$v['id']}" name="check" {php echo ($v['vis']==='on')?'checked':''}/>
 		</div>	    
     </td>
+    <td>
+		<div class="op" >
+			<span class="delete_md" rel="{$v['id']}">
+				<button  class="btn btn-danger">删除板块</button>
+			</span>
+			<span class="update_md" rel="{$v['id']}">
+				<button  class="btn btn-primary">修改板块</button>
+			</span>
+		</div>	    
+    </td>    
 </tr>
 {/loop}
 </table>
@@ -68,6 +79,8 @@
 		<input type="submit" class="btn btn-primary" value="提交"/>
 	</div>	
 </form>
+
+
 <script>
 require(['jquery','../addons/hypernet_iptj/template/js/bootstrap-switch.js'],function($){
 	$(".check").bootstrapSwitch();
@@ -110,12 +123,40 @@ $(".check").on('switchChange.bootstrapSwitch', function(event, state) {
 	
 	$("#cancel").click(function(){
 		$("#cancel").hide();		
+		$("edit_form").hide();
 		$("#add").show();
 		$("#add_info").hide();				
 		$("#allinfo").show();
 	});
 	
+	$(".delete_md").click(function(){
+		var mid=$(this).attr('rel');
+		$.ajax({
+			url:"{php echo $this->createWebUrl('ptjmodel');}",
+			method:"POST",
+			data:{
+				op:"delete",
+				mid:mid,
+			}
+		})
+		.done(function(data){
+			var Obj=jQuery.parseJSON(data);
+			if(Obj.message=="deleted"){
+				alert('删除成功!');
+				location.reload();
+			}
+		});
+	});
 	
+	$(".update_md").click(function(){
+		var mid=$(this).attr('rel');
+		location.href="{php echo $this->createWebUrl('Ptjmodeledit');}"+"&mid="+mid;
+	});
+	
+	$("#back_e").click(function(){
+		$("#edit_form").hide();
+		$("allinfo").show();
+	});
 });
 
 </script>
